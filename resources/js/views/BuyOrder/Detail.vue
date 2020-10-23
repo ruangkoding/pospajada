@@ -4,7 +4,29 @@
             <div class="card">
                 <div class="card-body">
                     <loading :opacity="100" :active.sync="isLoading" :can-cancel="false" :is-full-page="false" />
-                    <transition name="fade">
+                    <transition name="fade" v-if="mobile === true">
+                        <table class="table table-hover table-striped table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td style="width:15%;"><b>Nota</b></td>
+                                    <td style="width:85%;">{{ invoice.invoice }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="width:15%;"><b>Tanggal</b></td>
+                                    <td style="width:85%;">{{ invoice.invoice_date | moment }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="width:15%;"><b>Supplier</b></td>
+                                    <td style="width:85%;">
+                                        {{ invoice.supplier.supplier_name }}<br>
+                                        {{ invoice.supplier.supplier_address }}<br>
+                                        {{ invoice.supplier.supplier_contact }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </transition>
+                    <transition name="fade" v-else>
                         <table class="table table-hover table-striped table-bordered">
                             <tbody>
                                 <tr>
@@ -32,35 +54,26 @@
                             <v-alert :alert="alert"></v-alert>
                             <transition name="fade">
                                 <div class="table-responsive">
-                                    <table class="table table-hover table-striped table-bordered" v-if="showTable === true">
+                                    <table class="table table-hover table-striped table-bordered" v-if="showTable == true">
                                         <thead>
                                             <tr>
                                                 <th style="width:30%;text-align:center;">Barang</th>
-                                                <th style="width:10%;text-align:center;">Harga (Rp)</th>
+                                                <th style="width:10%;text-align:center;">Harga</th>
                                                 <th style="width:5%;text-align:center;">Jumlah</th>
-                                                <th style="width:10%;text-align:center;">Subtotal (Rp)</th>
+                                                <th style="width:10%;text-align:center;">Subtotal</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr v-for="v in invoicedetail" :key="v.id">
                                                 <td>{{ v.item.item_name }}</td>
-                                                <td style="text-align:right;">
-                                                    {{ v.price | rupiah }}
+                                                <td style="text-align:right;">{{ v.price | rupiah }}</td>
+                                                <td style="text-align:center;">{{ v.quantity }} {{ v.item.unit.unit_name }}
                                                 </td>
-                                                <td style="text-align:center;">
-                                                    {{ v.quantity }} {{ v.item.unit.unit_name }}
-                                                </td>
-                                                <td style="text-align:right;">
-                                                    {{ v.subtotal | rupiah }}
-                                                </td>
+                                                <td style="text-align:right;">{{ v.subtotal | rupiah }}</td>
                                             </tr>
                                             <tr>
-                                                <td colspan="3" style="text-align:right;">
-                                                    <b>Total Harga</b>
-                                                </td>
-                                                <td style="text-align:right;">
-                                                    <b>{{ invoice.total | rupiah }}</b>
-                                                </td>
+                                                <td colspan="3" style="text-align:right;"><b>Total Harga</b></td>
+                                                <td style="text-align:right;"><b>{{ invoice.total | rupiah }}</b></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -69,16 +82,32 @@
                         </div>
                     </div>
                     <a
-                        :href="route"
-                        class="btn btn-danger">
-                        <i class="fa fa-arrow-left"></i> Kembali
-                    </a>
-                    <a
+                        v-if="mobile === true"
                         href="#"
-                        class="btn btn-success"
+                        class="btn btn-block btn-success"
                         @click="cetakInvoice(invoice.id)"
                     >
                         <i class="fa fa-print"></i> Cetak Nota
+                    </a>
+                    <a
+                        v-else
+                        href="#"
+                        class="btn bbtn-success"
+                        @click="cetakInvoice(invoice.id)"
+                    >
+                        <i class="fa fa-print"></i> Cetak Nota
+                    </a>
+                    <a
+                        v-if="mobile === true"
+                        :href="route"
+                        class="btn btn-block btn-outline-danger">
+                        <i class="fa fa-arrow-left"></i> Kembali
+                    </a>
+                    <a
+                        v-else
+                        :href="route"
+                        class="btn btn-outline-danger">
+                        <i class="fa fa-arrow-left"></i> Kembali
                     </a>
                 </div>
             </div>
@@ -108,7 +137,8 @@
             'route',
             'print_api',
             'access',
-            'api'
+            'api',
+            'mobile'
         ],
         methods: {
             cetakInvoice(id) {

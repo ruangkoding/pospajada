@@ -4,9 +4,33 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-header">
-                        <div class="pull-right">
-                            <button type="button" v-on:click.prevent="toggle" class="btn btn-info mb-2"><i class="fa fa-search"></i> Form Pencarian</button>
-                            <a v-if="access.write === 1" :href="route + '/create'" class="btn btn-success mb-2"><i class="fa fa-plus"></i> Tambah Data</a>
+                        <div v-if="mobile === true">
+                            <a
+                                v-if="access.write === 1"
+                                :href="route + '/create'"
+                                class="btn btn-block btn-success mb-2">
+                                <i class="fa fa-plus"></i> Tambah Data
+                            </a>
+                            <button
+                                type="button"
+                                v-on:click.prevent="toggle"
+                                class="btn btn-block btn-outline-info mb-2">
+                                <i class="fa fa-search"></i> Form Pencarian
+                            </button>
+                        </div>
+                        <div class="pull-right" v-else>
+                            <button
+                                type="button"
+                                v-on:click.prevent="toggle"
+                                class="btn btn-outline-info mb-2">
+                                <i class="fa fa-search"></i> Form Pencarian
+                            </button>
+                            <a
+                                v-if="access.write === 1"
+                                :href="route + '/create'"
+                                class="btn btn-success mb-2">
+                                <i class="fa fa-plus"></i> Tambah Data
+                            </a>
                         </div>
                         <transition name="fade">
                             <div class="card" style="margin-top:50px;" v-show="showForm">
@@ -16,9 +40,35 @@
                                             <div class="form-group col-md-4">
                                                 <input type="text" class="form-control" v-model="search.q" placeholder="Nama Supplier">
                                             </div>
-                                            <div class="form-group col-md-4">
-                                                <button type="submit" class="btn btn-success mr-xs-2"><i class="fa fa-search"></i> Cari Data</button>
-                                                <button type="button" v-on:click.prevent="clear" class="btn btn-info"><i class="fa fa-refresh"></i> Reset</button>
+                                        </div>
+                                        <div class="row" v-if="mobile === true">
+                                            <div class="input-group col-md-6">
+                                                <button 
+                                                    type="submit" 
+                                                    class="btn btn-block btn-success mr-sm-2">
+                                                    <i class="fa fa-search"></i> Cari Data
+                                                </button>
+                                                <button 
+                                                    type="button" 
+                                                    v-on:click.prevent="clear" 
+                                                    class="btn btn-block btn-info">
+                                                    <i class="fa fa-refresh"></i> Reset
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="row" v-else>
+                                            <div class="input-group col-md-6">
+                                                <button 
+                                                    type="submit" 
+                                                    class="btn btn-success mr-sm-2">
+                                                    <i class="fa fa-search"></i> Cari Data
+                                                </button>
+                                                <button 
+                                                    type="button" 
+                                                    v-on:click.prevent="clear" 
+                                                    class="btn btn-info">
+                                                    <i class="fa fa-refresh"></i> Reset
+                                                </button>
                                             </div>
                                         </div>
                                     </form>
@@ -28,8 +78,55 @@
                     </div>
                     <div class="card-body">
                         <v-alert :alert="alert"></v-alert>
-                        <loading :opacity="100" :active.sync="isLoading" :can-cancel="false" :is-full-page="false"></loading>
-                        <transition name="fade">
+                        <loading :opacity="100" :active.sync="isLoading" :can-cancel="false" :is-full-page="false" />
+                        <transition name="fade" v-if="mobile === true">
+                            <div v-if="showTable === true">
+                                <div class="card" v-for="v in supplier" :key="v.id">
+                                  <div class="card-body">
+                                    <h5 class="card-title">{{ v.supplier_name }}</h5>
+                                    <br>
+                                    <table class="table table-striped">
+                                        <tbody>
+                                            <tr>
+                                                <td style="width:5%;">Alamat</td>
+                                                <td style="width:2%;">:</td>
+                                                <td style="width:50%;">{{ v.supplier_address }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="width:5%;">Kontak</td>
+                                                <td style="width:2%;">:</td>
+                                                <td style="width:50%;">{{ v.supplier_contact }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <br>
+                                    <a
+                                        v-if="(access.update === 1)"
+                                        :href="route + '/edit?id=' + v.id"
+                                        class="btn btn-block btn-sm btn-warning mr-sm-1">
+                                        <i class="fa fa-wrench"></i> Ubah
+                                    </a>
+                                    <button
+                                        v-else
+                                        class="btn btn-block btn-sm btn-warning disabled mr-sm-1">
+                                        <i class="fa fa-wrench"></i> Ubah
+                                    </button>
+                                    <a
+                                        v-if="(access.delete === 1)"
+                                        href="#" @click="toggleModal(v.id)"
+                                        class="btn btn-block btn-sm btn-danger">
+                                        <i class="fa fa-trash-o"></i> Hapus
+                                    </a>
+                                    <button
+                                        v-else
+                                        class="btn btn-block btn-sm btn-danger disabled">
+                                        <i class="fa fa-trash-o"></i> Hapus
+                                    </button>
+                                  </div>
+                                </div>
+                            </div>
+                        </transition>
+                        <transition name="fade" v-else>
                             <div class="table-responsive">
                                 <table class="table table-hover table-striped table-bordered" v-if="showTable == true">
                                     <thead>
@@ -70,7 +167,7 @@
                             </div>
                         </transition>
 
-                        <v-delete :element="'delete_modal'" :id="id" @delete="deleteData"></v-delete>
+                        <v-delete :element="'delete_modal'" :id="id" @delete="deleteData" />
                         <div class="card-footer clearfix" v-if="showTable === true">
                             <v-pagination
                                 :pagination="pagination"
@@ -114,7 +211,7 @@ export default {
             id:''
         }
     },
-    props: ['api','route','access'],
+    props: ['api','route','access', 'mobile'],
     methods: {
         toggle() {
             this.showForm = !this.showForm

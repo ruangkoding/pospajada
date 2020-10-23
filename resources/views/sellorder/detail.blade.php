@@ -4,6 +4,7 @@
         @if ($act == 'create')
             <sellorder-detail
                 :invoice='{!! json_encode($invoice) !!}'
+                :mobile='{!! json_encode($mobile) !!}'
                 :invoicedetail='{!! json_encode($invoicedetail) !!}'
                 :route='{!! json_encode($route) !!}'
                 :api='{!! json_encode($api) !!}'

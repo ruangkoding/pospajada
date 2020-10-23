@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Libraries\Access;
 use App\Libraries\Common;
+use Jenssegers\Agent\Agent;
 use Closure;
 
 class CategoryController extends Controller
@@ -20,6 +21,7 @@ class CategoryController extends Controller
     protected $access;
     protected $common;
     protected $breadcrumb;
+    protected $mobile;
 
     public function __construct()
     {
@@ -27,13 +29,22 @@ class CategoryController extends Controller
             function ($request, Closure $next) {
                 if (Cookie::get('login') == true) {
                     $access = new Access();
-                    $this->access = $access->generateAccess(Cookie::get('level'));
-                    $this->common = new Common();
+                    $agent  = new Agent();
+                    $common = new Common();
+
                     $nav = [
                         '<a href="' . url('dashboard') . '"><i class="fa fa-dashboard"></i> Dashboard</a>',
                         '<i class="fa fa-dropbox"></i> ' . $this->title
-                    ]; 
-                    $this->breadcrumb = $this->common->generate_breadcrumbs($nav);
+                    ];
+
+                    if ($agent->isMobile()) {
+                        $this->mobile = true;
+                    } else {
+                        $this->mobile = false;
+                    }
+
+                    $this->access = $access->generateAccess(Cookie::get('level'));
+                    $this->breadcrumb = $common->generate_breadcrumbs($nav);
                     return $next($request);
                 } else {
                     return redirect('login');
@@ -51,6 +62,7 @@ class CategoryController extends Controller
         $data['api'] = url($this->api);
         $data['route'] = url($this->route);
         $data['access'] = $this->access;
+        $data['mobile'] = $this->mobile;
         return View::make('category.index', $data);
     }
 
@@ -63,6 +75,7 @@ class CategoryController extends Controller
         $data['api'] = url($this->api);
         $data['act'] = 'create';
         $data['route'] = url($this->route);
+        $data['mobile'] = $this->mobile;
         return View::make('category.form', $data);
     }
 
@@ -77,6 +90,7 @@ class CategoryController extends Controller
         $data['api'] = url($this->api . '?id=' . $category->id);
         $data['act'] = 'edit';
         $data['route'] = url($this->route);
+        $data['mobile'] = $this->mobile;
         return View::make('category.form', $data);
     }
 }

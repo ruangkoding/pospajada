@@ -7,10 +7,10 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Point Of Sale</title>
     <link href="{!! asset('css/app.css') !!}" rel="stylesheet">
-    @laravelPWA
+    <link rel="manifest" href="{!! asset('manifest.json') !!}" />
 </head>
 <body class="hold-transition login-page">
-    <div class="login-box">
+    <div class="login-box" @if ($mobile == true) style="margin-top:40%;" @endif>
         <div class="card">
             <div class="card-body login-card-body">
                 <div id="app">

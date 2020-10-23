@@ -11,6 +11,7 @@ use App\Models\Category;
 use App\Models\Unit;
 use App\Libraries\Access;
 use App\Libraries\Common;
+use Jenssegers\Agent\Agent;
 use Closure;
 
 class ItemController extends Controller
@@ -20,8 +21,8 @@ class ItemController extends Controller
     protected $api   = 'api/item';
     protected $route = 'item';
     protected $access;
-    protected $common;
     protected $breadcrumb;
+    protected $mobile;
 
     public function __construct()
     {
@@ -29,13 +30,22 @@ class ItemController extends Controller
             function ($request, Closure $next) {
                 if (Cookie::get('login') == true) {
                     $access = new Access();
-                    $this->access = $access->generateAccess(Cookie::get('level'));
-                    $this->common = new Common();
+                    $common = new Common();
+                    $agent  = new Agent();
+
                     $nav = [
                         '<a href="' . url('dashboard') . '"><i class="fa fa-dashboard"></i> Dashboard</a>',
                         '<i class="fa fa-dropbox"></i> ' . $this->title
-                    ]; 
-                    $this->breadcrumb = $this->common->generate_breadcrumbs($nav);
+                    ];
+
+                    if ($agent->isMobile()) {
+                        $this->mobile = true;
+                    } else {
+                        $this->mobile = false;
+                    }
+
+                    $this->access = $access->generateAccess(Cookie::get('level'));
+                    $this->breadcrumb = $common->generate_breadcrumbs($nav);
                     return $next($request);
                 } else {
                     return redirect('login');
@@ -58,6 +68,7 @@ class ItemController extends Controller
         $data['access'] = $this->access;
         $data['category'] = $category;
         $data['unit'] = $unit;
+        $data['mobile'] = $this->mobile;
         return View::make('item.index', $data);
     }
 
@@ -75,6 +86,7 @@ class ItemController extends Controller
         $data['category'] = $category;
         $data['unit'] = $unit;
         $data['route'] = url($this->route);
+        $data['mobile'] = $this->mobile;
         return View::make('item.form', $data);
     }
 
@@ -94,6 +106,7 @@ class ItemController extends Controller
         $data['category'] = $category;
         $data['unit'] = $unit;
         $data['route'] = url($this->route);
+        $data['mobile'] = $this->mobile;
         return View::make('item.form', $data);
     }
 }

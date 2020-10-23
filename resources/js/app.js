@@ -12,6 +12,12 @@ import datePicker from 'vue-bootstrap-datetimepicker';
 import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
 import VueTypeaheadBootstrap from 'vue-typeahead-bootstrap';
 
+/* if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js');
+    });
+} */
+
 Vue.use(money, {
     decimal: ',',
     thousands: '.',

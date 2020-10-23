@@ -10,6 +10,7 @@ use App\Models\SellOrder;
 use App\Models\SellOrderDetail;
 use App\Libraries\Access;
 use App\Libraries\Common;
+use Jenssegers\Agent\Agent;
 use Closure;
 
 class SellOrderController extends Controller
@@ -20,22 +21,31 @@ class SellOrderController extends Controller
   protected $route = 'sellorder';
   protected $access;
   protected $breadcrumb;
-  protected $common;
+  protected $mobile;
 
   public function __construct()
   {
     $this->middleware(
       function ($request, Closure $next) {
         if (Cookie::get('login') == true) {
-          $access = new Access();
-          $this->access = $access->generateAccess(Cookie::get('level'));
-          $this->common = new Common();
-          $nav = [
-            '<a href="' . url('dashboard') . '"><i class="fa fa-dashboard"></i> Dashboard</a>',
-            '<i class="fa fa-file-text"></i> ' . $this->title
-          ];
-          $this->breadcrumb = $this->common->generate_breadcrumbs($nav);
-          return $next($request);
+            $access = new Access();
+            $agent  = new Agent();
+            $common = new Common();
+
+            $nav = [
+                '<a href="' . url('dashboard') . '"><i class="fa fa-dashboard"></i> Dashboard</a>',
+                '<i class="fa fa-file-text"></i> ' . $this->title
+            ];
+
+            if ($agent->isMobile()) {
+                $this->mobile = true;
+            } else {
+                $this->mobile = false;
+            }
+
+            $this->access = $access->generateAccess(Cookie::get('level'));
+            $this->breadcrumb = $common->generate_breadcrumbs($nav);
+            return $next($request);
         } else {
           return redirect('login');
         }
@@ -52,6 +62,7 @@ class SellOrderController extends Controller
     $data['api'] = url($this->api);
     $data['route'] = url($this->route);
     $data['access'] = $this->access;
+    $data['mobile'] = $this->mobile;
     return View::make('sellorder.index', $data);
   }
 
@@ -69,6 +80,7 @@ class SellOrderController extends Controller
     $data['invoicedetail'] = $invoicedetail;
     $data['act'] = 'create';
     $data['route'] = url($this->route);
+    $data['mobile'] = $this->mobile;
     return View::make('sellorder.detail', $data);
   }
 }

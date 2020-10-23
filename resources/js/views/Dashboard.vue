@@ -98,8 +98,7 @@ export default {
         generateChart(buy, sell) {
             this.chart = {
                 chart: {
-                    type: 'column',
-                    height: '40%'
+                    type: 'column'
                 },
                 credits: {
                     enabled: false

@@ -53,7 +53,13 @@
                                 <b>*) Wajib Diisi</b>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row" v-if="mobile === true">
+                            <div class="form-group col-md-12">
+                                <button type="submit" class="btn btn-block btn-success"><i class="fa fa-save"></i> Simpan Data</button>
+                                <a :href="route" class="btn btn-block btn-danger"><i class="fa fa-arrow-left"></i> Kembali</a>
+                            </div>
+                        </div>
+                        <div class="row" v-else>
                             <div class="form-group col-md-12">
                                 <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Simpan Data</button>
                                 <a :href="route" class="btn btn-danger"><i class="fa fa-arrow-left"></i> Kembali</a>
@@ -97,7 +103,7 @@
                 isLoading: false
             }
         },
-        props: ['category_data', 'unit_data', 'api', 'route'],
+        props: ['category_data', 'unit_data', 'api', 'route', 'mobile'],
         methods: {
             clearAlert() {
                 this.alert.error = false;

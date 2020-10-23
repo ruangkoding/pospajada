@@ -8,23 +8,31 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\View;
 use App\Http\Controllers\Controller;
 use App\Libraries\Common;
+use Jenssegers\Agent\Agent;
 
 class DashboardController extends Controller
 {
     public $title   = 'Dashboard';
     public $link    = 'dashboard';
     protected $api  = 'api/dashboard';
-    protected $common;
     protected $breadcrumb;
+    protected $mobile;
 
     public function __construct()
     {
         $this->middleware(
             function ($request, Closure $next) {
                 if (Cookie::get('login') == 'true') {
-                    $this->common = new Common();
-                    $nav = ['<i class="fa fa-dashboard"></i> Dashboard']; 
-                    $this->breadcrumb = $this->common->generate_breadcrumbs($nav);
+                    $common = new Common();
+                    $agent  = new Agent();
+                    $nav = ['<i class="fa fa-dashboard"></i> Dashboard'];
+
+                    if ($agent->isMobile()) {
+                        $this->mobile = true;
+                    } else {
+                        $this->mobile = false;
+                    }
+                    $this->breadcrumb = $common->generate_breadcrumbs($nav);
                     return $next($request);
                 } else {
                     return redirect('login');
@@ -40,6 +48,7 @@ class DashboardController extends Controller
         $data['title']  = $this->title;
         $data['link'] = $this->link;
         $data['api'] = url($this->api);
+        $data['mobile'] = $this->mobile;
         return View::make('dashboard', $data);
     }
 }

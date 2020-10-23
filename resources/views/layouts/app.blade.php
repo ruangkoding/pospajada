@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Point Of Sale | {!! $title !!}</title>
     <link href="{!! asset(mix('css/app.css')) !!}" rel="stylesheet">
-    @laravelPWA
+    <link rel="manifest" href="{!! asset('manifest.json') !!}" />
 </head>
 <body class="hold-transition sidebar-mini sidebar-expand">
     <div class="wrapper">

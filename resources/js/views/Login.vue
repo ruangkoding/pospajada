@@ -1,21 +1,34 @@
 <template>
     <div>
-        <loading :opacity="100" :active.sync="isLoading" :can-cancel="false" :is-full-page="false"></loading>
+        <loading :opacity="100" :active.sync="isLoading" :can-cancel="false" :is-full-page="false" />
         <div class="login-logo">
             <img src="img/logo.png" width="100%;">
         </div>
         <transition name="fade">
             <form v-on:submit.prevent="onSubmit" method="post">
                 <div class="input-group mb-3">
-                    <input type="text" v-model="userlogin.username" class="form-control" placeholder="Username" required>
+                    <input type="text" 
+                        v-model="userlogin.username"
+                        class="form-control"
+                        placeholder="Username" 
+                        required>
                     <div class="input-group-append">
-                        <div class="input-group-text"><span class="fa fa-user"></span></div>
+                        <div class="input-group-text">
+                            <span class="fa fa-user"></span>
+                        </div>
                     </div>
                 </div>
                 <div class="input-group mb-3">
-                    <input type="password" v-model="userlogin.password" class="form-control" placeholder="Password" required>
+                    <input 
+                        type="password" 
+                        v-model="userlogin.password"
+                        class="form-control"
+                        placeholder="Password" 
+                        required>
                     <div class="input-group-append">
-                        <div class="input-group-text"><span class="fa fa-lock"></span></div>
+                        <div class="input-group-text">
+                            <span class="fa fa-lock"></span>
+                        </div>
                     </div>
                 </div>
                 <div class="row">

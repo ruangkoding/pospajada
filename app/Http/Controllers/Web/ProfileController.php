@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\View;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Libraries\Access;
+use App\Libraries\Common;
+use Jenssegers\Agent\Agent;
 
 /**
  * @author rikyhsb
@@ -15,18 +18,35 @@ use App\Models\User;
  */
 class ProfileController extends Controller
 {
-    public $title = 'Ubah Password';
-    public $link = 'profile';
-    protected $api = 'api/profile';
+    public $title   = 'Ganti Password';
+    public $link    = 'profile';
+    protected $api  = 'api/profile';
 
     public function __construct()
     {
         $this->middleware(
             function ($request, Closure $next) {
                 if (Cookie::get('login') == true) {
+                    $access = new Access();
+                    $agent  = new Agent();
+                    $common = new Common();
+
+                    $nav = [
+                        '<a href="' . url('dashboard') . '"><i class="fa fa-dashboard"></i> Dashboard</a>',
+                        '<i class="fa fa-lock"></i> ' . $this->title
+                    ];
+
+                    if ($agent->isMobile()) {
+                        $this->mobile = true;
+                    } else {
+                        $this->mobile = false;
+                    }
+
+                    $this->access = $access->generateAccess(Cookie::get('level'));
+                    $this->breadcrumb = $common->generate_breadcrumbs($nav);
                     return $next($request);
                 } else {
-                    return redirect('admin');
+                return redirect('login');
                 }
             }
         );
@@ -36,15 +56,10 @@ class ProfileController extends Controller
      * @param Request $request
      * @return \Illuminate\Contracts\View\View
      */
-    public function index(Request $request) {
-        $breadcrumb = [];
-        $breadcrumb[0] = '<a href="' . url('admin/dashboard') . '"><i class="fa fa-dashboard"></i> Dashboard</a>';
-        $breadcrumb[1] = '<i class="fa fa-user"></i> '. $this->title;
-
+    public function index(Request $request) { 
         $user  = User::find(Cookie::get('id'));
-
         $data = [];
-        $data['breadcrumb'] = $breadcrumb;
+        $data['breadcrumb'] = $this->breadcrumb;
         $data['title']  = $this->title;
         $data['link'] = $this->link;
         $data['api'] = url($this->api.'?id='.$user->id);

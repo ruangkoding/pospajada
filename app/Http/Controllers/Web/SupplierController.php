@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Supplier;
 use App\Libraries\Access;
 use App\Libraries\Common;
+use Jenssegers\Agent\Agent;
 use Closure;
 
 class SupplierController extends Controller
@@ -18,8 +19,8 @@ class SupplierController extends Controller
     protected $api   = 'api/supplier';
     protected $route = 'supplier';
     protected $access;
-    protected $common;
     protected $breadcrumb;
+    protected $mobile;
 
     public function __construct()
     {
@@ -27,13 +28,22 @@ class SupplierController extends Controller
             function ($request, Closure $next) {
                 if (Cookie::get('login') == true) {
                     $access = new Access();
-                    $this->common = new Common();
-                    $this->access = $access->generateAccess(Cookie::get('level'));
+                    $agent  = new Agent();
+                    $common = new Common();
+
                     $nav = [
                         '<a href="' . url('dashboard') . '"><i class="fa fa-dashboard"></i> Dashboard</a>',
                         '<i class="fa fa-user"></i> ' . $this->title
-                    ]; 
-                    $this->breadcrumb = $this->common->generate_breadcrumbs($nav);
+                    ];
+
+                    if ($agent->isMobile()) {
+                        $this->mobile = true;
+                    } else {
+                        $this->mobile = false;
+                    }
+
+                    $this->access = $access->generateAccess(Cookie::get('level'));
+                    $this->breadcrumb = $common->generate_breadcrumbs($nav);
                     return $next($request);
                 } else {
                     return redirect('login');
@@ -51,6 +61,7 @@ class SupplierController extends Controller
         $data['api'] = url($this->api);
         $data['route'] = url($this->route);
         $data['access'] = $this->access;
+        $data['mobile'] = $this->mobile;
         return View::make('supplier.index', $data);
     }
 
@@ -63,6 +74,7 @@ class SupplierController extends Controller
         $data['api'] = url($this->api);
         $data['act'] = 'create';
         $data['route'] = url($this->route);
+        $data['mobile'] = $this->mobile;
         return View::make('supplier.form', $data);
     }
 
@@ -77,6 +89,7 @@ class SupplierController extends Controller
         $data['api'] = url($this->api . '?id=' . $supplier->id);
         $data['act'] = 'edit';
         $data['route'] = url($this->route);
+        $data['mobile'] = $this->mobile;
         return View::make('supplier.form', $data);
     }
 }

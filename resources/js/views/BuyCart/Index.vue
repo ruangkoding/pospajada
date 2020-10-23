@@ -4,10 +4,18 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-header">
-                        <div class="pull-right">
-                            <a 
-                                v-if="access.write === 1" 
-                                :href="route + '/create'" 
+                        <div v-if="mobile === true">
+                            <a
+                                v-if="access.write === 1"
+                                :href="route + '/create'"
+                                class="btn btn-block btn-success mb-2">
+                                <i class="fa fa-plus"></i> Tambah Data
+                            </a>
+                        </div>
+                        <div class="pull-right" v-else>
+                            <a
+                                v-if="access.write === 1"
+                                :href="route + '/create'"
                                 class="btn btn-success mb-2">
                                 <i class="fa fa-plus"></i> Tambah Data
                             </a>
@@ -22,9 +30,9 @@
                                     <thead>
                                         <tr>
                                             <th style="width:30%;text-align:center;">Barang</th>
-                                            <th style="width:10%;text-align:center;">Harga (Rp)</th>
+                                            <th style="width:10%;text-align:center;">Harga</th>
                                             <th style="width:5%;text-align:center;">Jumlah</th>
-                                            <th style="width:10%;text-align:center;">Subtotal (Rp)</th>
+                                            <th style="width:10%;text-align:center;">Subtotal</th>
                                             <th style="width:10%;text-align:center;">Action</th>
                                         </tr>
                                     </thead>
@@ -63,13 +71,23 @@
                         </transition>
                         <div v-if="showTable == true">
                             <a 
+                                v-if="mobile == true"
+                                href="#" 
+                                @click="toggleCheckoutModal" 
+                                class="btn btn-block btn-warning">
+                                <i class="fa fa-shopping-cart"></i> Check Out
+                            </a>
+                            <a 
+                                v-else
                                 href="#" 
                                 @click="toggleCheckoutModal" 
                                 class="btn btn-warning">
                                 <i class="fa fa-shopping-cart"></i> Check Out
                             </a>
                         </div>
-                        <v-delete :element="'delete_modal'" :id="id" @delete="deleteData"></v-delete>
+
+                        <v-delete :element="'delete_modal'" :id="id" @delete="deleteData" />
+
                         <div class="modal fade" id="checkout_modal" tabindex="-1" role="dialog">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
@@ -149,7 +167,24 @@
                                                         v-model="totalHarga" />
                                                 </div>
                                             </div>
-                                            <div class="row">
+                                            <div class="row" v-if="mobile == true">
+                                                <div class="form-group col-md-12">
+                                                    <button 
+                                                        type="button"
+                                                        class="btn btn-block btn-success"
+                                                        @click.prevent="checkOutCart()">
+                                                        <i class="fa fa-shopping-cart"></i>
+                                                        Selesaikan Transaksi
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        class="btn btn-block btn-danger"
+                                                        data-dismiss="modal"><i
+                                                        class="fa fa-times"></i> Batal
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="row" v-else>
                                                 <div class="form-group col-md-12">
                                                     <button 
                                                         type="button"
@@ -220,7 +255,7 @@
                 }
             }
         },
-        props: ['supplier', 'paymentmethod', 'api', 'route', 'access'],
+        props: ['supplier', 'paymentmethod', 'api', 'route', 'access', 'mobile'],
         methods: {
             calcChanges() {
                 if (this.checkout.paytotal > 0) {

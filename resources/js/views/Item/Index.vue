@@ -4,11 +4,25 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-header">
-                        <div class="pull-right">
+                        <div v-if="mobile === true">
+                            <a
+                                v-if="access.write === 1"
+                                :href="route + '/create'"
+                                class="btn btn-block btn-success mb-2">
+                                <i class="fa fa-plus"></i> Tambah Data
+                            </a>
                             <button
                                 type="button"
                                 v-on:click.prevent="toggle"
-                                class="btn btn-info mb-2">
+                                class="btn btn-block btn-info mb-2">
+                                <i class="fa fa-search"></i> Form Pencarian
+                            </button>
+                        </div>
+                        <div class="pull-right" v-else>
+                            <button
+                                type="button"
+                                v-on:click.prevent="toggle"
+                                class="btn btn-block btn-info mb-2">
                                 <i class="fa fa-search"></i> Form Pencarian
                             </button>
                             <a
@@ -18,7 +32,50 @@
                                 <i class="fa fa-plus"></i> Tambah Data
                             </a>
                         </div>
-                        <transition name="fade">
+                        <transition name="fade" v-if="mobile === true">
+                            <div class="card" style="margin-top:20px;" v-show="showForm">
+                                <div class="card-body table-responsive">
+                                    <form v-on:submit.prevent="fetchData()">
+                                        <div class="row">
+                                            <div class="form-group col-md-4">
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    v-model="search.q"
+                                                    placeholder="Kode Barang / Nama Barang">
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <select v-model="search.category" class="form-control">
+                                                    <option value="">Pilih Jenis Barang</option>
+                                                    <option
+                                                        v-for="val in this.category_data"
+                                                        :value="val.id"
+                                                        :key="val.id">
+                                                        {{ val.category_name }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="input-group col-md-4">
+                                                <button
+                                                    type="submit"
+                                                    class="btn btn-block btn-success mr-sm-2">
+                                                    <i class="fa fa-search"></i> Cari Data
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    v-on:click.prevent="clear"
+                                                    class="btn btn-block btn-info">
+                                                    <i class="fa fa-refresh"></i> Reset
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </transition>
+                        <transition name="fade" v-else>
                             <div class="card" style="margin-top:50px;" v-show="showForm">
                                 <div class="card-body table-responsive">
                                     <form v-on:submit.prevent="fetchData()">
@@ -29,14 +86,28 @@
                                             <div class="form-group col-md-4">
                                                 <select v-model="search.category" class="form-control">
                                                     <option value="">Pilih Jenis Barang</option>
-                                                    <option v-for="val in this.category_data" :value="val.id" :key="val.id">{{ val.category_name }}</option>
+                                                    <option 
+                                                        v-for="val in this.category_data" 
+                                                        :value="val.id" 
+                                                        :key="val.id">
+                                                        {{ val.category_name }}
+                                                    </option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="input-group col-md-4">
-                                                <button type="submit" class="btn btn-success mr-sm-2"><i class="fa fa-search"></i> Cari Data</button>
-                                                <button type="button" v-on:click.prevent="clear" class="btn btn-info"><i class="fa fa-refresh"></i> Reset</button>
+                                                <button 
+                                                    type="submit" 
+                                                    class="btn btn-success mr-sm-2">
+                                                    <i class="fa fa-search"></i> Cari Data
+                                                </button>
+                                                <button 
+                                                    type="button" 
+                                                    v-on:click.prevent="clear" 
+                                                    class="btn btn-info">
+                                                    <i class="fa fa-refresh"></i> Reset
+                                                </button>
                                             </div>
                                         </div>
                                     </form>
@@ -47,7 +118,64 @@
                     <div class="card-body">
                         <v-alert :alert="alert"></v-alert>
                         <loading :opacity="100" :active.sync="isLoading" :can-cancel="false" :is-full-page="false"></loading>
-                        <transition name="fade">
+                        <transition name="fade" v-if="mobile === true">
+                            <div v-if="showTable === true">
+                                <div class="card" v-for="v in item" :key="v.id">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ v.item_name }}</h5>
+                                        <br>
+                                        <table class="table table-striped">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="width:5%;">Kode</td>
+                                                    <td style="width:2%;">:</td>
+                                                    <td style="width:50%;">{{ v.item_code }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width:5%;">Jenis</td>
+                                                    <td style="width:2%;">:</td>
+                                                    <td style="width:50%;">{{ v.category.category_name }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Stok</td>
+                                                    <td>:</td>
+                                                    <td>{{ v.stock }} {{ v.unit.unit_name }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Harga</td>
+                                                    <td>:</td>
+                                                    <td>{{ v.price | rupiah }}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <br>
+                                        <a
+                                            v-if="(access.update === 1)"
+                                            :href="route + '/edit?id=' + v.id"
+                                            class="btn btn-block btn-sm btn-warning mr-sm-1">
+                                            <i class="fa fa-wrench"></i> Ubah
+                                        </a>
+                                        <button
+                                            v-else
+                                            class="btn btn-block btn-sm btn-warning disabled mr-sm-1">
+                                            <i class="fa fa-wrench"></i> Ubah
+                                        </button>
+                                        <a
+                                            v-if="(access.delete === 1)"
+                                            href="#" @click="toggleModal(v.id)"
+                                            class="btn btn-block btn-sm btn-danger">
+                                            <i class="fa fa-trash-o"></i> Hapus
+                                        </a>
+                                        <button
+                                            v-else
+                                            class="btn btn-block btn-sm btn-danger disabled">
+                                            <i class="fa fa-trash-o"></i> Hapus
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </transition>
+                        <transition name="fade" v-else>
                             <div class="table-responsive">
                                 <table class="table table-hover table-striped table-bordered" v-if="showTable == true">
                                     <thead>
@@ -144,7 +272,7 @@ export default {
             id:''
         }
     },
-    props: ['category_data','api','route','access'],
+    props: ['category_data','api','route','access', 'mobile'],
     methods: {
         toggle() {
             this.showForm = !this.showForm

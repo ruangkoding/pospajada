@@ -12,6 +12,7 @@ use App\Models\BuyCart;
 use App\Models\PaymentMethod;
 use App\Libraries\Access;
 use App\Libraries\Common;
+use Jenssegers\Agent\Agent;
 use Closure;
 
 class SellCartController extends Controller
@@ -22,7 +23,7 @@ class SellCartController extends Controller
     protected $route = 'sellcart';
     protected $access;
     protected $breadcrumb;
-    protected $common;
+    protected $mobile;
 
     public function __construct()
     {
@@ -30,13 +31,23 @@ class SellCartController extends Controller
             function ($request, Closure $next) {
                 if (Cookie::get('login') == true) {
                     $access = new Access();
-                    $this->common = new Common();
-                    $this->access = $access->generateAccess(Cookie::get('level'));
+                    $common = new Common();
+                    $agent  = new Agent();
+
                     $nav = [
                         '<a href="' . url('dashboard') . '"><i class="fa fa-dashboard"></i> Dashboard</a>',
                         '<i class="fa fa-shopping-bag"></i> ' . $this->title
                     ];
-                    $this->breadcrumb = $this->common->generate_breadcrumbs($nav);
+
+                    if ($agent->isMobile()) {
+                        $this->mobile = true;
+                    } else {
+                        $this->mobile = false;
+                    }
+
+
+                    $this->access = $access->generateAccess(Cookie::get('level'));
+                    $this->breadcrumb = $common->generate_breadcrumbs($nav);
                     return $next($request);
                 } else {
                     return redirect('login');
@@ -58,6 +69,7 @@ class SellCartController extends Controller
         $data['access'] = $this->access;
         $data['customer'] = $customer;
         $data['paymentmethod'] = $paymentmethod;
+        $data['mobile'] = $this->mobile;
         return View::make('sellcart.index', $data);
     }
 
@@ -71,6 +83,7 @@ class SellCartController extends Controller
         $data['api'] = url($this->api);
         $data['act'] = 'create';
         $data['route'] = url($this->route);
+        $data['mobile'] = $this->mobile;
         $data['item'] = $item;
         return View::make('sellcart.form', $data);
     }
