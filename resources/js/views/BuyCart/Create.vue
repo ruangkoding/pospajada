@@ -104,7 +104,8 @@
                     duplicate: false,
                     validate:false
                 },
-                isLoading: false
+                isLoading: false,
+                userId: ''
             }
         },
         props: ['api', 'route', 'item', 'mobile'],
@@ -137,7 +138,7 @@
                 let validasi = this.validate();
                 if (validasi === true) {
                     this.isLoading = true;
-                    service.postData(this.api, this.cart)
+                    service.postData(this.api + '?user=' + this.userId, this.cart)
                     .then(result => {
                         this.response(result);
                     }).catch(error => {
@@ -204,6 +205,7 @@
         },
         mounted() {
             this.isLoading = false;
+            this.userId = this.$cookies.get('id');
         }
     };
 </script>

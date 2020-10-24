@@ -23,7 +23,8 @@ class BuyOrderController extends Controller
     {
         try {
             $_query = isset($request['q']) ? $request['q'] : '';
-            $order = BuyOrder::searchInvoice($_query)->with('supplier', 'paymentmethod')->orderBy('id', 'DESC')->paginate(10);
+            $_user  = isset($request['user']) ? $request['user'] : '';
+            $order = BuyOrder::searchUser($_user)->searchInvoice($_query)->with('supplier', 'paymentmethod')->orderBy('id', 'DESC')->paginate(10);
             return response()->json($order, 200);
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);

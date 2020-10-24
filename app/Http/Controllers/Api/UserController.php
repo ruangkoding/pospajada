@@ -21,10 +21,8 @@ class UserController extends Controller
         try {
             $_query = isset($request['q']) ? $request['q'] : '';
             $_active = isset($request['active']) ?  $request['active'] : '';
-            $_level = isset($request['level']) ?  $request['level'] : '';
             $user = User::searchNotAdmin()
                         ->searchUser($_query)
-                        ->searchLevel($_level)
                         ->searchActive($_active)
                         ->orderBy('id', 'DESC')
                         ->paginate(10);
@@ -41,7 +39,7 @@ class UserController extends Controller
             $user = new User();
             $user->username = $request->input('username');
             $user->password = md5('sosroretno');
-            $user->level = $request->input('level');
+            $user->level = 2;
             $user->active = $request->input('active');
             $user->created_at = date('Y-m-d H:i:s');
             if ($user->save()) {
@@ -63,7 +61,6 @@ class UserController extends Controller
     {
         $user = User::find($request['id']);
         $user->username = $request->input('username');
-        $user->level = $request->input('level');
         $user->active = $request->input('active');
         $user->updated_at = date('Y-m-d H:i:s');
         if ($user->save()) {

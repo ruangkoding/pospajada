@@ -92,7 +92,7 @@
                     <a
                         v-else
                         href="#"
-                        class="btn bbtn-success"
+                        class="btn btn-success"
                         @click="cetakInvoice(invoice.id)"
                     >
                         <i class="fa fa-print"></i> Cetak Nota

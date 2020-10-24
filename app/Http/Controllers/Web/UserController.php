@@ -6,11 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\View;
 use App\Http\Controllers\Controller;
-use App\Models\Pegawai;
-use App\Models\Level;
 use App\Models\User;
 use App\Libraries\Access;
 use App\Libraries\Common;
+use Jenssegers\Agent\Agent;
 use Closure;
 
 class UserController extends Controller
@@ -20,8 +19,8 @@ class UserController extends Controller
     protected $api   = 'api/user';
     protected $route = 'user';
     protected $access;
-    protected $common;
-    protected $_nip;
+    protected $breadcrumb;
+    protected $mobile;
 
     public function __construct()
     {
@@ -29,8 +28,22 @@ class UserController extends Controller
             function ($request, Closure $next) {
                 if (Cookie::get('login') == true) {
                     $access = new Access();
+                    $agent  = new Agent();
+                    $common = new Common();
+
+                    $nav = [
+                        '<a href="' . url('dashboard') . '"><i class="fa fa-dashboard"></i> Dashboard</a>',
+                        '<i class="fa fa-user"></i> ' . $this->title
+                    ];
+
+                    if ($agent->isMobile()) {
+                        $this->mobile = true;
+                    } else {
+                        $this->mobile = false;
+                    }
+
                     $this->access = $access->generateAccess(Cookie::get('level'));
-                    $this->_nip = Cookie::get('nip');
+                    $this->breadcrumb = $common->generate_breadcrumbs($nav);
                     return $next($request);
                 } else {
                     return redirect('login');
@@ -41,68 +54,43 @@ class UserController extends Controller
 
     public function index()
     {
-        $breadcrumb = [];
-        $breadcrumb[0] = '<a href="' . url('dashboard') . '"><i class="fa fa-dashboard"></i> Dashboard</a>';
-        $breadcrumb[1] = '<i class="fa fa-user"></i> ' . $this->title;
-
-        $level = Level::all();
-
         $data = [];
-        $data['breadcrumb'] = $breadcrumb;
+        $data['breadcrumb'] = $this->breadcrumb;
         $data['title']  = $this->title;
         $data['link'] = $this->link;
         $data['api'] = url($this->api);
         $data['route'] = url($this->route);
         $data['access'] = $this->access;
-        $data['level'] = $level;
+        $data['mobile'] = $this->mobile;
         return View::make('user.index', $data);
     }
 
     public function create()
     {
-        $breadcrumb = [];
-        $breadcrumb[0] = '<a href="' . url('dashboard') . '"><i class="fa fa-dashboard"></i> Dashboard</a>';
-        $breadcrumb[1] = '<a href="' . url($this->route) . '"><i class="fa fa-user"></i> ' . $this->title . '</a>';
-        $breadcrumb[2] = '<i class="fa fa-plus"></i> Tambah Data';
-
-        $pegawai = Pegawai::all();
-        $level = Level::all();
-
         $data = [];
         $data['title']  = $this->title;
         $data['link'] = $this->link;
-        $data['breadcrumb'] = $breadcrumb;
-        $data['api'] = url($this->api.'?nip=' . $this->_nip);
+        $data['breadcrumb'] = $this->breadcrumb;
+        $data['api'] = url($this->api);
         $data['act'] = 'create';
-        $data['pegawai'] = $pegawai;
-        $data['level'] = $level;
         $data['route'] = url($this->route);
+        $data['mobile'] = $this->mobile;
         return View::make('user.form', $data);
     }
 
     public function edit(Request $request)
     {
-        $breadcrumb = [];
-        $breadcrumb[0] = '<a href="' . url('dashboard') . '"><i class="fa fa-dashboard"></i> Dashboard</a>';
-        $breadcrumb[1] = '<a href="' . url($this->route) . '"><i class="fa fa-user"></i> ' . $this->title . '</a>';
-        $breadcrumb[2] = '<i class="fa fa-wrench"></i> Ubah Data';
-
         $user = User::find($request['id']);
-
-        $pegawai = Pegawai::all();
-        $level = Level::all();
-
         $data = [];
         $data['title']  = $this->title;
         $data['link'] = $this->link;
         $data['user'] = $user;
-        $data['breadcrumb'] = $breadcrumb;
-        $data['api'] = url($this->api . '?nip='.$this->_nip.'&id=' . $user->id);
-        $data['reset_password'] = url($this->api . '/resetpassword?nip='.$this->_nip.'&id=' . $user->id);
+        $data['breadcrumb'] = $this->breadcrumb;
+        $data['api'] = url($this->api . '?id=' . $user->id);
+        $data['reset_password'] = url($this->api . '/resetpassword?id=' . $user->id);
         $data['act'] = 'edit';
-        $data['pegawai'] = $pegawai;
-        $data['level'] = $level;
         $data['route'] = url($this->route);
+        $data['mobile'] = $this->mobile;
         return View::make('user.form', $data);
     }
 }

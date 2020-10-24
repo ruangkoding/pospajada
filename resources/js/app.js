@@ -171,6 +171,9 @@ Vue.component('buyorder-detail', require('./views/BuyOrder/Detail.vue'));
 Vue.component('sellorder-index', require('./views/SellOrder/Index.vue'));
 Vue.component('sellorder-detail', require('./views/SellOrder/Detail.vue'));
 
+Vue.component('user-index', require('./views/User/Index.vue'));
+Vue.component('user-create', require('./views/User/Create.vue'));
+
 Vue.component('report', require('./views/Report.vue'));
 Vue.component('log-index', require('./views/Log.vue'));
 

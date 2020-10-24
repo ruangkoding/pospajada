@@ -104,7 +104,8 @@ export default {
             isLoading: false,
             showForm: false,
             showTable: false,
-            id:''
+            id:'',
+            userId: ''
         }
     },
     props: ['api','route','access'],
@@ -126,7 +127,7 @@ export default {
         },
         fetchData() {
             let query  = this.generateParams();
-            service.fetchData(this.api + '?'+ query + '&page='+ this.pagination.page)
+            service.fetchData(this.api + '?user=' + this.userId + '&'+ query + '&page='+ this.pagination.page)
             .then(response => {
                 this.renderData(response);
                 this.isLoading = false;
@@ -160,6 +161,7 @@ export default {
         this.isLoading = true;
     },
     mounted() {
+        this.userId = this.$cookies.get('id');
         this.fetchData();
     }
 };

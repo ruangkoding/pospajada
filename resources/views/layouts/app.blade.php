@@ -8,7 +8,7 @@
     <link href="{!! asset(mix('css/app.css')) !!}" rel="stylesheet">
     <link rel="manifest" href="{!! asset('manifest.json') !!}" />
 </head>
-<body class="hold-transition sidebar-mini sidebar-expand">
+<body class="hold-transition">
     <div class="wrapper">
         @include('layouts.topmenu')
         @include('layouts.sidebar')

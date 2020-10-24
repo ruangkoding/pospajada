@@ -92,84 +92,99 @@
                         </li>
                     </ul>
                 </li>
-                <li 
-                    @if (in_array($link, ['category','item'])) 
-                        class="nav-item has-treeview menu-open" 
-                    @else
-                        class="nav-item has-treeview" 
-                    @endif
-                >
-                    <a class="nav-link" href="#"><i class="nav-icon fa fa-dropbox"></i>
-                        <p>Data Katalog <i class="fa fa-angle-left right"></i></p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a 
-                                @if($link=='category') 
-                                    class="nav-link active" 
-                                @else 
-                                    class="nav-link" 
-                                @endif
-                                href="{!! url('category') !!}"
-                            >
-                                <i class="nav-icon fa fa-circle-o"></i>
-                                <p>Jenis Barang</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a 
-                                @if($link=='item') 
-                                    class="nav-link active" 
-                                @else 
-                                    class="nav-link" 
-                                @endif
-                                href="{!! url('item') !!}"
-                            >
-                                <i class="nav-icon fa fa-circle-o"></i>
-                                <p>Barang</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li 
-                    @if (in_array($link, ['supplier','customer'])) 
-                        class="nav-item has-treeview menu-open" 
-                    @else
-                        class="nav-item has-treeview" 
-                    @endif
-                >
-                    <a class="nav-link" href="#"><i class="nav-icon fa fa-database"></i>
-                        <p>Data Master <i class="fa fa-angle-left right"></i></p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a 
-                                @if($link=='supplier') 
-                                    class="nav-link active" 
-                                @else 
-                                    class="nav-link" 
-                                @endif
-                                href="{!! url('supplier') !!}"
-                            >
-                                <i class="nav-icon fa fa-circle-o"></i>
-                                <p>Supplier</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a 
-                                @if($link=='customer') 
-                                    class="nav-link active" 
-                                @else 
-                                    class="nav-link" 
-                                @endif
-                                href="{!! url('customer') !!}"
-                            >
-                                <i class="nav-icon fa fa-circle-o"></i>
-                                <p>Customer</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+                @if(Cookie::get('level') == 1)
+                    <li 
+                        @if (in_array($link, ['category','item'])) 
+                            class="nav-item has-treeview menu-open" 
+                        @else
+                            class="nav-item has-treeview" 
+                        @endif
+                    >
+                        <a class="nav-link" href="#"><i class="nav-icon fa fa-dropbox"></i>
+                            <p>Data Katalog <i class="fa fa-angle-left right"></i></p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a 
+                                    @if($link=='category') 
+                                        class="nav-link active" 
+                                    @else 
+                                        class="nav-link" 
+                                    @endif
+                                    href="{!! url('category') !!}"
+                                >
+                                    <i class="nav-icon fa fa-circle-o"></i>
+                                    <p>Jenis Barang</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a 
+                                    @if($link=='item') 
+                                        class="nav-link active" 
+                                    @else 
+                                        class="nav-link" 
+                                    @endif
+                                    href="{!! url('item') !!}"
+                                >
+                                    <i class="nav-icon fa fa-circle-o"></i>
+                                    <p>Barang</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li 
+                        @if (in_array($link, ['supplier','customer'])) 
+                            class="nav-item has-treeview menu-open" 
+                        @else
+                            class="nav-item has-treeview" 
+                        @endif
+                    >
+                        <a class="nav-link" href="#"><i class="nav-icon fa fa-database"></i>
+                            <p>Data Master <i class="fa fa-angle-left right"></i></p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a 
+                                    @if($link=='supplier') 
+                                        class="nav-link active" 
+                                    @else 
+                                        class="nav-link" 
+                                    @endif
+                                    href="{!! url('supplier') !!}"
+                                >
+                                    <i class="nav-icon fa fa-circle-o"></i>
+                                    <p>Supplier</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a 
+                                    @if($link=='customer') 
+                                        class="nav-link active" 
+                                    @else 
+                                        class="nav-link" 
+                                    @endif
+                                    href="{!! url('customer') !!}"
+                                >
+                                    <i class="nav-icon fa fa-circle-o"></i>
+                                    <p>Customer</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a 
+                                    @if($link=='user') 
+                                        class="nav-link active" 
+                                    @else 
+                                        class="nav-link" 
+                                    @endif
+                                    href="{!! url('user') !!}"
+                                >
+                                    <i class="nav-icon fa fa-circle-o"></i>
+                                    <p>User</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                @endif
                 <li class="nav-item">
                     <a 
                         @if($link=='profile') 

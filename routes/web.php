@@ -24,6 +24,11 @@ Route::get('dashboard', 'Web\DashboardController@index');
 Route::get('profile', 'Web\ProfileController@index');
 Route::get('report', 'Web\ReportController@index');
 
+// user
+Route::get('user', 'Web\UserController@index');
+Route::get('user/create', 'Web\UserController@create');
+Route::get('user/edit', 'Web\UserController@edit');
+
 // category
 Route::get('category', 'Web\CategoryController@index');
 Route::get('category/create', 'Web\CategoryController@create');

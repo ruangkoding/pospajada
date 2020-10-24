@@ -16,13 +16,6 @@ class User extends Model
         }
     }
 
-    public function scopeSearchLevel($query, $level)
-    {
-        if ($level) {
-            return $query->where('level', '=', $level);
-        }
-    }
-
     public function scopeSearchActive($query, $active)
     {
         if ($active) {

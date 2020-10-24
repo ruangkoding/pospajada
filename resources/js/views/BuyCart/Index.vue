@@ -85,9 +85,7 @@
                                 <i class="fa fa-shopping-cart"></i> Check Out
                             </a>
                         </div>
-
                         <v-delete :element="'delete_modal'" :id="id" @delete="deleteData" />
-
                         <div class="modal fade" id="checkout_modal" tabindex="-1" role="dialog">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
@@ -252,7 +250,8 @@
                     format: 'YYYY-MM-DD',
                     useCurrent: false,
                     locale: 'id'
-                }
+                },
+                userId:''
             }
         },
         props: ['supplier', 'paymentmethod', 'api', 'route', 'access', 'mobile'],
@@ -270,7 +269,7 @@
                 $("#checkout_modal").modal('show');
             },
             fetchData() {
-                service.fetchData(this.api)
+                service.fetchData(this.api + '?user=' + this.userId)
                 .then(response => {
                     this.renderData(response);
                     this.isLoading = false;
@@ -328,7 +327,7 @@
                 let validasi = this.validate();
                 if (validasi === true) {
                     this.checkout.total = this.totalHarga;
-                    service.postData(this.api + '/checkout', this.checkout)
+                    service.postData(this.api + '/checkout?user=' + this.userId, this.checkout)
                     .then(response => {
                         if (response.status === 'ok') {
                             $('#checkout_modal').modal('hide');
@@ -386,6 +385,7 @@
             this.isLoading = true;
         },
         mounted() {
+            this.userId = this.$cookies.get('id');
             this.fetchData();
         }
     };
