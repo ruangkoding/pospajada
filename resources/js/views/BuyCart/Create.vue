@@ -81,7 +81,6 @@
         </div>
     </div>
 </template>
-
 <script>
     import service from './../../services.js';
     export default {

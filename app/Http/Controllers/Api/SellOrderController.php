@@ -23,7 +23,12 @@ class SellOrderController extends Controller
     {
         try {
             $_query = isset($request['q']) ? $request['q'] : '';
-            $order = SellOrder::searchInvoice($_query)->with('customer', 'paymentmethod')->orderBy('id', 'DESC')->paginate(10);
+            $_user  = isset($request['user']) ? $request['user'] : '';
+            $order = SellOrder::searchUser($_user)
+                            ->searchInvoice($_query)
+                            ->with('customer', 'paymentmethod')
+                            ->orderBy('id', 'DESC')
+                            ->paginate(10);
             return response()->json($order, 200);
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);

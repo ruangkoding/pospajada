@@ -217,7 +217,8 @@
                     format: 'YYYY-MM-DD',
                     useCurrent: false,
                     locale: 'id'
-                }
+                },
+                userId: ''
             }
         },
         props: ['customer', 'paymentmethod', 'api', 'route', 'access'],
@@ -235,7 +236,7 @@
                 $("#checkout_modal").modal('show');
             },
             fetchData() {
-                service.fetchData(this.api)
+                service.fetchData(this.api  + '?user=' + this.userId)
                 .then(response => {
                     this.renderData(response);
                     this.isLoading = false;
@@ -351,6 +352,7 @@
             this.isLoading = true;
         },
         mounted() {
+            this.userId = this.$cookies.get('id');
             this.fetchData();
         }
     };

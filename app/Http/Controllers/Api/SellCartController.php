@@ -22,7 +22,8 @@ class SellCartController extends Controller
     public function get_data(Request $request)
     {
         try {
-            return response()->json(SellCart::with('item.unit')->orderBy('id', 'DESC')->get(), 200);
+            $_user = isset($request['user']) ? $request['user'] : '';
+            return response()->json(SellCart::where('user_id', $_user)->with('item.unit')->orderBy('id', 'DESC')->get(), 200);
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
@@ -30,10 +31,12 @@ class SellCartController extends Controller
 
     public function post_data(Request $request)
     {
-        $check = SellCart::where('item_id', $request->input('item_id'))->count();
+        $_user = isset($request['user']) ? $request['user'] : '';
+        $check = SellCart::where('item_id', $request->input('item_id'))->where('user_id', $_user)->count();
         if ($check == 0) {
             $cart = new SellCart();
             $cart->item_id = $request->input('item_id');
+            $cart->user_id = $_user;
             $cart->quantity = $request->input('quantity');
             $cart->price = $request->input('price');
             $cart->subtotal = $request->input('subtotal');
@@ -50,7 +53,9 @@ class SellCartController extends Controller
 
     public function post_checkout_data(Request $request)
     {
+        $_user = isset($request['user']) ? $request['user'] : '';
         $order = new SellOrder();
+        $order->user_id = $_user;
         $order->invoice = $request->input('invoice');
         $order->invoice_date = $request->input('invoice_date');
         $order->customer_id = $request->input('customer_id');
