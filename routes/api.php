@@ -15,6 +15,7 @@ Route::get('report', 'Api\ReportController@print_data');
 
 // AJAX request
 Route::get('ajax/item', 'Api\AjaxController@show_price_by_item');
+Route::get('ajax/invoice', 'Api\AjaxController@generate_invoice');
 
 // category
 Route::get('category', 'Api\CategoryController@get_data');

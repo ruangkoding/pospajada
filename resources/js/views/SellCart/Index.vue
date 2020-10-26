@@ -106,6 +106,7 @@
                                                         class="form-control"
                                                         placeholder="Masukkan Nota"
                                                         v-model="checkout.invoice"
+                                                        readonly="readonly"
                                                         :class="{ 'is-invalid': validasi.invoice }">
                                                 </div>
                                             </div>
@@ -294,7 +295,7 @@
                 let validasi = this.validate();
                 if (validasi === true) {
                     this.checkout.total = this.totalHarga;
-                    service.postData(this.api + '/checkout', this.checkout)
+                    service.postData(this.api + '/checkout?user=' + this.userId, this.checkout)
                     .then(response => {
                         if (response.status === 'ok') {
                             $('#checkout_modal').modal('hide');
@@ -310,6 +311,15 @@
                     this.alert_modal.validate = true;
                     setTimeout(() => this.alert_modal.validate = false, 5000);
                 }
+            },
+            getInvoiceNumber() {
+                service.fetchData('./api/ajax/invoice')
+                .then(response => {
+                    this.checkout.invoice = response;
+                }).catch(error => {
+                    this.alert_modal.error = true;
+                    console.log(error);
+                });
             },
             validate() {
                 let condition = 0;
@@ -354,6 +364,7 @@
         mounted() {
             this.userId = this.$cookies.get('id');
             this.fetchData();
+            this.getInvoiceNumber();
         }
     };
 

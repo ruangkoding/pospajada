@@ -38,14 +38,8 @@
                         </div>
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <label>Stok Barang *</label>
-                                <input type="text" class="form-control" placeholder="Masukkan Jumlah Stok" v-model="item.stock" :class="{ 'is-invalid': validasi.stock }">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-md-6">
-                                <label>Harga *</label>
-                                <money class="form-control" placeholder="Masukkan Harga Barang" v-model="item.price" :class="{ 'is-invalid': validasi.price }" />
+                                <label>Stok Barang</label>
+                                <input type="text" class="form-control" placeholder="Masukkan Jumlah Stok" v-model="item.stock">
                             </div>
                         </div>
                         <div class="row">
@@ -83,16 +77,13 @@
                     'unit_id': '',
                     'item_code': '',
                     'item_name': '',
-                    'stock': '',
-                    'price': ''
+                    'stock': ''
                 },
                 validasi: {
                     'category_id': '',
                     'unit_id': '',
                     'item_code': '',
-                    'item_name': '',
-                    'stock': '',
-                    'price': ''
+                    'item_name': ''
                 },
                 alert: {
                     error: false,
@@ -149,7 +140,6 @@
                 this.item.item_code = '';
                 this.item.item_name = '';
                 this.item.stock = '';
-                this.item.price = '';
             },
             validate() {
                 let condition = 0;
@@ -180,20 +170,6 @@
                     condition++;
                 } else {
                     this.validasi.item_name = false;
-                }
-
-                if (this.item.stock.length === 0) {
-                    this.validasi.stock = true;
-                    condition++;
-                } else {
-                    this.validasi.stock = false;
-                }
-
-                if (this.item.price.length === 0) {
-                    this.validasi.price = true;
-                    condition++;
-                } else {
-                    this.validasi.price = false;
                 }
 
                 if (condition > 0) {

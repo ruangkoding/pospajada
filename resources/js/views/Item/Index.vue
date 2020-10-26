@@ -141,11 +141,6 @@
                                                     <td>:</td>
                                                     <td>{{ v.stock }} {{ v.unit.unit_name }}</td>
                                                 </tr>
-                                                <tr>
-                                                    <td>Harga</td>
-                                                    <td>:</td>
-                                                    <td>{{ v.price | rupiah }}</td>
-                                                </tr>
                                             </tbody>
                                         </table>
                                         <br>
@@ -184,7 +179,6 @@
                                             <th style="width:15%; text-align:center;">Nama Barang</th>
                                             <th style="width:5%; text-align:center;">Jenis</th>
                                             <th style="width:5%; text-align:center;">Stok</th>
-                                            <th style="width:5%; text-align:center;">Harga</th>
                                             <th style="width:10%; text-align:center;">Action</th>
                                         </tr>
                                     </thead>
@@ -194,7 +188,6 @@
                                             <td>{{ v.item_name }}</td>
                                             <td>{{ v.category.category_name }}</td>
                                             <td style="text-align:center;">{{ v.stock }} {{ v.unit.unit_name }}</td>
-                                            <td style="text-align:right;">{{ v.price | rupiah }}</td>
                                             <td>
                                                 <div style="text-align: center;">
                                                     <a

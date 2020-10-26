@@ -20,4 +20,10 @@ class AjaxController extends Controller
         }
         return $callback;
     }
+
+    public function generate_invoice(Request $request) 
+    {
+        $now = date('ymd');
+        return 'SR' . $now . rand(1,10);
+    }
 }

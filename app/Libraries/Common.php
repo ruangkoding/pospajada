@@ -136,6 +136,19 @@ class Common
         return $indonesia_date;
     }
 
+     /**
+     * convert mysql date to indonesia date format
+     * @param string $date
+     * @return string
+     */
+    public function generate_indonesia_short_date($date)
+    {
+        $bulan = self::generate_integer_month();
+        $timestamp = strtotime($date);
+        $indonesia_date = date('j', $timestamp) .'/'. date('n', $timestamp) .'/'. date('Y', $timestamp);
+        return $indonesia_date;
+    }
+
     /**
      * convert mysql month to indonesia month format
      * @param string $date

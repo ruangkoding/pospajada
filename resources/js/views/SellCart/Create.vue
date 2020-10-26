@@ -11,7 +11,6 @@
                                 <label>Barang *</label>
                                 <select
                                     v-model="cart.item_id"
-                                    @change="getItemPrice($event)"
                                     class="form-control"
                                     :class="{ 'is-invalid': validasi.item_id }">
                                     <option value="">Pilih Barang</option>
@@ -119,19 +118,6 @@
                 this.alert.save = false;
                 this.alert.duplicate = false;
                 this.alert.validate = false;
-            },
-            getItemPrice(evt) {
-                const id = evt.target.value;
-                let url = '';
-                url = '../api/ajax/item?id='+id;
-                service.fetchData(url)
-                .then(response => {
-                    this.cart.price = response;
-                    this.cart.subtotal = this.cart.price * this.cart.quantity;
-                })
-                .catch(error => {
-                    console.log(error);
-                });
             },
             onSubmit(evt) {
                 evt.preventDefault();

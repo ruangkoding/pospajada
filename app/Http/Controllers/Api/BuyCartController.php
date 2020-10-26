@@ -7,6 +7,7 @@ use App\Libraries\Common;
 use App\Models\BuyCart;
 use App\Models\BuyOrder;
 use App\Models\BuyOrderDetail;
+use App\Models\Item;
 use Illuminate\Http\Request;
 use Exception;
 
@@ -71,7 +72,12 @@ class BuyCartController extends Controller
                 $detail->quantity = $c->quantity;
                 $detail->price = $c->price;
                 $detail->subtotal = $c->subtotal;
-                $detail->save();
+                if($detail->save()) {
+                    $item = Item::find($c->item_id);
+                    $old_stock = $item->stock;
+                    $item->stock = $old_stock + $c->quantity;
+                    $item->save();
+                }
             }
             BuyCart::truncate();
             return response()->json(['status'=>'ok', 'order_id' => $order->id], 200);

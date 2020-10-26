@@ -37,8 +37,7 @@ class ItemController extends Controller
             $item->item_name = $request->input('item_name');
             $item->category_id = $request->input('category_id');
             $item->unit_id = $request->input('unit_id');
-            $item->stock = $request->input('stock');
-            $item->price = $request->input('price');
+            $item->stock = 0;
             $item->created_at = date('Y-m-d H:i:s');
             if ($item->save()) {
                 return response()->json(['status' => 'ok'], 200);
@@ -62,8 +61,6 @@ class ItemController extends Controller
         $item->item_name = $request->input('item_name');
         $item->category_id = $request->input('category_id');
         $item->unit_id = $request->input('unit_id');
-        $item->stock = $request->input('stock');
-        $item->price = $request->input('price');
         $item->updated_at = date('Y-m-d H:i:s');
         if ($item->save()) {
             return response()->json(['status' => 'ok'], 200);

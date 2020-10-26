@@ -22,7 +22,7 @@
                     @endif
                 >
                     <a class="nav-link" href="#"><i class="nav-icon fa fa-shopping-bag"></i>
-                        <p>Data Belanja <i class="fa fa-angle-left right"></i></p>
+                        <p>Belanja <i class="fa fa-angle-left right"></i></p>
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
@@ -61,7 +61,7 @@
                     @endif
                 >
                     <a class="nav-link" href="#"><i class="nav-icon fa fa-file-text"></i>
-                        <p>Data Invoice <i class="fa fa-angle-left right"></i></p>
+                        <p>Invoice <i class="fa fa-angle-left right"></i></p>
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
@@ -101,7 +101,7 @@
                         @endif
                     >
                         <a class="nav-link" href="#"><i class="nav-icon fa fa-dropbox"></i>
-                            <p>Data Katalog <i class="fa fa-angle-left right"></i></p>
+                            <p>Katalog <i class="fa fa-angle-left right"></i></p>
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
@@ -140,7 +140,7 @@
                         @endif
                     >
                         <a class="nav-link" href="#"><i class="nav-icon fa fa-database"></i>
-                            <p>Data Master <i class="fa fa-angle-left right"></i></p>
+                            <p>Master <i class="fa fa-angle-left right"></i></p>
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
