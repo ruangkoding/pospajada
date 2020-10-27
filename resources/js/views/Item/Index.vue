@@ -14,7 +14,7 @@
                             <button
                                 type="button"
                                 v-on:click.prevent="toggle"
-                                class="btn btn-block btn-info mb-2">
+                                class="btn btn-block btn-outline-info mb-2">
                                 <i class="fa fa-search"></i> Form Pencarian
                             </button>
                         </div>
@@ -22,7 +22,7 @@
                             <button
                                 type="button"
                                 v-on:click.prevent="toggle"
-                                class="btn btn-block btn-info mb-2">
+                                class="btn btn-outline-info mb-2">
                                 <i class="fa fa-search"></i> Form Pencarian
                             </button>
                             <a
@@ -66,7 +66,7 @@
                                                 <button
                                                     type="button"
                                                     v-on:click.prevent="clear"
-                                                    class="btn btn-block btn-info">
+                                                    class="btn btn-block btn-outline-info">
                                                     <i class="fa fa-refresh"></i> Reset
                                                 </button>
                                             </div>
@@ -105,7 +105,7 @@
                                                 <button 
                                                     type="button" 
                                                     v-on:click.prevent="clear" 
-                                                    class="btn btn-info">
+                                                    class="btn btn-outline-info">
                                                     <i class="fa fa-refresh"></i> Reset
                                                 </button>
                                             </div>
@@ -179,7 +179,7 @@
                                             <th style="width:15%; text-align:center;">Nama Barang</th>
                                             <th style="width:5%; text-align:center;">Jenis</th>
                                             <th style="width:5%; text-align:center;">Stok</th>
-                                            <th style="width:10%; text-align:center;">Action</th>
+                                            <th style="width:5%; text-align:center;">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>

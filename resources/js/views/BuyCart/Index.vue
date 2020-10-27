@@ -75,14 +75,14 @@
                                 href="#" 
                                 @click="toggleCheckoutModal" 
                                 class="btn btn-block btn-warning">
-                                <i class="fa fa-shopping-cart"></i> Check Out
+                                <i class="fa fa-shopping-cart"></i> Selesaikan Transaksi
                             </a>
                             <a 
                                 v-else
                                 href="#" 
                                 @click="toggleCheckoutModal" 
                                 class="btn btn-warning">
-                                <i class="fa fa-shopping-cart"></i> Check Out
+                                <i class="fa fa-shopping-cart"></i> Selesaikan Transaksi
                             </a>
                         </div>
                         <v-delete :element="'delete_modal'" :id="id" @delete="deleteData" />
@@ -90,7 +90,7 @@
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title">Checkout</h5>
+                                        <h5 class="modal-title">Form Transaksi</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -100,12 +100,12 @@
                                         <form method="POST">
                                             <div class="row">
                                                 <div class="form-group col-md-12">
-                                                    <label>Supplier *</label>
+                                                    <label>Supplier / Penjual *</label>
                                                     <select 
                                                         v-model="checkout.supplier_id" 
                                                         class="form-control" 
                                                         :class="{ 'is-invalid': validasi.supplier_id }">
-                                                        <option value="">Pilih Supplier</option>
+                                                        <option value="">Pilih Supplier / Penjual</option>
                                                         <option 
                                                             v-for="v in this.supplier" 
                                                             :value="v.id" 
@@ -127,12 +127,12 @@
                                             </div>
                                             <div class="row">
                                                 <div class="form-group col-md-12">
-                                                    <label>Tanggal Transaksi *</label>
+                                                    <label>Tanggal Pembelian *</label>
                                                     <date-picker
                                                         v-model="checkout.invoice_date"
                                                         :config="options"
                                                         class="form-control"
-                                                        placeholder="Tanggal Transaksi"
+                                                        placeholder="Tanggal Pembelian"
                                                         autocomplete="off">
                                                     </date-picker>
                                                 </div>
@@ -330,7 +330,7 @@
                     .then(response => {
                         if (response.status === 'ok') {
                             $('#checkout_modal').modal('hide');
-                            alert('PROSES CHECKOUT BERHASIL');
+                            alert('PROSES TRANSAKSI BERHASIL');
                             window.location.href = this.route + './../buyorder/detail?id=' + response.order_id;
                         }
                     }).catch(error => {

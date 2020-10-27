@@ -2,12 +2,6 @@
 
 namespace App\Exports;
 
-use App\Models\Anggaran;
-use App\Models\Kegiatan;
-use App\Models\Belanja;
-use App\Models\Sp2d;
-use App\Models\Pelimpahan;
-use App\Models\Sp2t;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
@@ -15,15 +9,18 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 class AnggaranExport implements FromView, ShouldAutoSize
 {
     protected $dari;
+    protected $sampai;
 
-    function __construct($dari)
+    function __construct($dari, $sampai)
     {
-        $this->dari = explode('-', $dari);
+        $this->dari = $dari;
+        $this->sampai = $sampai;
     }
 
     public function view(): View
     {
         $dari = $this->dari;
-        return view('excel', ['dari' => $dari[1], 'tahun' => $dari[0]]);
+        $sampai = $this->sampai;
+        return view('penjualan', ['dari' => $dari, 'sampai' => $sampai]);
     }
 }

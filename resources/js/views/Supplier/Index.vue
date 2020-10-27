@@ -50,7 +50,7 @@
                                             <button 
                                                 type="button" 
                                                 v-on:click.prevent="clear" 
-                                                class="btn btn-block btn-info">
+                                                class="btn btn-block btn-outline-info">
                                                 <i class="fa fa-refresh"></i> Reset
                                             </button>
                                         </div>
@@ -65,7 +65,7 @@
                                             <button 
                                                 type="button" 
                                                 v-on:click.prevent="clear" 
-                                                class="btn btn-info">
+                                                class="btn btn-outline-info">
                                                 <i class="fa fa-refresh"></i> Reset
                                             </button>
                                         </div>

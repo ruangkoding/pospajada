@@ -38,7 +38,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-">
                 <div class="card">
                     <div class="card-body table-responsive">
                         <loading :opacity="100" :active.sync="isLoading" :can-cancel="false" :is-full-page="false" />

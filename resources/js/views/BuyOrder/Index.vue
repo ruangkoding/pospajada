@@ -8,7 +8,7 @@
                             <button 
                                 type="button" 
                                 v-on:click.prevent="toggle" 
-                                class="btn btn-info mb-2">
+                                class="btn btn-outline-info mb-2">
                                 <i class="fa fa-search"></i> Form Pencarian
                             </button>
                         </div>
@@ -25,7 +25,7 @@
                                             <button type="submit" class="btn btn-success mr-sm-2">
                                                 <i class="fa fa-search"></i> Cari Data
                                             </button>
-                                            <button type="button" v-on:click.prevent="clear" class="btn btn-info">
+                                            <button type="button" v-on:click.prevent="clear" class="btn btn-outline-info">
                                                 <i class="fa fa-refresh"></i> Reset
                                             </button>
                                         </div>

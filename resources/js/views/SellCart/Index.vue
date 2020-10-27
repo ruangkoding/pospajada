@@ -22,9 +22,9 @@
                                     <thead>
                                         <tr>
                                             <th style="width:30%;text-align:center;">Barang</th>
-                                            <th style="width:10%;text-align:center;">Harga (Rp)</th>
+                                            <th style="width:10%;text-align:center;">Harga</th>
                                             <th style="width:5%;text-align:center;">Jumlah</th>
-                                            <th style="width:10%;text-align:center;">Subtotal (Rp)</th>
+                                            <th style="width:10%;text-align:center;">Subtotal</th>
                                             <th style="width:5%;text-align:center;">Action</th>
                                         </tr>
                                     </thead>
@@ -66,7 +66,7 @@
                                 href="#"
                                 @click="toggleCheckoutModal"
                                 class="btn btn-warning">
-                                <i class="fa fa-shopping-cart"></i> Check Out
+                                <i class="fa fa-shopping-cart"></i> Selesaikan Transaksi
                             </a>
                         </div>
                         <v-delete :element="'delete_modal'" :id="id" @delete="deleteData"></v-delete>
@@ -74,7 +74,7 @@
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title">Checkout</h5>
+                                        <h5 class="modal-title">Form Transaksi</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -84,7 +84,7 @@
                                         <form method="POST">
                                             <div class="row">
                                                 <div class="form-group col-md-12">
-                                                    <label>Customer *</label>
+                                                    <label>Customer / Pembeli *</label>
                                                     <select
                                                         v-model="checkout.customer_id"
                                                         class="form-control"
@@ -101,10 +101,10 @@
                                             </div>
                                             <div class="row">
                                                 <div class="form-group col-md-12">
-                                                    <label>Nota *</label>
+                                                    <label>Nota Penjualan *</label>
                                                     <input
                                                         class="form-control"
-                                                        placeholder="Masukkan Nota"
+                                                        placeholder="Masukkan Nota Penjualan"
                                                         v-model="checkout.invoice"
                                                         readonly="readonly"
                                                         :class="{ 'is-invalid': validasi.invoice }">
@@ -112,12 +112,12 @@
                                             </div>
                                             <div class="row">
                                                 <div class="form-group col-md-12">
-                                                    <label>Tanggal Transaksi *</label>
+                                                    <label>Tanggal Penjualan *</label>
                                                     <date-picker
                                                         v-model="checkout.invoice_date"
                                                         :config="options"
                                                         class="form-control"
-                                                        placeholder="Tanggal Transaksi"
+                                                        placeholder="Tanggal Penjualan"
                                                         autocomplete="off">
                                                     </date-picker>
                                                 </div>
@@ -129,9 +129,7 @@
                                                         v-model="checkout.payment_method_id"
                                                         class="form-control"
                                                         :class="{ 'is-invalid': validasi.payment_method_id }">
-                                                        <option value="">
-                                                            Pilih Metode Pembayaran
-                                                        </option>
+                                                        <option value="">Pilih Metode Pembayaran</option>
                                                         <option
                                                             v-for="v in this.paymentmethod"
                                                             :value="v.id"
@@ -299,7 +297,7 @@
                     .then(response => {
                         if (response.status === 'ok') {
                             $('#checkout_modal').modal('hide');
-                            alert('PROSES CHECKOUT BERHASIL');
+                            alert('PROSES TRANSAKSI BERHASIL');
                             window.location.href = this.route + './../sellorder/detail?id=' + response.order_id;
                         }
                     }).catch(error => {

@@ -4,7 +4,7 @@
             <div class="card">
                 <div class="card-body">
                     <v-alert :alert=alert></v-alert>
-                    <loading :opacity="100" :active.sync="isLoading" :can-cancel="false" :is-full-page="false"></loading>
+                    <loading :opacity="100" :active.sync="isLoading" :can-cancel="false" :is-full-page="false" />
                     <form method="POST" v-on:submit.prevent="onSubmit">
                         <div class="row">
                             <div class="form-group col-md-6">
@@ -12,8 +12,7 @@
                                 <select 
                                     v-model="cart.item_id" 
                                     class="form-control" 
-                                    :class="{ 'is-invalid': validasi.item_id }"
-                                >
+                                    :class="{ 'is-invalid': validasi.item_id }">
                                     <option value="">Pilih Barang</option>
                                     <option 
                                         v-for="v in this.item" 
@@ -64,14 +63,30 @@
                         </div>
                         <div class="row" v-if="mobile === true">
                             <div class="form-group col-md-12">
-                                <button type="submit" class="btn btn-block btn-success"><i class="fa fa-save"></i> Simpan Data</button>
-                                <a :href="route" class="btn btn-block btn-outline-danger"><i class="fa fa-arrow-left"></i> Kembali</a>
+                                <button
+                                    type="submit"
+                                    class="btn btn-block btn-success">
+                                    <i class="fa fa-save"></i> Simpan Data
+                                </button>
+                                <a 
+                                    :href="route" 
+                                    class="btn btn-block btn-outline-danger">
+                                    <i class="fa fa-arrow-left"></i> Kembali
+                                </a>
                             </div>
                         </div>
                         <div class="row" v-else>
                             <div class="form-group col-md-12">
-                                <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Simpan Data</button>
-                                <a :href="route" class="btn btn-outline-danger"><i class="fa fa-arrow-left"></i> Kembali</a>
+                                <button 
+                                    type="submit"
+                                    class="btn btn-success">
+                                    <i class="fa fa-save"></i> Simpan Data
+                                </button>
+                                <a 
+                                    :href="route"
+                                    class="btn btn-outline-danger">
+                                    <i class="fa fa-arrow-left"></i> Kembali
+                                </a>
                             </div>
                         </div>
                     </form>
