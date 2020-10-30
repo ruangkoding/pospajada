@@ -3,11 +3,11 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="card">
-                    <div class="card-body table-responsive">
+                    <div class="card-body">
                         <loading :opacity="100" :active.sync="isLoading" :can-cancel="false" :is-full-page="false" />
                         <form method="POST" v-on:submit.prevent="fetchData">
                             <div class="form-row">
-                                <div class="form-group col-4">
+                                <div class="form-group col-lg-4 col-md-4 col-sm-12 col-sm-12">
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">
@@ -24,8 +24,15 @@
                                         </date-picker>
                                     </div>
                                 </div>
-                                <div class="form-group col-4">
+                                <div class="form-group col-lg-4 col-md-4 col-sm-12 col-sm-12">
                                     <button
+                                        v-if="mobile === true"
+                                        type="submit"
+                                        class="btn btn-block btn-success">
+                                        <i class="fa fa-search"></i> Tampikan Data
+                                    </button>
+                                    <button
+                                        v-else
                                         type="submit"
                                         class="btn btn-success">
                                         <i class="fa fa-search"></i> Tampikan Data
@@ -38,9 +45,9 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-">
+            <div class="col-12">
                 <div class="card">
-                    <div class="card-body table-responsive">
+                    <div class="card-body">
                         <loading :opacity="100" :active.sync="isLoading" :can-cancel="false" :is-full-page="false" />
                         <highcharts :options="sell_chart" />
                     </div>
@@ -48,9 +55,9 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-12">
                 <div class="card">
-                    <div class="card-body table-responsive">
+                    <div class="card-body">
                         <loading :opacity="100" :active.sync="isLoading" :can-cancel="false" :is-full-page="false" />
                         <highcharts :options="buy_chart" />
                     </div>
@@ -82,31 +89,26 @@ export default {
                 },
             ],
             options: {
-                format: 'YYYY',
-                viewMode:'years',
+                format: 'YYYY-MM',
+                viewMode:'months',
                 useCurrent: false,
                 locale: 'id'
             }
         }
     },
-    props:['api'],
+    props:['api', 'mobile'],
     components: {
         highcharts: Chart
     },
     created() {
         this.isLoading = true;
-        this.fetchData();
     },
     mounted() {
-        let date = new Date();
-        this.year = date.getFullYear();
+        this.fetchData();
     },
     methods: {
         fetchData() {
-            if (this.periode != '') {
-                this.year = this.periode
-            }
-            service.fetchData(this.api + '?year='+ this.year)
+            service.fetchData(this.api + '?year='+ this.periode)
             .then(
                 response => {
                     this.isLoading = false;
@@ -150,7 +152,8 @@ export default {
                 series: [
                     {
                         name: 'Transaksi Penjualan',
-                        data: sell.data
+                        data: sell.data,
+                        color: '#6f42c1'
                     }
                 ],
                 tooltip: {
@@ -203,7 +206,8 @@ export default {
                 series: [
                     {
                         name: 'Transaksi Pembelian',
-                        data: buy.data
+                        data: buy.data,
+                        color: '#6f42c1'
                     }
                 ],
                 tooltip: {

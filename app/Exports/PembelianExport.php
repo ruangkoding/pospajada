@@ -6,7 +6,7 @@ use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
-class AnggaranExport implements FromView, ShouldAutoSize
+class PembelianExport implements FromView, ShouldAutoSize
 {
     protected $dari;
     protected $sampai;

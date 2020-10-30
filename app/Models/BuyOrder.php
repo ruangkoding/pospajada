@@ -24,10 +24,29 @@ class BuyOrder extends Model
         return $this->belongsTo('App\Models\User', 'user_id');
     }
 
+    public function detail()
+    {
+        return $this->hasMany('App\Models\BuyOrderDetail', 'id', 'buy_order_id');
+    }
+
     public function scopeSearchInvoice($query, $q)
     {
         if ($q) {
             return $query->where('invoice', 'LIKE', '%' . $q . '%');
+        }
+    }
+
+    public function scopeSearchAwalPeriode($query, $start)
+    {
+        if ($start) {
+            return $query->where('invoice_date', '>=', $start);
+        }
+    }
+
+    public function scopeSearchAkhirPeriode($query, $end)
+    {
+        if ($end) {
+            return $query->where('invoice_date', '<=', $end);
         }
     }
 

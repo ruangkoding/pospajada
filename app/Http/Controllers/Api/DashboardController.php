@@ -16,17 +16,30 @@ class DashboardController extends Controller
     {
         try {
             $common = new Common();
-            $year = ($request['year'] != '') ? $request['year'] : date('Y');
-            $buy  = BuyOrder::whereYear('invoice_date', '=', $year)->get();
-            $sell = SellOrder::select('invoice_date', DB::raw('sum(total) as total'))->whereYear('invoice_date', '=', $year)->groupBy('invoice_date')->get();
+            $year = ($request['year'] != '') ? $request['year'] : date('Y-m');
 
-            $buy_chart = ['timestamp' => [], 'data' => []];
+            $d = explode('-', $year);
+
+            $buy  = BuyOrder::select('invoice_date', DB::raw('sum(total) as total'))
+                            ->whereYear('invoice_date', $d[0])
+                            ->whereMonth('invoice_date', $d[1])
+                            ->groupBy('invoice_date')
+                            ->get();
+
+            $sell = SellOrder::select('invoice_date', DB::raw('sum(total) as total'))
+                            ->whereYear('invoice_date', $d[0])
+                            ->whereMonth('invoice_date', $d[1])
+                            ->groupBy('invoice_date')
+                            ->get();
+
+            $buy_chart  = ['timestamp' => [], 'data' => []];
             $sell_chart = ['timestamp' => [], 'data' => []];
 
             foreach ($buy as $b) {
                 array_push($buy_chart['timestamp'], $common->generate_indonesia_short_date($b->invoice_date));
                 array_push($buy_chart['data'], $b->total);
             }
+
             foreach ($sell as $b) {
                 array_push($sell_chart['timestamp'], $common->generate_indonesia_short_date($b->invoice_date));
                 array_push($sell_chart['data'], $b->total);
@@ -34,8 +47,9 @@ class DashboardController extends Controller
 
             return response()->json([
                 'sell_chart' => $sell_chart,
-                'buy_chart' => $buy_chart
+                'buy_chart'  => $buy_chart
             ], 200);
+
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

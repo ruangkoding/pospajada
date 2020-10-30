@@ -2,7 +2,7 @@
 @section('content')
     <div id="app">
         <report
-            :bendahara_data='{!! json_encode($bendahara) !!}'
+            :mobile='{!! json_encode($mobile) !!}'
             :route='{!! json_encode($route) !!}'
             :api='{!! json_encode($api) !!}'>
         </report>

@@ -31,6 +31,20 @@ class SellOrder extends Model
         }
     }
 
+    public function scopeSearchAwalPeriode($query, $start)
+    {
+        if ($start) {
+            return $query->where('invoice_date', '>=', $start);
+        }
+    }
+
+    public function scopeSearchAkhirPeriode($query, $end)
+    {
+        if ($end) {
+            return $query->where('invoice_date', '<=', $end);
+        }
+    }
+
     public function scopeSearchUser($query, $user)
     {
         if ($user != 1) {

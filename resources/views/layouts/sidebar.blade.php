@@ -184,6 +184,19 @@
                             </li>
                         </ul>
                     </li>
+                    <li class="nav-item">
+                        <a 
+                            @if($link=='report') 
+                                class="nav-link active" 
+                            @else 
+                                class="nav-link" 
+                            @endif
+                            href="{!! url('report') !!}"
+                        >
+                            <i class="nav-icon fa fa-file-excel-o"></i>
+                            <p>Laporan Transaksi</p>
+                        </a>
+                    </li>
                 @endif
                 <li class="nav-item">
                     <a 

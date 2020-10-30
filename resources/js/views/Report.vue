@@ -4,14 +4,16 @@
             <div class="card">
                 <div class="card-body">
                     <v-alert :alert=alert></v-alert>
-                    <loading :opacity="100" :active.sync="isLoading" :can-cancel="false" :is-full-page="false"></loading>
+                    <loading :opacity="100" :active.sync="isLoading" :can-cancel="false" :is-full-page="false" />
                     <form method="POST" v-on:submit.prevent="onSubmit">
                         <div class="row">
                             <div class="form-group col-md-4">
-                                <label>Periode *</label>
+                                <label>Dari *</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                        <span class="input-group-text">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
                                     </div>
                                     <date-picker
                                         id="dari"
@@ -19,8 +21,31 @@
                                         v-model="report.dari"
                                         :config="options"
                                         class="form-control"
-                                        placeholder="Periode"
+                                        placeholder="Awal Periode"
                                         :class="{ 'is-invalid': validasi.dari }"
+                                        autocomplete="off">
+                                    </date-picker>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label>Sampai *</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                    </div>
+                                    <date-picker
+                                        id="sampai"
+                                        name="sampai"
+                                        v-model="report.sampai"
+                                        :config="options"
+                                        class="form-control"
+                                        placeholder="Akhir Periode"
+                                        :class="{ 'is-invalid': validasi.sampai }"
                                         autocomplete="off">
                                     </date-picker>
                                 </div>
@@ -32,22 +57,22 @@
                                 <label>Jenis Laporan *</label>
                                 <div class="input-group">
                                     <select v-model="report.jenis" class="form-control">
-                                        <option value="excel" selected>Excel</option>
-                                        <option value="pdf">PDF</option>
+                                        <option value="buy">Pembelian</option>
+                                        <option value="sell">Penjualan</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="row">
+                         <div class="row">
                             <div class="form-group col-md-12">
-                                <button type="submit" class="btn btn-success"><i class="fa fa-file-excel"></i> Cetak Laporan</button>
+                                <b>*) Wajib Diisi</b>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="form-group col-md-12">
-                                <b>*) Wajib Diisi</b>
+                                <button type="submit" class="btn btn-success"><i class="fa fa-print"></i> Cetak Laporan</button>
                             </div>
                         </div>
                     </form>
@@ -70,24 +95,24 @@
                 report: {
                     dari:'',
                     sampai:'',
-                    bendahara:'',
-                    jenis:'excel'
+                    jenis:'buy'
                 },
                 validasi: {
                     'dari': '',
-                    'sampai': ''
+                    'sampai': '',
+                    'jenis': ''
                 },
                 isLoading:false,
                 options: {
-                    format: 'YYYY-MM',
-                    viewMode:'years',
+                    format: 'YYYY-MM-DD',
+                    viewMode:'days',
                     useCurrent: false,
                     locale: 'id',
                     minDate:'2020/01/01'
                 }
             }
         },
-        props: ['api','route', 'bendahara_data'],
+        props: ['api','route', 'mobile'],
         methods: {
             onSubmit (evt) {
                 evt.preventDefault();
@@ -99,7 +124,7 @@
                 let validasi = this.validate();
                 if (validasi === true) {
                     let newWindow = window.open();
-                    newWindow.location = this.api + '?jenis=' + this.report.jenis + '&dari=' + this.report.dari;
+                    newWindow.location = this.api + '?jenis=' + this.report.jenis + '&dari=' + this.report.dari + '&sampai=' + this.report.sampai;
                 } else {
                     this.alert.validate = true;
                     setTimeout(() => this.alert.validate = false, 3000);
@@ -113,6 +138,20 @@
                     condition++;
                 } else {
                     this.validasi.dari = false;
+                }
+
+                if (this.report.sampai.length === 0) {
+                    this.validasi.sampai = true;
+                    condition++;
+                } else {
+                    this.validasi.sampai = false;
+                }
+
+                if (this.report.jenis.length === 0) {
+                    this.validasi.jenis = true;
+                    condition++;
+                } else {
+                    this.validasi.jenis = false;
                 }
 
                 if (condition > 0) {
