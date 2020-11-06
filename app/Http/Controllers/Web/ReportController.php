@@ -29,8 +29,8 @@ class ReportController extends Controller
                     $agent  = new Agent();
 
                     $nav = [
-                        '<a href="' . url('dashboard') . '"><i class="fa fa-dashboard"></i> Dashboard</a>',
-                        '<i class="fa fa-file-excel-o"></i> ' . $this->title
+                        '<a href="' . url('dashboard') . '" style="color:#ffffff;">Beranda</a>',
+                        $this->title
                     ];
 
                     if ($agent->isMobile()) {

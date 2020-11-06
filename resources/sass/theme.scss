@@ -1,0 +1,13 @@
+
+$body-bg: #15202B;
+
+@import "./../../node_modules/@coreui/coreui/scss/coreui";
+@import "./../../node_modules/@coreui/coreui/scss/bootstrap";
+
+.bg-dark {
+    background-color: #192734 !important;
+}
+
+.bg-gray {
+    background-color: #141d26 !important;
+}

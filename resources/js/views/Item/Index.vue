@@ -118,62 +118,10 @@
                     <div class="card-body">
                         <v-alert :alert="alert"></v-alert>
                         <loading :opacity="100" :active.sync="isLoading" :can-cancel="false" :is-full-page="false"></loading>
-                        <transition name="fade" v-if="mobile === true">
-                            <div v-if="showTable === true">
-                                <div class="card" v-for="v in item" :key="v.id">
-                                    <div class="card-body">
-                                        <h5 class="card-title">{{ v.item_name }}</h5>
-                                        <br>
-                                        <table class="table table-striped">
-                                            <tbody>
-                                                <tr>
-                                                    <td style="width:5%;">Kode</td>
-                                                    <td style="width:2%;">:</td>
-                                                    <td style="width:50%;">{{ v.item_code }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="width:5%;">Jenis</td>
-                                                    <td style="width:2%;">:</td>
-                                                    <td style="width:50%;">{{ v.category.category_name }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Stok</td>
-                                                    <td>:</td>
-                                                    <td>{{ v.stock }} {{ v.unit.unit_name }}</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        <br>
-                                        <a
-                                            v-if="(access.update === 1)"
-                                            :href="route + '/edit?id=' + v.id"
-                                            class="btn btn-block btn-sm btn-warning mr-sm-1">
-                                            <i class="fa fa-wrench"></i> Ubah
-                                        </a>
-                                        <button
-                                            v-else
-                                            class="btn btn-block btn-sm btn-warning disabled mr-sm-1">
-                                            <i class="fa fa-wrench"></i> Ubah
-                                        </button>
-                                        <a
-                                            v-if="(access.delete === 1)"
-                                            href="#" @click="toggleModal(v.id)"
-                                            class="btn btn-block btn-sm btn-danger">
-                                            <i class="fa fa-trash-o"></i> Hapus
-                                        </a>
-                                        <button
-                                            v-else
-                                            class="btn btn-block btn-sm btn-danger disabled">
-                                            <i class="fa fa-trash-o"></i> Hapus
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </transition>
-                        <transition name="fade" v-else>
+                        <transition name="fade">
                             <div class="table-responsive">
                                 <table class="table table-hover table-striped table-bordered" v-if="showTable == true">
-                                    <thead>
+                                    <thead class="thead-dark">
                                         <tr>
                                             <th style="width:5%; text-align:center;">Kode Barang</th>
                                             <th style="width:15%; text-align:center;">Nama Barang</th>

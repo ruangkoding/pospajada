@@ -7,33 +7,20 @@
         <transition name="fade">
             <form v-on:submit.prevent="onSubmit" method="post">
                 <div class="input-group mb-3">
-                    <input type="text" 
-                        v-model="userlogin.username"
-                        class="form-control"
-                        placeholder="Username" 
-                        required>
-                    <div class="input-group-append">
-                        <div class="input-group-text">
-                            <span class="fa fa-user"></span>
-                        </div>
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fa fa-user"></i></span>
                     </div>
+                    <input class="form-control" type="text" v-model="userlogin.username" placeholder="Username" required>
                 </div>
-                <div class="input-group mb-3">
-                    <input 
-                        type="password" 
-                        v-model="userlogin.password"
-                        class="form-control"
-                        placeholder="Password" 
-                        required>
-                    <div class="input-group-append">
-                        <div class="input-group-text">
-                            <span class="fa fa-lock"></span>
-                        </div>
+                <div class="input-group mb-4">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fa fa-lock"></i></span>
                     </div>
+                    <input class="form-control" v-model="userlogin.password" type="password" placeholder="Password" required>
                 </div>
                 <div class="row">
                     <div class="col-12">
-                        <button type="submit" class="btn btn-success btn-block"><i class="fa fa-lock"></i> LOGIN</button>
+                        <button class="btn btn-block btn-success px-4" type="submit">Login</button>
                         <div class="text-center" v-if="(login !== '') && (login === 'notfound')" style="margin-top:25px;">
                             <div class="alert alert-danger">Username / Password Salah!</div>
                         </div>
@@ -57,7 +44,7 @@ export default {
     data: function () {
         return {
             userlogin : {
-                nip: "",
+                username: "",
                 password: ""
             },
             login: "",

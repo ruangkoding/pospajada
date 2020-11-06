@@ -9,15 +9,18 @@
     <link href="{!! asset('css/app.css') !!}" rel="stylesheet">
     <link rel="manifest" href="{!! asset('manifest.json') !!}" />
 </head>
-<body class="hold-transition login-page">
-    <div class="login-box" @if ($mobile == true) style="margin-top:40%;" @endif>
-        <div class="card">
-            <div class="card-body login-card-body">
-                <div id="app">
-                    <login 
-                        :api='{!! json_encode($api) !!}' 
-                        :redirect='{!! json_encode($redirect) !!}'>
-                    </login>
+<body class="c-app flex-row align-items-center">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <div class="card-group">
+                    <div class="card p-4">
+                        <div class="card-body">
+                            <div id="app">
+                                <login :api='{!! json_encode($api) !!}' :redirect='{!! json_encode($redirect) !!}'></login>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -6,8 +6,7 @@ use Exception;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Libraries\Common;
-use App\Models\BuyOrder;
-use App\Models\SellOrder;
+use App\Models\PurchaseInvoice;
 use DB;
 
 class DashboardController extends Controller
@@ -20,17 +19,17 @@ class DashboardController extends Controller
 
             $d = explode('-', $year);
 
-            $buy  = BuyOrder::select('invoice_date', DB::raw('sum(total) as total'))
-                            ->whereYear('invoice_date', $d[0])
-                            ->whereMonth('invoice_date', $d[1])
-                            ->groupBy('invoice_date')
-                            ->get();
+            $buy  = PurchaseInvoice::select('invoice_date', DB::raw('sum(total) as total'))
+                                    ->whereYear('invoice_date', $d[0])
+                                    ->whereMonth('invoice_date', $d[1])
+                                    ->groupBy('invoice_date')
+                                    ->get();
 
-            $sell = SellOrder::select('invoice_date', DB::raw('sum(total) as total'))
+            /* $sell = SellOrder::select('invoice_date', DB::raw('sum(total) as total'))
                             ->whereYear('invoice_date', $d[0])
                             ->whereMonth('invoice_date', $d[1])
                             ->groupBy('invoice_date')
-                            ->get();
+                            ->get(); */
 
             $buy_chart  = ['timestamp' => [], 'data' => []];
             $sell_chart = ['timestamp' => [], 'data' => []];
@@ -40,10 +39,10 @@ class DashboardController extends Controller
                 array_push($buy_chart['data'], $b->total);
             }
 
-            foreach ($sell as $b) {
-                array_push($sell_chart['timestamp'], $common->generate_indonesia_short_date($b->invoice_date));
-                array_push($sell_chart['data'], $b->total);
-            }
+            // foreach ($sell as $b) {
+            //     array_push($sell_chart['timestamp'], $common->generate_indonesia_short_date($b->invoice_date));
+            //     array_push($sell_chart['data'], $b->total);
+            // }
 
             return response()->json([
                 'sell_chart' => $sell_chart,

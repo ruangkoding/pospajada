@@ -28,6 +28,8 @@
         "webpack-bundle-analyzer": "^3.8.0"
     },
     "dependencies": {
+        "@coreui/coreui": "^3.3.0",
+        "@coreui/icons": "^2.0.0-beta.5",
         "@fullcalendar/core": "^4.4.2",
         "@fullcalendar/daygrid": "^4.4.2",
         "@fullcalendar/vue": "^4.4.2",
@@ -52,6 +54,7 @@
         "vue-progressbar": "^0.7.5",
         "vue-router": "^3.4.6",
         "vue-select": "^3.10.8",
+        "vue-swal": "^1.0.0",
         "vue-sweetalert2": "^3.0.5",
         "vue-typeahead-bootstrap": "^2.5.1"
     }

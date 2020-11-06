@@ -11,6 +11,7 @@ import accounting from 'accounting';
 import datePicker from 'vue-bootstrap-datetimepicker';
 import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
 import VueTypeaheadBootstrap from 'vue-typeahead-bootstrap';
+import VueSwal from 'vue-swal';
 
 /* if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -30,6 +31,7 @@ Vue.use(money, {
 Vue.use(datePicker);
 Vue.use(accounting);
 Vue.use(VueCookies);
+Vue.use(VueSwal);
 
 // Component Config
 $.extend(true, $.fn.datetimepicker.defaults, {
@@ -159,17 +161,18 @@ Vue.component('customer-index', require('./views/Customer/Index.vue'));
 Vue.component('customer-create', require('./views/Customer/Create.vue'));
 Vue.component('customer-update', require('./views/Customer/Update.vue'));
 
-Vue.component('buycart-index', require('./views/BuyCart/Index.vue'));
-Vue.component('buycart-create', require('./views/BuyCart/Create.vue'));
+Vue.component('pocart-index', require('./views/POCart/Index.vue'));
+Vue.component('pocart-create', require('./views/POCart/Create.vue'));
 
 Vue.component('sellcart-index', require('./views/SellCart/Index.vue'));
 Vue.component('sellcart-create', require('./views/SellCart/Create.vue'));
 
-Vue.component('buyorder-index', require('./views/BuyOrder/Index.vue'));
-Vue.component('buyorder-detail', require('./views/BuyOrder/Detail.vue'));
+Vue.component('po-index', require('./views/PO/Index.vue'));
+Vue.component('po-detail', require('./views/PO/Detail.vue'));
+Vue.component('po-cart', require('./views/PO/Cart.vue'));
 
-Vue.component('sellorder-index', require('./views/SellOrder/Index.vue'));
-Vue.component('sellorder-detail', require('./views/SellOrder/Detail.vue'));
+Vue.component('poinvoice-index', require('./views/POInvoice/Index.vue'));
+Vue.component('poinvoice-detail', require('./views/POInvoice/Detail.vue'));
 
 Vue.component('user-index', require('./views/User/Index.vue'));
 Vue.component('user-create', require('./views/User/Create.vue'));

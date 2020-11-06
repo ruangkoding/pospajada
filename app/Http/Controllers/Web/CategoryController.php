@@ -33,8 +33,8 @@ class CategoryController extends Controller
                     $common = new Common();
 
                     $nav = [
-                        '<a href="' . url('dashboard') . '"><i class="fa fa-dashboard"></i> Dashboard</a>',
-                        '<i class="fa fa-dropbox"></i> ' . $this->title
+                        '<a href="' . url('dashboard') . '" style="color:#ffffff;">Beranda</a>',
+                        $this->title
                     ];
 
                     if ($agent->isMobile()) {

@@ -1,5 +1,9 @@
-<nav class="main-header navbar navbar-expand navbar-dark navbar-dark">
-    <ul class="navbar-nav">
-        <li class="nav-item"><a class="nav-link" data-widget="pushmenu" href="#"><i class="fa fa-bars"></i></a></li>
-    </ul>
-</nav>
+<header class="c-header c-header-dark bg-dark c-header-fixed">
+    <button class="c-header-toggler c-class-toggler mfs-3" type="button" data-target="#sidebar"
+        data-class="c-sidebar-lg-show" responsive="true">
+        <span class="c-header-toggler-icon"></span>
+    </button>
+</header>
+<div class="c-subheader justify-content-between px-3 bg-dark">
+    {!! $breadcrumb !!}
+</div>

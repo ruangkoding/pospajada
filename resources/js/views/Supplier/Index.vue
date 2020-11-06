@@ -78,54 +78,7 @@
                 <div class="card-body">
                     <v-alert :alert="alert"></v-alert>
                     <loading :opacity="100" :active.sync="isLoading" :can-cancel="false" :is-full-page="false" />
-                    <transition name="fade" v-if="mobile === true">
-                        <div v-if="showTable === true">
-                            <div class="card" v-for="v in supplier" :key="v.id">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ v.supplier_name }}</h5>
-                                <br>
-                                <table class="table table-striped">
-                                    <tbody>
-                                        <tr>
-                                            <td style="width:5%;">Alamat</td>
-                                            <td style="width:2%;">:</td>
-                                            <td style="width:50%;">{{ v.supplier_address }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td style="width:5%;">Kontak</td>
-                                            <td style="width:2%;">:</td>
-                                            <td style="width:50%;">{{ v.supplier_contact }}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <br>
-                                <a
-                                    v-if="(access.update === 1)"
-                                    :href="route + '/edit?id=' + v.id"
-                                    class="btn btn-block btn-sm btn-warning mr-sm-1">
-                                    <i class="fa fa-wrench"></i> Ubah
-                                </a>
-                                <button
-                                    v-else
-                                    class="btn btn-block btn-sm btn-warning disabled mr-sm-1">
-                                    <i class="fa fa-wrench"></i> Ubah
-                                </button>
-                                <a
-                                    v-if="(access.delete === 1)"
-                                    href="#" @click="toggleModal(v.id)"
-                                    class="btn btn-block btn-sm btn-danger">
-                                    <i class="fa fa-trash-o"></i> Hapus
-                                </a>
-                                <button
-                                    v-else
-                                    class="btn btn-block btn-sm btn-danger disabled">
-                                    <i class="fa fa-trash-o"></i> Hapus
-                                </button>
-                            </div>
-                            </div>
-                        </div>
-                    </transition>
-                    <transition name="fade" v-else>
+                    <transition name="fade">
                         <div class="table-responsive">
                             <table class="table table-hover table-striped table-bordered" v-if="showTable == true">
                                 <thead>

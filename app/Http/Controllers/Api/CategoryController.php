@@ -7,6 +7,11 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+/**
+ * Class CategoryController
+ *
+ * @package App\Http\Controllers\Api
+ */
 class CategoryController extends Controller
 {
     protected $_common;

@@ -77,42 +77,10 @@
                     <div class="card-body">
                         <v-alert :alert="alert"></v-alert>
                         <loading :opacity="100" :active.sync="isLoading" :can-cancel="false" :is-full-page="false" />
-                        <transition name="fade" v-if="mobile === true">
-                            <div v-if="showTable === true">
-                                <div class="card" v-for="v in category" :key="v.id">
-                                  <div class="card-body">
-                                    <h5 class="card-title">{{ v.category_name }}</h5>
-                                    <br>
-                                    <a
-                                        v-if="(access.update === 1)"
-                                        :href="route + '/edit?id=' + v.id"
-                                        class="btn btn-block btn-sm btn-warning mr-sm-1">
-                                        <i class="fa fa-wrench"></i> Ubah
-                                    </a>
-                                    <button
-                                        v-else
-                                        class="btn btn-block btn-sm btn-warning disabled mr-sm-1">
-                                        <i class="fa fa-wrench"></i> Ubah
-                                    </button>
-                                    <a
-                                        v-if="(access.delete === 1)"
-                                        href="#" @click="toggleModal(v.id)"
-                                        class="btn btn-block btn-sm btn-danger">
-                                        <i class="fa fa-trash-o"></i> Hapus
-                                    </a>
-                                    <button
-                                        v-else
-                                        class="btn btn-block btn-sm btn-danger disabled">
-                                        <i class="fa fa-trash-o"></i> Hapus
-                                    </button>
-                                  </div>
-                                </div>
-                            </div>
-                        </transition>
-                        <transition name="fade" v-else>
+                        <transition name="fade">
                             <div class="table-responsive">
                                 <table class="table table-hover table-striped table-bordered" v-if="showTable == true">
-                                    <thead>
+                                    <thead class="thead-dark">
                                         <tr>
                                             <th style="width:50%; text-align:center;">Nama Jenis Barang</th>
                                             <th style="width:10%; text-align:center;">Action</th>
@@ -153,7 +121,6 @@
                                 </table>
                             </div>
                         </transition>
-
                         <v-delete :element="'delete_modal'" :id="id" @delete="deleteData" />
                         <div class="card-footer clearfix" v-if="showTable === true">
                             <v-pagination

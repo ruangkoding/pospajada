@@ -50,17 +50,22 @@ Route::get('customer/create', 'Web\CustomerController@create');
 Route::get('customer/edit', 'Web\CustomerController@edit');
 
 // buycart
-Route::get('buycart', 'Web\BuyCartController@index');
-Route::get('buycart/create', 'Web\BuyCartController@create');
+Route::get('pocart', 'Web\POCartController@index');
+Route::get('pocart/create', 'Web\POCartController@create');
 
 // sellcart
 Route::get('sellcart', 'Web\SellCartController@index');
 Route::get('sellcart/create', 'Web\SellCartController@create');
 
 // buy invoice
-Route::get('buyorder', 'Web\BuyOrderController@index');
-Route::get('buyorder/detail', 'Web\BuyOrderController@detail');
+Route::get('po', 'Web\PurchaseOrderController@index');
+Route::get('po/create', 'Web\PurchaseOrderController@create');
+Route::get('po/detail', 'Web\PurchaseOrderController@detail');
 
 // sell invoice
 Route::get('sellorder', 'Web\SellOrderController@index');
 Route::get('sellorder/detail', 'Web\SellOrderController@detail');
+
+// buy invoice
+Route::get('poinvoice', 'Web\POInvoiceController@index');
+Route::get('poinvoice/detail', 'Web\POInvoiceController@detail');

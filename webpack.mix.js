@@ -31,8 +31,10 @@ mix.webpackConfig({
 
 mix
     .js('./resources/js/app.js', 'js/app.js')
-    .js('./resources/sass/admin-lte/dist/js/adminlte.min.js', 'js/adminlte.js')
-    .sass('./resources/sass/login.scss', 'css/login.css')
+    .js('./resources/sass/coreui/js/coreui.bundle.min.js', 'js/coreui.js')
+    .js('./resources/sass/coreui/js/coreui-utilities.min.js', 'js/coreui-utils.js')
+    .js('./resources/sass/coreui/js/svgxuse.min.js', 'js/svg.js')
+    //.sass('./resources/sass/login.scss', 'css/login.css')
     .sass('./resources/sass/app.scss', 'css/app.css')
     .sass('./resources/sass/print.scss', 'css/print.css')
     .options({ processCssUrls: false })

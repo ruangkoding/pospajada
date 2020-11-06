@@ -27,15 +27,15 @@
 </template>
 
 <script>
-  export default {
-    props: ["deleteModal", "id", "element"],
-    methods: {
-      close() {
-        this.$emit('close');
-      },
-      deleteButton() {
-        this.$emit('delete', this.id);
-      }
-    }
-  };
+    export default {
+        props: ["deleteModal", "id", "element"],
+        methods: {
+            close() {
+                this.$emit('close');
+            },
+            deleteButton() {
+                this.$emit('delete', this.id);
+            }
+        }
+    };
 </script>

@@ -1,13 +1,23 @@
 <?php
-
 namespace App\Http\Controllers\Api;
 
 use App\Models\Item;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+/**
+ * Class AjaxController
+ *
+ * @package App\Http\Controllers\Api
+ */
 class AjaxController extends Controller
 {
+    /**
+     * Mengambil data harga dari sebuah item
+     *
+     * @param Request $request
+     * @return $callback
+     */
     public function show_price_by_item(Request $request)
     {
         $id = ($request['id'] != '') ? $request['id'] : '';
@@ -21,9 +31,25 @@ class AjaxController extends Controller
         return $callback;
     }
 
-    public function generate_invoice(Request $request) 
+    /**
+     * Membuat sebuah invoice otomatis untuk purchasing order
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function generate_purchasing_invoice(Request $request)
     {
-        $now = date('ymd');
-        return 'SR' . $now . rand(1,10);
+        return 'SR/P/' . date('ymd') .'/'. rand(10, 99);
+    }
+
+    /**
+     * Membuat sebuah invoice otomatis untuk sales order
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function generate_sales_invoice(Request $request)
+    {
+        return 'SR/S/' . date('ymd') .'/'. rand(10, 99);
     }
 }

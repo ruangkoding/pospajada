@@ -25,7 +25,7 @@ class DashboardController extends Controller
                 if (Cookie::get('login') == 'true') {
                     $common = new Common();
                     $agent  = new Agent();
-                    $nav = ['<i class="fa fa-dashboard"></i> Dashboard'];
+                    $nav = ['Beranda'];
 
                     if ($agent->isMobile()) {
                         $this->mobile = true;

@@ -136,7 +136,7 @@ class Common
         return $indonesia_date;
     }
 
-     /**
+    /**
      * convert mysql date to indonesia date format
      * @param string $date
      * @return string
@@ -167,12 +167,12 @@ class Common
      */
     public function generate_breadcrumbs($arr)
     {
-        $breadcrumb = '<ol class="breadcrumb float-sm-right">';
+        $breadcrumb = '<ol class="breadcrumb border-0 m-0 px-0 px-md-3">';
         $total = count($arr);
         $i = 1;
         foreach($arr as $key=>$val) {
             if ($i == $total) {
-                $breadcrumb .= '<li class="breadcrumb-item active"><span>'.$val.'</span></li>';
+                $breadcrumb .= '<li class="breadcrumb-item active">'.$val.'</li>';
             } else {
                 $breadcrumb .= '<li class="breadcrumb-item">'.$val.'</li>';
             }       
