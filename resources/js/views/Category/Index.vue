@@ -78,12 +78,12 @@
                         <v-alert :alert="alert"></v-alert>
                         <loading :opacity="100" :active.sync="isLoading" :can-cancel="false" :is-full-page="false" />
                         <transition name="fade">
-                            <div class="table-responsive">
+                            <div class="table-responsive fixed-table-body">
                                 <table class="table table-hover table-striped table-bordered" v-if="showTable == true">
                                     <thead class="thead-dark">
                                         <tr>
-                                            <th style="width:50%; text-align:center;">Nama Jenis Barang</th>
-                                            <th style="width:10%; text-align:center;">Action</th>
+                                            <th style="text-align:center;">Nama Jenis Barang</th>
+                                            <th style="text-align:center;">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>

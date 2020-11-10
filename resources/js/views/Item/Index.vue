@@ -1,10 +1,8 @@
 <template>
     <div>
         <div class="row">
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="card-header">
-                        <div v-if="mobile === true">
+            <div class="col-12">
+                <div v-if="mobile === true">
                             <a
                                 v-if="access.write === 1"
                                 :href="route + '/create'"
@@ -114,59 +112,55 @@
                                 </div>
                             </div>
                         </transition>
-                    </div>
-                    <div class="card-body">
                         <v-alert :alert="alert"></v-alert>
                         <loading :opacity="100" :active.sync="isLoading" :can-cancel="false" :is-full-page="false"></loading>
-                        <transition name="fade">
-                            <div class="table-responsive">
-                                <table class="table table-hover table-striped table-bordered" v-if="showTable == true">
-                                    <thead class="thead-dark">
-                                        <tr>
-                                            <th style="width:5%; text-align:center;">Kode Barang</th>
-                                            <th style="width:15%; text-align:center;">Nama Barang</th>
-                                            <th style="width:5%; text-align:center;">Jenis</th>
-                                            <th style="width:5%; text-align:center;">Stok</th>
-                                            <th style="width:5%; text-align:center;">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-for="v in item" :key="v.id">
-                                            <td>{{ v.item_code }}</td>
-                                            <td>{{ v.item_name }}</td>
-                                            <td>{{ v.category.category_name }}</td>
-                                            <td style="text-align:center;">{{ v.stock }} {{ v.unit.unit_name }}</td>
-                                            <td>
-                                                <div style="text-align: center;">
-                                                    <a
-                                                        v-if="(access.update === 1)"
-                                                        :href="route + '/edit?id=' + v.id"
-                                                        class="btn btn-sm btn-warning mr-sm-1">
-                                                        <i class="fa fa-wrench"></i> Ubah
-                                                    </a>
-                                                    <button
-                                                        v-else
-                                                        class="btn btn-sm btn-warning disabled mr-sm-1">
-                                                        <i class="fa fa-wrench"></i> Ubah
-                                                    </button>
-                                                    <a
-                                                        v-if="(access.delete === 1)"
-                                                        href="#" @click="toggleModal(v.id)"
-                                                        class="btn btn-sm btn-danger">
-                                                        <i class="fa fa-trash-o"></i> Hapus
-                                                    </a>
-                                                    <button
-                                                        v-else
-                                                        class="btn btn-sm btn-danger disabled">
-                                                        <i class="fa fa-trash-o"></i> Hapus
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                        <div class="table-responsive">
+                                <table class="table table-bordered table-striped" style="min-width:100%;" v-if="showTable == true">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th scope="col" class="text-center">Kode Barang</th>
+                                                <th scope="col" class="text-center">Nama Barang</th>
+                                                <th scope="col" class="text-center">Jenis</th>
+                                                <th scope="col" class="text-center">Stok</th>
+                                                <th scope="col" class="text-center">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="v in item" :key="v.id">
+                                                <th scope="row">{{ v.item_code }}</th>
+                                                <td>{{ v.item_name }}</td>
+                                                <td>{{ v.category.category_name }}</td>
+                                                <td style="text-align:center;">{{ v.stock }} {{ v.unit.unit_name }}</td>
+                                                <td>
+                                                    <div style="text-align: center;">
+                                                        <a
+                                                            v-if="(access.update === 1)"
+                                                            :href="route + '/edit?id=' + v.id"
+                                                            class="btn btn-sm btn-warning mr-sm-1">
+                                                            <i class="fa fa-wrench"></i> Ubah
+                                                        </a>
+                                                        <button
+                                                            v-else
+                                                            class="btn btn-sm btn-warning disabled mr-sm-1">
+                                                            <i class="fa fa-wrench"></i> Ubah
+                                                        </button>
+                                                        <a
+                                                            v-if="(access.delete === 1)"
+                                                            href="#" @click="toggleModal(v.id)"
+                                                            class="btn btn-sm btn-danger">
+                                                            <i class="fa fa-trash-o"></i> Hapus
+                                                        </a>
+                                                        <button
+                                                            v-else
+                                                            class="btn btn-sm btn-danger disabled">
+                                                            <i class="fa fa-trash-o"></i> Hapus
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                             </div>
-                        </transition>
 
                         <v-delete :element="'delete_modal'" :id="id" @delete="deleteData"></v-delete>
                         <div class="card-footer clearfix" v-if="showTable === true">
@@ -177,8 +171,14 @@
                                 v-if="showTable === true">
                             </v-pagination>
                         </div>
+                <!-- <div class="card">
+                    <div class="card-header">
+                        
                     </div>
-                </div>
+                    <div class="card-body">
+                        
+                    </div>
+                </div> -->
             </div>
         </div>
     </div>

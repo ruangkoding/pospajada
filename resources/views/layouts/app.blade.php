@@ -13,17 +13,6 @@
     @include('layouts.sidebar')
     <div class="c-wrapper">
         @include('layouts.topmenu')
-        <!-- <div class="content-wrapper">
-            <section class="content-header">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-sm-6"><h2>{!! $title !!}</h2></div>
-                        <div class="col-sm-6">
-                            {!! $breadcrumb !!}
-                        </div>
-                    </div>
-                </div>
-            </section> -->
             <div class="c-body">
                 <main class="c-main">
                     <div class="container-fluid">
@@ -31,14 +20,11 @@
                     </div>
                 </main>
             </div>
-        <!-- </div> -->
         @include('layouts.footer')
     </div>
     <script src="{!! asset(mix('js/manifest.js')) !!}"></script>
     <script src="{!! asset(mix('js/vendor.js')) !!}"></script>
     <script src="{!! asset(mix('js/app.js')) !!}"></script>
     <script src="{!! asset(mix('js/coreui.js')) !!}"></script>
-    <script src="{!! asset(mix('js/coreui-utils.js')) !!}"></script>
-    <script src="{!! asset(mix('js/svg.js')) !!}"></script>
 </body>
 </html>

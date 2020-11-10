@@ -32,6 +32,7 @@ Vue.use(datePicker);
 Vue.use(accounting);
 Vue.use(VueCookies);
 Vue.use(VueSwal);
+Vue.use(Loading, { 'color': 'red', 'opacity': 100, 'can-cancel': false, 'is-full-page': false, 'z-index': 999, 'loader': 'bars'});
 
 // Component Config
 $.extend(true, $.fn.datetimepicker.defaults, {
@@ -138,9 +139,8 @@ Vue.filter('rupiah', function (amount) {
 Vue.component('v-alert', require('./components/Alert.vue'));
 Vue.component('v-pagination', require('./components/Pagination.vue'));
 Vue.component('v-delete', require('./components/Delete.vue'));
-Vue.component('vue-typeahead-bootstrap', VueTypeaheadBootstrap)
+Vue.component('vue-typeahead-bootstrap', VueTypeaheadBootstrap);
 Vue.component('loading', Loading);
-
 Vue.component('login', require('./views/Login.vue'));
 Vue.component('dashboard', require('./views/Dashboard.vue'));
 Vue.component('profile', require('./views/Profile.vue'));

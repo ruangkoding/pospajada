@@ -74,7 +74,7 @@
                         </transition>
 
                         <!-- checkout button -->
-                        <div v-if="showTable == true">
+                        <span v-if="showTable == true">
                             <a 
                                 v-if="mobile == true"
                                 href="#" 
@@ -89,7 +89,33 @@
                                 class="btn btn-warning">
                                 <i class="fa fa-shopping-cart"></i> Buat PO
                             </a>
-                        </div>
+                            <a
+                                v-if="mobile === true"
+                                :href="route"
+                                class="btn btn-block btn-outline-danger">
+                                <i class="fa fa-arrow-left"></i> Kembali
+                            </a>
+                            <a
+                                v-else
+                                :href="route"
+                                class="btn btn-outline-danger">
+                                <i class="fa fa-arrow-left"></i> Kembali
+                            </a>
+                        </span>
+                        <span v-else>
+                            <a
+                                v-if="mobile === true"
+                                :href="route"
+                                class="btn btn-block btn-outline-danger">
+                                <i class="fa fa-arrow-left"></i> Kembali
+                            </a>
+                            <a
+                                v-else
+                                :href="route"
+                                class="btn btn-outline-danger">
+                                <i class="fa fa-arrow-left"></i> Kembali
+                            </a>
+                        </span>
 
                         <!-- delete item from cart -->
                         <v-delete :element="'delete_modal'" :id="id" @delete="deleteData" />

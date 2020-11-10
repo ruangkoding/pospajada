@@ -83,6 +83,8 @@ Route::get('order/so/print', 'Api\SalesOrderController@get_print_data');
 
 // invoice pembelian
 Route::get('invoice/buy', 'Api\PurchaseInvoiceController@get_data');
+Route::post('invoice/buy/pay', 'Api\PurchaseInvoiceController@post_payment_data');
+Route::get('invoice/buy/pay', 'Api\PurchaseInvoiceController@get_payment_data');
 Route::get('invoice/buy/print', 'Api\PurchaseInvoiceController@get_print_data');
 
 // invoice penjualan

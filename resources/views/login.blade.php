@@ -9,7 +9,7 @@
     <link href="{!! asset('css/app.css') !!}" rel="stylesheet">
     <link rel="manifest" href="{!! asset('manifest.json') !!}" />
 </head>
-<body class="c-app flex-row align-items-center">
+<body class="c-app flex-row align-items-center" style="background: #15202B;">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-4">

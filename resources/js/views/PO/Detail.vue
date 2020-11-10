@@ -112,19 +112,33 @@
                             @click="toggleRejectModal(po.id)">
                             <i class="fa fa-times"></i> Batalkan PO
                         </a>
+                        <a
+                            v-if="mobile === true"
+                            :href="route"
+                            class="btn btn-block btn-outline-danger">
+                            <i class="fa fa-arrow-left"></i> Kembali
+                        </a>
+                        <a
+                            v-else
+                            :href="route"
+                            class="btn btn-outline-danger">
+                            <i class="fa fa-arrow-left"></i> Kembali
+                        </a>
                     </span>
-                    <a
-                        v-if="mobile === true"
-                        :href="route"
-                        class="btn btn-block btn-outline-danger">
-                        <i class="fa fa-arrow-left"></i> Kembali
-                    </a>
-                    <a
-                        v-else
-                        :href="route"
-                        class="btn btn-outline-danger">
-                        <i class="fa fa-arrow-left"></i> Kembali
-                    </a>
+                    <span v-else>
+                        <a
+                            v-if="mobile === true"
+                            :href="route"
+                            class="btn btn-block btn-outline-danger">
+                            <i class="fa fa-arrow-left"></i> Kembali
+                        </a>
+                        <a
+                            v-else
+                            :href="route"
+                            class="btn btn-outline-danger">
+                            <i class="fa fa-arrow-left"></i> Kembali
+                        </a>
+                    </span>
 
                     <div class="modal fade" id="approval_modal" tabindex="-1" role="dialog">
                         <div class="modal-dialog" role="document">

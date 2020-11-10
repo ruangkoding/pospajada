@@ -34,7 +34,7 @@ class PurchaseInvoice extends Model
         return $this->hasMany('App\Models\PODetail', 'id', 'po_id');
     }
 
-    public function scopeSearchInvoiceNumber($query, $q)
+    public function scopeSearchInvoice($query, $q)
     {
         if ($q) {
             return $query->where('invoice_number', 'LIKE', '%' . $q . '%');

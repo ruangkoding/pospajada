@@ -4,80 +4,107 @@
             <div class="card">
                 <div class="card-body">
                     <loading :opacity="100" :active.sync="isLoading" :can-cancel="false" :is-full-page="false" />
+                    <!-- summary data -->
                     <transition name="fade">
-                        <table class="table table-hover table-striped table-bordered">
+                        <table class="table table-striped">
                             <tbody>
                                 <tr>
-                                    <td style="width:15%;"><b>Nomor PO</b></td>
-                                    <td style="width:85%;">{{ po.po_number }}</td>
+                                    <td style="width:15%;"><b>Invoice</b></td>
+                                    <td style="width:85%;">{{ invoice.invoice_number }}</td>
                                 </tr>
                                 <tr>
-                                    <td style="width:15%;"><b>Tanggal PO</b></td>
-                                    <td style="width:85%;">{{ po.po_date | moment }}</td>
+                                    <td style="width:15%;"><b>Tanggal</b></td>
+                                    <td style="width:85%;">{{ invoice.invoice_date | moment }}</td>
                                 </tr>
                                 <tr>
                                     <td style="width:15%;"><b>Supplier</b></td>
                                     <td style="width:85%;">
-                                        {{ po.supplier.supplier_name }}<br>
-                                        {{ po.supplier.supplier_address }}<br>
-                                        {{ po.supplier.supplier_contact }}
+                                        {{ invoice.po.supplier.supplier_name }}<br>
+                                        {{ invoice.po.supplier.supplier_address }}<br>
+                                        {{ invoice.po.supplier.supplier_contact }}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td style="width:15%;"><b>PIC</b></td>
                                     <td style="width:85%;">
-                                        {{ po.user.username }}
+                                        {{ invoice.po.user.username }}
                                     </td>
                                 </tr>
-                                <tr v-if="po.note !== null">
-                                    <td style="width:15%;"><b>Keterangan</b></td>
+                                <tr>
+                                    <td style="width:15%;"><b>Pembayaran</b></td>
                                     <td style="width:85%;">
-                                        {{ po.note }}
+                                        <span v-if="invoice.paymentmethod.name === 'Kredit'">
+                                            {{ invoice.paymentmethod.name }}<br>
+                                            Tanggal Jatuh Tempo : <b>{{ invoice.payment_due_date | moment }}</b>
+                                        </span>
+                                        <span v-if="invoice.paymentmethod.name === 'Tunai'">
+                                            {{ v.paymentmethod.name }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><b>Status</b></td>
+                                    <td>
+                                        <span 
+                                            class="badge badge-danger" 
+                                            v-if="invoice.status === 0" 
+                                            style="padding:5px;">
+                                                <i class="fa fa-times"></i> BELUM DIBAYAR
+                                        </span>
+                                        <span 
+                                            class="badge badge-success"
+                                            v-if="invoice.status === 1"
+                                            style="padding:5px;">
+                                                <i class="fa fa-check"></i> LUNAS
+                                        </span>
+                                        <span
+                                            class="badge badge-warning" 
+                                            v-if="invoice.status === 2" 
+                                            style="padding:5px;">
+                                            <i class="fa fa-refresh"></i> DIBAYAR SEBAGIAN
+                                        </span>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </transition>
+
                     <div style="margin-top:25px;"></div>
+
+                    <!-- item data -->
                     <div class="row">
-                        <div class="col-md-12">
-                            <v-alert :alert="alert"></v-alert>
-                            <transition name="fade">
-                                <div class="table-responsive">
-                                    <table class="table table-hover table-bordered" v-if="showTable == true">
+                        <div class="col-lg-12">
+                            <hr>
+                            <h3>Data Barang</h3>
+                            <transition name="fade" v-if="showTable == true">
+                                <div class="table-responsive-sm">
+                                    <table class="table table-hover table-bordered">
                                         <thead class="thead-dark">
                                             <tr>
                                                 <th style="width:30%;text-align:center;">Barang</th>
                                                 <th style="width:10%;text-align:center;">Harga</th>
                                                 <th style="width:5%;text-align:center;">Jumlah</th>
                                                 <th style="width:10%;text-align:center;">Subtotal</th>
-                                                <th style="width:5%;text-align:center;">Tindakan</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="v in podetail" :key="v.id" :class="{'table-warning': isReject(v.status) }">
-                                                <td>
-                                                    {{ v.item.item_name }}<span v-if="isReject(v.status)">&nbsp;<i>(Dibatalkan)</i></span>
-                                                </td>
+                                            <tr v-for="v in detail" :key="v.id">
+                                                <td>{{ v.item.item_name }}</td>
                                                 <td style="text-align:right;">{{ v.price | rupiah }}</td>
                                                 <td style="text-align:center;">{{ v.quantity }} {{ v.item.unit.unit_name }}</td>
                                                 <td style="text-align:right;">{{ v.subtotal | rupiah }}</td>
-                                                <td style="text-align:center;">
-                                                    <a 
-                                                        v-if="v.status === 0" 
-                                                        href="#" 
-                                                        @click="toggleCancelItemModal(v.id)" 
-                                                        class="btn btn-sm btn-danger">
-                                                        <i class="fa fa-times"></i>
-                                                    </a>
-                                                    <span v-if="v.status === 1"><i class="fa fa-check"></i></span>
-                                                    <span v-if="v.status === 2"><i class="fa fa-archive"></i></span>
-                                                </td>
                                             </tr>
                                             <tr>
                                                 <td colspan="3" style="text-align:right;"><b>Total Harga</b></td>
-                                                <td style="text-align:right;"><b>{{ po.total | rupiah }}</b></td>
-                                                <td></td>
+                                                <td style="text-align:right;"><b>{{ invoice.total | rupiah }}</b></td>
+                                            </tr>
+                                            <tr v-if="invoice.status == 2">
+                                                <td colspan="3" style="text-align:right;"><b>Dibayarkan Sebagian</b></td>
+                                                <td style="text-align:right;"><b>{{ invoice.total - payment.total | rupiah }}</b></td>
+                                            </tr>
+                                            <tr v-if="invoice.status == 2">
+                                                <td colspan="3" style="text-align:right;"><b>Sisa Pembayaran</b></td>
+                                                <td style="text-align:right;"><b>{{ payment.total | rupiah }}</b></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -85,50 +112,69 @@
                             </transition>
                         </div>
                     </div>
-                    <a
-                        v-if="mobile === true"
-                        href="#"
-                        class="btn btn-block btn-success"
-                        @click="toggleApprovalModal(po.id)">
-                        <i class="fa fa-check"></i> Proses PO
-                    </a>
-                    <a
-                        v-else
-                        href="#"
-                        class="btn btn-success"
-                        @click="toggleApprovalModal(po.id)"
-                    >
-                        <i class="fa fa-check"></i> Proses PO
-                    </a>
-                    <a
-                        v-if="mobile === true"
-                        href="#"
-                        class="btn btn-block btn-danger"
-                        @click="rejectPurchase(po.id)">
-                        <i class="fa fa-times"></i> Tolak PO
-                    </a>
-                    <a
-                        v-else
-                        href="#"
-                        class="btn btn-danger"
-                        @click="rejectPurchase(po.id)"
-                    >
-                        <i class="fa fa-times"></i> Tolak PO
-                    </a>
-                    <a
-                        v-if="mobile === true"
-                        :href="route"
-                        class="btn btn-block btn-outline-danger">
-                        <i class="fa fa-arrow-left"></i> Kembali
-                    </a>
-                    <a
-                        v-else
-                        :href="route"
-                        class="btn btn-outline-danger">
-                        <i class="fa fa-arrow-left"></i> Kembali
-                    </a>
+                    
+                    <!-- payment data -->
+                    <div class="row" v-if="payment_data.length > 0">
+                        <div class="col-lg-12">
+                            <hr>
+                            <h3>Data Pembayaran</h3>
+                            <transition name="fade">
+                                <div style="overflow-x:auto;">
+                                    <table class="table table-hover table-bordered">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th style="width:30%;text-align:center;">Tanggal Pembayaran</th>
+                                                <th style="width:25%;text-align:center;">Jumlah Pembayaran</th>
+                                                <th style="width:25%;text-align:center;">Sisa Pembayaran</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="p in payment_data" :key="p.id">
+                                                <td style="text-align:center;">{{ p.payment_date | moment }}</td>
+                                                <td style="text-align:right;">{{ p.nominal | rupiah }}</td>
+                                                <td style="text-align:right;">{{ p.total_payment - p.nominal  | rupiah}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </transition>
+                        </div>
+                    </div>
 
-                    <div class="modal fade" id="approval_model" tabindex="-1" role="dialog">
+                    <!-- action button -->
+                    <span v-if="invoice.status !== 1">
+                        <a
+                            href="#"
+                            class="btn btn-success"
+                            :class="{'btn-block': mobile === true}"
+                            @click="togglePaymentModal()">
+                            <i class="fa fa-check"></i> Proses Pembayaran
+                        </a>
+                        <a
+                            :href="route"
+                            :class="{'btn-block': mobile === true}"
+                            class="btn btn-outline-danger">
+                            <i class="fa fa-arrow-left"></i> Kembali
+                        </a>
+                    </span>
+                    <span v-else>
+                        <a
+                            href="#"
+                            :class="{'btn-block': mobile === true}"
+                            @click="cetakInvoice(invoice.id)"
+                            class="btn btn-info">
+                            <i class="fa fa-print"></i> Cetak Invoice
+                        </a>
+                        <a
+                            :href="route"
+                            :class="{'btn-block': mobile === true}"
+                            class="btn btn-outline-danger">
+                            <i class="fa fa-arrow-left"></i> Kembali
+                        </a>
+                    </span>
+
+                    <!-- payment modal -->
+                    <div class="modal fade" id="payment_modal" tabindex="-1" role="dialog">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -142,18 +188,7 @@
                                     <form method="POST">
                                         <div class="row">
                                             <div class="form-group col-md-12">
-                                                <label>Nomor Invoice *</label>
-                                                <input 
-                                                    class="form-control"
-                                                    placeholder="Masukkan Nomor Invoice"
-                                                    v-model="checkout.invoice_number"
-                                                    :class="{ 'is-invalid': validasi.invoice_number }"
-                                                    readonly="readonly">
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="form-group col-md-12">
-                                                <label>Tanggal Invoice *</label>
+                                                <label>Tanggal Pembayaran *</label>
                                                 <div class="input-group">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text">
@@ -161,10 +196,11 @@
                                                         </span>
                                                     </div>
                                                     <date-picker
-                                                        v-model="checkout.invoice_date"
+                                                        v-model="payment.payment_date"
                                                         :config="options"
                                                         class="form-control"
-                                                        placeholder="Tanggal Invoice"
+                                                        placeholder="Tanggal Pembayaran"
+                                                        :class="{ 'is-invalid': validasi.payment_date }"
                                                         autocomplete="off">
                                                     </date-picker>
                                                 </div>
@@ -172,72 +208,44 @@
                                         </div>
                                         <div class="row">
                                             <div class="form-group col-md-12">
-                                                <label>Metode Pembayaran *</label>
-                                                <select 
-                                                    v-model="checkout.payment_method_id" 
-                                                    class="form-control" 
-                                                    :class="{ 'is-invalid': validasi.payment_method_id }">
-                                                    <option value="">Pilih Metode Pembayaran</option>
-                                                    <option 
-                                                        v-for="v in this.paymentmethod"
-                                                        :value="v.id"
-                                                        :key="v.id">
-                                                        {{ v.name }}
-                                                    </option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="row" v-if="checkout.payment_method_id === 2">
-                                            <div class="form-group col-md-12">
-                                                <label>Durasi Pembayaran *</label>
-                                                <select v-model="checkout.payment_duration" class="form-control">
-                                                    <option value="7" selected>7 Hari Kerja</option>
-                                                    <option value="14">14 Hari Kerja</option>
-                                                    <option value="30">30 Hari Kerja</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="form-group col-md-12">
                                                 <label>Keterangan</label>
-                                                <textarea class="form-control" v-model="checkout.note"></textarea>
+                                                <textarea 
+                                                    class="form-control" 
+                                                    v-model="payment.note">
+                                                </textarea>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-12">
+                                                <label>Nominal Pembayaran *</label>
+                                                <money 
+                                                    class="form-control" 
+                                                    placeholder="Masukkan Nominal Pembayaran" 
+                                                    v-model="payment.nominal" 
+                                                    :class="{ 'is-invalid': validasi.nominal }" />
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="form-group col-md-12">
-                                                <label>Total Harga *</label>
+                                                <label>Jumlah Yang Harus Dibayar *</label>
                                                 <money 
                                                     class="form-control"
                                                     readonly="readonly"
-                                                    v-model="checkout.total" />
+                                                    v-model="payment.total" />
                                             </div>
                                         </div>
-                                        <div class="row" v-if="mobile == true">
-                                            <div class="form-group col-md-12">
-                                                <button 
-                                                    type="button"
-                                                    class="btn btn-block btn-success"
-                                                    @click.prevent="generateInvoice()">
-                                                    <i class="fa fa-shopping-cart"></i> Proses Invoice
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    class="btn btn-block btn-danger"
-                                                    data-dismiss="modal">
-                                                    <i class="fa fa-times"></i> Batal
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="row" v-else>
+                                        <div class="row">
                                             <div class="form-group col-md-12">
                                                 <button 
                                                     type="button"
                                                     class="btn btn-success"
-                                                    @click.prevent="generateInvoice()">
-                                                    <i class="fa fa-shopping-cart"></i> Proses Invoice
+                                                    :class="{'btn-block': mobile === true}"
+                                                    @click.prevent="processPayment()">
+                                                    <i class="fa fa-shopping-cart"></i> Proses Pembayaran
                                                 </button>
                                                 <button
                                                     type="button"
+                                                    :class="{'btn-block': mobile === true}"
                                                     class="btn btn-danger"
                                                     data-dismiss="modal">
                                                     <i class="fa fa-times"></i> Batal
@@ -247,36 +255,6 @@
                                     </form>
                                 </div>
                                 <div class="modal-footer"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="modal fade" id="cancel_item_model" tabindex="-1" role="dialog">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Konfirmasi Pembatalan Barang</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <p>Anda Akan Membatalkan Barang Ini, Teruskan?</p>
-                                </div>
-                                <div class="modal-footer">
-                                    <button 
-                                        type="button" 
-                                        class="btn btn-success" 
-                                        @click="rejectItem">
-                                        <i class="fa fa-check-circle-o"></i> Ya
-                                    </button>
-                                    <button 
-                                        type="button" 
-                                        class="btn btn-danger" 
-                                        data-dismiss="modal">
-                                        <i class="fa fa-times-circle-o"></i> Batal
-                                    </button>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -304,32 +282,30 @@
                     error: false,
                     validate: false
                 },
-                checkout: {
+                payment: {
+                    'po_invoice_id': this.invoice.id,
                     'note': '',
-                    'invoice_number': '',
-                    'invoice_date': '',
-                    'total': this.po.total,
-                    'payment_method_id': '',
-                    'payment_duration': '7'
+                    'payment_date': '',
+                    'total': '',
+                    'nominal': ''
                 },
+                payment_data: {},
+                remaining_payment: 0,
                 validasi: {
-                    'po_number': '',
-                    'po_date': '',
-                    'supplier_id': ''
+                    'payment_date': '',
+                    'nominal': ''
                 },
                 options: {
                     format: 'YYYY-MM-DD',
                     useCurrent: true,
                     locale: 'id'
                 },
-                userId:'',
-                itemId:''
+                userId:''
             }
         },
         props: [
-            'paymentmethod',
-            'po',
-            'podetail',
+            'invoice',
+            'detail',
             'route',
             'print_api',
             'access',
@@ -341,84 +317,57 @@
                 let newWindow = window.open();
                 newWindow.location = this.print_api;
             },
-            toggleApprovalModal() {
-                $("#approval_model").modal('show');
+            togglePaymentModal() {
+                $("#payment_modal").modal('show');
             },
-            toggleCancelItemModal(id) {
-                this.itemId = id;
-                $("#cancel_item_model").modal('show');
-            },
-            isReject(status) {
-                if (status === 2) {
-                    return true;
-                } else {
-                    return false;
-                }
-            },
-            generateInvoice() {
+            processPayment() {
                 let validasi = this.validate();
                 if (validasi === true) {
-                    service.postData(this.api + '/generateinvoice?id=' + this.po.id, this.checkout)
-                    .then(response => {
-                        if (response.status === 'ok') {
-                            $('#approval_modal').modal('hide');
-                            this.$swal("Berhasil!", "Proses Pembuatan Invoice Berhasil!", "success")
-                            window.location.href = this.route + './../invoice/detail?id=' + response.order_id;
-                        }
-                    }).catch(error => {
-                        this.$swal("Terjadi Kesalahan!", "Silahkan Ulangi Kembali!", "error")
-                        console.log(error);
-                    });
+                    if (this.payment.nominal <= this.payment.total) {
+                        service.postData(this.api + '/pay', this.payment)
+                        .then(response => {
+                            if (response.status === 'ok') {
+                                $('#payment_modal').modal('hide');
+                                this.$swal("Berhasil!", "Proses Pembayaran Berhasil!", "success");
+                                setTimeout(() => location.reload(), 2000);
+                            }
+                        }).catch(error => {
+                            this.$swal("Terjadi Kesalahan!", "Silahkan Ulangi Kembali!", "error");
+                            console.log(error);
+                        });
+                    } else {
+                        this.$swal("Peringatan!", "Nominal Yang Dibayarkan Tidak Boleh Melebihi Total Yang Harus Dibayar!", "warning");
+                    }
                 } else {
                     this.alert_modal.validate = true;
                     setTimeout(() => this.alert_modal.validate = false, 5000);
                 }
             },
-            rejectItem() {
-                service.postData(this.api + '/rejectitem?item=' + this.itemId)
+            checkRemainingPayment() {
+                service.fetchData(this.api + '/pay?invoice=' + this.invoice.id)
                 .then(response => {
-                    if (response.status === 'ok') {
-                        window.scroll({
-                            top: 0,
-                            left: 0,
-                            behavior: 'smooth'
-                        });
-                        $('#cancel_item_model').modal('hide');
-                        this.$swal("Berhasil!", "Proses Pembatalan Barang Berhasil!", "success");
-                        setTimeout(() => location.reload(), 2000);
-                    }
-                }).catch(error => {
-                    $('#cancel_item_model').modal('hide');
-                    window.scroll({
-                        top: 0,
-                        left: 0,
-                        behavior: 'smooth'
-                    });
-                    this.$swal("Terjadi Kesalahan!", "Silahkan ulangi kembali!", "error")
+                    this.payment_data  = response.payment_data;
+                    this.payment.total = response.remaining_payment;
+                })
+                .catch(error => {
                     console.log(error);
                 });
             },
             validate() {
                 let condition = 0;
-                if (this.checkout.invoice_number.length === 0) {
-                    this.validasi.invoice_number = true;
+
+                if (this.payment.payment_date.length === 0) {
+                    this.validasi.payment_date = true;
                     condition++;
                 } else {
-                    this.validasi.invoice_number = false;
+                    this.validasi.payment_date = false;
                 }
 
-                if (this.checkout.invoice_date.length === 0) {
-                    this.validasi.invoice_date = true;
+                if (this.payment.nominal.length === 0) {
+                    this.validasi.nominal = true;
                     condition++;
                 } else {
-                    this.validasi.invoice_date = false;
-                }
-
-                if (this.checkout.payment_method_id.length === 0) {
-                    this.validasi.payment_method_id = true;
-                    condition++;
-                } else {
-                    this.validasi.payment_method_id = false;
+                    this.validasi.nominal = false;
                 }
                 
                 if (condition > 0) {
@@ -430,23 +379,16 @@
         },
         created() {
             this.isLoading = true;
-            if (this.podetail.length < 1) {
+            if (this.detail.length < 1) {
                 this.alert.empty = true;
                 this.showTable = false;
             } else {
                 this.showTable = true;
+                this.checkRemainingPayment();
             }
         },
         mounted() {
             this.userId = this.$cookies.get('id');
-            service.fetchData('./../api/ajax/poinvoice')
-            .then(response => {
-                this.checkout.invoice_number = response;
-            })
-            .catch(error => {
-                this.alert_modal.error = true;
-                console.log(error);
-            });
             this.isLoading = false;
         }
     };
