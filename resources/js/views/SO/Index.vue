@@ -11,13 +11,19 @@
                                 class="btn btn-outline-info mb-2">
                                 <i class="fa fa-search"></i> Form Pencarian
                             </button>
+                            <a
+                                v-if="access.write === 1"
+                                :href="route + '/create'"
+                                class="btn btn-success mb-2">
+                                <i class="fa fa-plus"></i> Tambah Data
+                            </a>
                         </div>
                         <div class="card" style="margin-top:50px;" v-show="showForm">
                             <div class="card-body">
                                 <form v-on:submit.prevent="fetchData()">
                                     <div class="row">
                                         <div class="form-group col-md-6">
-                                            <input type="text" class="form-control" v-model="search.q" placeholder="Nota Pembelian">
+                                            <input type="text" class="form-control" v-model="search.q" placeholder="Nomor SO">
                                         </div>
                                     </div>
                                     <div class="row">
@@ -40,25 +46,46 @@
                         <transition name="fade">
                             <div class="table-responsive">
                                 <table class="table table-hover table-striped table-bordered" v-if="showTable == true">
-                                    <thead>
+                                    <thead class="thead-dark">
                                         <tr>
-                                            <th style="width:10%; text-align:center;">Nota Pembelian</th>
-                                            <th style="width:20%; text-align:center;">Customer</th>
-                                            <th style="width:10%; text-align:center;">Tanggal Transaksi</th>
-                                            <th style="width:5%; text-align:center;">Total</th>
-                                            <th style="width:5%; text-align:center;">Pembayaran</th>
+                                            <th scope="col" style="text-align:center;">Nomor SO</th>
+                                            <th scope="col" style="text-align:center;">Customer</th>
+                                            <th scope="col" style="text-align:center;">Tanggal SO</th>
+                                            <th scope="col" style="text-align:center;">Total</th>
+                                            <th scope="col" style="text-align:center;">Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="v in invoice" :key="v.id">
-                                            <td style="vertical-align:middle;"><a :href="route + '/detail?id=' + v.id">{{ v.invoice }}</a></td>
-                                            <td style="vertical-align:middle;">
+                                        <tr v-for="v in so" :key="v.id">
+                                            <td scope="row" style="vertical-align:middle;">
+                                                <a :href="route + '/detail?id=' + v.id">{{ v.so_number }}</a>
+                                            </td>
+                                            <td scope="row" style="vertical-align:middle;">
                                                 {{ v.customer.customer_name }}<br>
                                                 {{ v.customer.customer_address }}<br>
                                             </td>
-                                            <td style="text-align:center;vertical-align:middle;">{{ v.invoice_date | moment }}</td>
-                                            <td style="text-align:right;vertical-align:middle;">{{ v.total | rupiah }}</td>
-                                            <td style="text-align:center;vertical-align:middle;">{{ v.paymentmethod.name }}</td>
+                                            <td scope="row" style="text-align:center;vertical-align:middle;">{{ v.so_date | moment }}</td>
+                                            <td scope="row" style="text-align:right;vertical-align:middle;">{{ v.total | rupiah }}</td>
+                                            <td scope="row" style="text-align:center;vertical-align:middle;">
+                                                <span 
+                                                    class="badge badge-warning" 
+                                                    v-if="v.status === 0" 
+                                                    style="padding:10px;">
+                                                    <i class="fa fa-refresh"></i> MENUNGGU
+                                                </span>
+                                                <span
+                                                    class="badge badge-success"
+                                                    v-if="v.status === 1"
+                                                    style="padding:10px;">
+                                                    <i class="fa fa-check"></i> DIPROSES
+                                                </span>
+                                                <span
+                                                    class="badge badge-danger"
+                                                    v-if="v.status === 2"
+                                                    style="padding:10px;">
+                                                    <i class="fa fa-times"></i> DIBATALKAN
+                                                </span>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -85,7 +112,7 @@ import service from './../../services.js';
 export default {
     data: function() {
         return {
-            invoice: {},
+            so: {},
             search: {
                 q:''
             },
@@ -127,7 +154,7 @@ export default {
         },
         fetchData() {
             let query  = this.generateParams();
-            service.fetchData(this.api + '?user='+ this.userId + '&' + query + '&page='+ this.pagination.page)
+            service.fetchData(this.api + '?user=' + this.userId + '&'+ query + '&page='+ this.pagination.page)
             .then(response => {
                 this.renderData(response);
                 this.isLoading = false;
@@ -146,7 +173,7 @@ export default {
                 this.showTable = true;
                 this.alert.empty = false;
                 this.alert.error = false;
-                this.invoice = response.data;
+                this.so = response.data;
                 this.pagination.last = response.last_page;
                 this.pagination.from = response.from;
                 this.pagination.to = response.to;

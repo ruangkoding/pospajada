@@ -2,14 +2,14 @@
 @section('content')
     <div id="app">
         @if ($act == 'create')
-            <sellorder-detail
+            <soinvoice-detail
                 :invoice='{!! json_encode($invoice) !!}'
-                :mobile='{!! json_encode($mobile) !!}'
-                :invoicedetail='{!! json_encode($invoicedetail) !!}'
+                :detail='{!! json_encode($detail) !!}'
                 :route='{!! json_encode($route) !!}'
                 :api='{!! json_encode($api) !!}'
+                :mobile='{!! json_encode($mobile) !!}'
                 :print_api='{!! json_encode($print_api) !!}'>
-            </sellorder-detail>
+            </soinvoice-detail>
         @endif
     </div>
 @stop

@@ -1,12 +1,11 @@
 <?php
-
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Libraries\Common;
 use App\Models\SOCart;
-use App\Models\SOOrder;
-use App\Models\SOOrderDetail;
+use App\Models\SO;
+use App\Models\SODetail;
 use App\Models\Item;
 use Illuminate\Http\Request;
 use Exception;
@@ -48,7 +47,7 @@ class SOCartController extends Controller
                 return response()->json(['status'=>'failed'], 500);
             }
         } else {
-            return response()->json(['status' => 'duplicate'], 200);
+            return response()->json(['status'=>'duplicate'], 200);
         }
     }
 
@@ -56,15 +55,16 @@ class SOCartController extends Controller
     {
         $_user = isset($request['user']) ? $request['user'] : '';
         $order = new SO();
-        $order->user_id = $_user;
         $order->so_number = $request->input('so_number');
         $order->so_date = $request->input('so_date');
         $order->customer_id = $request->input('customer_id');
         $order->total = $request->input('total');
-        $order->payment_method_id = $request->input('payment_method_id');
+        $order->note = $request->input('note');
+        $order->user_id = $_user;
+        $order->status = 0;
         $order->created_at = date('Y-m-d H:i:s');
         if ($order->save()) {
-            $cart = SOCart::all();
+            $cart = SOCart::where('user_id', $_user)->get();
             foreach ($cart as $c) {
                 $detail = new SODetail();
                 $detail->so_id = $order->id;
@@ -72,16 +72,10 @@ class SOCartController extends Controller
                 $detail->quantity = $c->quantity;
                 $detail->price = $c->price;
                 $detail->subtotal = $c->subtotal;
-                if($detail->save()) {
-                    $item = Item::find($c->item_id);
-                    $old_stock = $item->stock;
-                    $item->stock = $old_stock - $c->quantity;
-                    $item->updated_at = date('Y-m-d H:i:s');
-                    $item->save();
-                }
+                $detail->save();
             }
-            SOCart::truncate();
-            return response()->json(['status' => 'ok', 'order_id' => $order->id], 200);
+            SOCart::where('user_id', $_user)->delete();
+            return response()->json(['status'=>'ok', 'order_id' => $order->id], 200);
         } else {
             return response()->json(['status'=>'failed'], 500);
         }

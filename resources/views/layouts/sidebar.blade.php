@@ -16,7 +16,7 @@
                     <a class="c-sidebar-nav-link" href="{!! url('po') !!}"> Purchase Order</a>
                 </li>
                 <li class="c-sidebar-nav-item">
-                    <a class="c-sidebar-nav-link" href="{!! url('po') !!}"> Sales Order</a>
+                    <a class="c-sidebar-nav-link" href="{!! url('so') !!}"> Sales Order</a>
                 </li>
             </ul>
         </li>

@@ -52,4 +52,26 @@ class AjaxController extends Controller
     {
         return 'SR/S/' . date('ymd') .'/'. rand(10, 99);
     }
+
+    /**
+     * Membuat sebuah noomor PO otomatis untuk purchasing order
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function generate_purchasing_number(Request $request)
+    {
+        return 'PO/' . date('ymd') .'/'. rand(10, 99);
+    }
+
+    /**
+     * Membuat sebuah nomor SO otomatis untuk sales order
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function generate_sales_number(Request $request)
+    {
+        return 'SO/' . date('ymd') .'/'. rand(10, 99);
+    }
 }

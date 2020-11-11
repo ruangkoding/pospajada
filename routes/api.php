@@ -17,6 +17,8 @@ Route::get('report', 'Api\ReportController@print_data');
 Route::get('ajax/item', 'Api\AjaxController@show_price_by_item');
 Route::get('ajax/poinvoice', 'Api\AjaxController@generate_purchasing_invoice');
 Route::get('ajax/soinvoice', 'Api\AjaxController@generate_sales_invoice');
+Route::get('ajax/ponumber', 'Api\AjaxController@generate_purchasing_number');
+Route::get('ajax/sonumber', 'Api\AjaxController@generate_sales_number');
 
 // category
 Route::get('category', 'Api\CategoryController@get_data');
@@ -54,18 +56,6 @@ Route::put('user', 'Api\UserController@put_data');
 Route::put('user/resetpassword', 'Api\UserController@reset_password');
 Route::delete('user', 'Api\UserController@delete_data');
 
-// buy cart
-Route::get('cart/po', 'Api\POCartController@get_data');
-Route::post('cart/po', 'Api\POCartController@post_data');
-Route::post('cart/po/checkout', 'Api\POCartController@post_checkout_data');
-Route::delete('cart/po', 'Api\POCartController@delete_data');
-
-// sell cart
-Route::get('cart/sell', 'Api\SellCartController@get_data');
-Route::post('cart/sell', 'Api\SellCartController@post_data');
-Route::post('cart/sell/checkout', 'Api\SellCartController@post_checkout_data');
-Route::delete('cart/sell', 'Api\SellCartController@delete_data');
-
 // PO order
 Route::get('order/po', 'Api\PurchaseOrderController@get_data');
 Route::get('order/po/cart', 'Api\PurchaseOrderController@get_cart_data');
@@ -79,6 +69,13 @@ Route::get('order/po/print', 'Api\PurchaseOrderController@get_print_data');
 
 // SO order
 Route::get('order/so', 'Api\SalesOrderController@get_data');
+Route::get('order/so/cart', 'Api\SalesOrderController@get_cart_data');
+Route::post('order/so/cart', 'Api\SalesOrderController@post_cart_data');
+Route::delete('order/so/cart', 'Api\SalesOrderController@delete_cart_data');
+Route::post('order/so/checkout', 'Api\SalesOrderController@post_checkout_data');
+Route::post('order/so/rejectitem', 'Api\SalesOrderController@post_reject_item_data');
+Route::post('order/so/generateinvoice', 'Api\SalesOrderController@post_invoice_data');
+Route::post('order/so/rejectso', 'Api\SalesOrderController@post_reject_so_data');
 Route::get('order/so/print', 'Api\SalesOrderController@get_print_data');
 
 // invoice pembelian
@@ -89,4 +86,6 @@ Route::get('invoice/buy/print', 'Api\PurchaseInvoiceController@get_print_data');
 
 // invoice penjualan
 Route::get('invoice/sell', 'Api\SalesInvoiceController@get_data');
+Route::post('invoice/sell/pay', 'Api\SalesInvoiceController@post_payment_data');
+Route::get('invoice/sell/pay', 'Api\SalesInvoiceController@get_payment_data');
 Route::get('invoice/sell/print', 'Api\SalesInvoiceController@get_print_data');

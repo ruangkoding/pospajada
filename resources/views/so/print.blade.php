@@ -35,7 +35,7 @@ $i = 0;
         <div class="col-12">
             <div class="row">
                 <div class="col-12">
-                    <h3>Nota Penjualan<br>
+                    <h3>Nota Pembelian<br>
                         <span class="small">
                             No : {!! $invoice->invoice !!}
                         </span>
@@ -54,7 +54,7 @@ $i = 0;
                 </div>
                 <div class="col-6 text-right">
                     <address>
-                        <strong>Tanggal Transaksi :</strong><br>
+                        <strong>Tanggal Penjualan :</strong><br>
                         {!! $common->generate_indonesia_date($invoice->invoice_date) !!}<br>
                         <strong>Pembayaran :</strong><br>
                         {!! $invoice->paymentmethod->name !!}

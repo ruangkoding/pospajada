@@ -161,18 +161,19 @@ Vue.component('customer-index', require('./views/Customer/Index.vue'));
 Vue.component('customer-create', require('./views/Customer/Create.vue'));
 Vue.component('customer-update', require('./views/Customer/Update.vue'));
 
-Vue.component('pocart-index', require('./views/POCart/Index.vue'));
-Vue.component('pocart-create', require('./views/POCart/Create.vue'));
-
-Vue.component('sellcart-index', require('./views/SellCart/Index.vue'));
-Vue.component('sellcart-create', require('./views/SellCart/Create.vue'));
-
 Vue.component('po-index', require('./views/PO/Index.vue'));
 Vue.component('po-detail', require('./views/PO/Detail.vue'));
 Vue.component('po-cart', require('./views/PO/Cart.vue'));
 
 Vue.component('poinvoice-index', require('./views/POInvoice/Index.vue'));
 Vue.component('poinvoice-detail', require('./views/POInvoice/Detail.vue'));
+
+Vue.component('so-index', require('./views/SO/Index.vue'));
+Vue.component('so-detail', require('./views/SO/Detail.vue'));
+Vue.component('so-cart', require('./views/SO/Cart.vue'));
+
+Vue.component('soinvoice-index', require('./views/SOInvoice/Index.vue'));
+Vue.component('soinvoice-detail', require('./views/SOInvoice/Detail.vue'));
 
 Vue.component('user-index', require('./views/User/Index.vue'));
 Vue.component('user-create', require('./views/User/Create.vue'));

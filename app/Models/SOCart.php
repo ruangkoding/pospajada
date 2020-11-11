@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class SellCart extends Model
+class SOCart extends Model
 {
-    protected $table = 'sell_cart';
+    protected $table = 'so_cart';
     protected $dates = ['created_at', 'updated_at'];
 
     public function item()

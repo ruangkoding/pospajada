@@ -1,13 +1,11 @@
 @extends('layouts.app')
 @section('content')
     <div id="app">
-        <sellcart-index
-            :customer='{!! json_encode($customer) !!}'
-            :paymentmethod='{!! json_encode($paymentmethod) !!}'
-            :mobile='{!! json_encode($mobile) !!}'
+        <so-index
             :route='{!! json_encode($route) !!}'
             :api='{!! json_encode($api) !!}'
+            :mobile='{!! json_encode($mobile) !!}'
             :access='{!! json_encode($access) !!}'>
-        </sellcart-index>
+        </so-index>
     </div>
 @stop

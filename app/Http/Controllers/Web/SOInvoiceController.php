@@ -6,23 +6,23 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\View;
 use App\Http\Controllers\Controller;
+use App\Models\SalesInvoice;
+use App\Models\SalesInvoiceDetail;
 use App\Models\Item;
-use App\Models\Supplier;
-use App\Models\SOCart;
-use App\Models\PaymentMethod;
 use App\Libraries\Access;
 use App\Libraries\Common;
 use Jenssegers\Agent\Agent;
 use Closure;
 
-class SOCartController extends Controller
+class POInvoiceController extends Controller
 {
-    protected $title = 'Keranjang Belanja';
-    protected $link  = 'socart';
-    protected $api   = 'api/cart/so';
-    protected $route = 'socart';
+    protected $title = 'Invoice Penjualan';
+    protected $link  = 'soinvoice';
+    protected $api   = 'api/invoice/sell';
+    protected $route = 'soinvoice';
     protected $access;
     protected $breadcrumb;
+    protected $common;
     protected $mobile;
 
     public function __construct()
@@ -57,8 +57,6 @@ class SOCartController extends Controller
 
     public function index()
     {
-        $supplier = Supplier::all();
-        $paymentmethod = PaymentMethod::all();
         $data = [];
         $data['breadcrumb'] = $this->breadcrumb;
         $data['title']  = $this->title;
@@ -66,24 +64,26 @@ class SOCartController extends Controller
         $data['api'] = url($this->api);
         $data['route'] = url($this->route);
         $data['access'] = $this->access;
-        $data['supplier'] = $supplier;
-        $data['paymentmethod'] = $paymentmethod;
         $data['mobile'] = $this->mobile;
-        return View::make('socart.index', $data);
+        return View::make('soinvoice.index', $data);
     }
 
-    public function create()
+    public function detail(Request $request)
     {
-        $item = Item::all();
+        $invoice = SalesInvoice::with('so.supplier', 'so.user', 'paymentmethod')->find($request['id']);
+        $detail  = SalesInvoiceDetail::where('so_invoice_id', $invoice->id)->with('item.unit')->get();
+
         $data = [];
         $data['title']  = $this->title;
         $data['link'] = $this->link;
         $data['breadcrumb'] = $this->breadcrumb;
         $data['api'] = url($this->api);
+        $data['print_api'] = url($this->api . '/print?id=' . $invoice->id);
+        $data['invoice'] = $invoice;
+        $data['detail'] = $detail;
         $data['act'] = 'create';
         $data['route'] = url($this->route);
         $data['mobile'] = $this->mobile;
-        $data['item'] = $item;
-        return View::make('socart.form', $data);
+        return View::make('soinvoice.detail', $data);
     }
 }
