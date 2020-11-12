@@ -14,7 +14,7 @@ use App\Libraries\Common;
 use Jenssegers\Agent\Agent;
 use Closure;
 
-class POInvoiceController extends Controller
+class SOInvoiceController extends Controller
 {
     protected $title = 'Invoice Penjualan';
     protected $link  = 'soinvoice';
