@@ -1,10 +1,18 @@
-@import url('https://fonts.googleapis.com/css?family=Lato:400,700&display=swap');
+@font-face {
+    font-family: 'Lato';
+    src: url('fonts/Lato-Reg.ttf');
+}
+
+@font-face {
+    font-family: 'Lato';
+    src: url('fonts/Lato-Bol.ttf');
+    font-weight: bold;
+}
+
 
 body {
     font-family: "Lato", sans-serif !important;
-    font-size: 12px !important;
-    line-height: 22px;
-    font-weight: 700;
+    line-height: 22px !important;
 }
 
 a {
@@ -78,4 +86,37 @@ table.table-fit tbody td, table.table-fit tfoot td {
 .table-noborder th, .table-noborder td {
     padding: 0.50rem;
     vertical-align: top;
+}
+
+.summary {
+    margin-top: 10px;
+}
+
+.buttons{
+    float: right;
+}
+
+
+.buttons i.fa {
+    margin-left: .5em;
+}
+
+@media (min-width: 0px) {
+    body{font-size: 16px !important;}
+}
+
+@media (min-width: 576px) {
+    body{font-size: 16px !important;}
+}
+
+@media (min-width: 768px) {
+    body{font-size: 14px !important;}
+}
+
+@media (min-width: 992px) {
+    body{font-size: 14px !important;}
+}
+
+@media (min-width: 1200px) {
+    body{font-size: 14px !important;}
 }

@@ -1,16 +1,12 @@
 /*jshint esversion: 8 */
 import Vue from 'vue';
-import { ModalEvent, DropdownEvent, AlertEvent } from 'bootstrap/dist/js/bootstrap.min.js';
 import Loading from 'vue-loading-overlay';
-import 'vue-loading-overlay/dist/vue-loading.css';
 import VueCookies from 'vue-cookies';
 import moment from 'moment/moment';
 import 'moment/locale/id';
 import money from 'v-money';
 import accounting from 'accounting';
 import datePicker from 'vue-bootstrap-datetimepicker';
-import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
-import VueTypeaheadBootstrap from 'vue-typeahead-bootstrap';
 import VueSwal from 'vue-swal';
 
 /* if ('serviceWorker' in navigator) {
@@ -32,7 +28,6 @@ Vue.use(datePicker);
 Vue.use(accounting);
 Vue.use(VueCookies);
 Vue.use(VueSwal);
-Vue.use(Loading, { 'color': 'red', 'opacity': 100, 'can-cancel': false, 'is-full-page': false, 'z-index': 999, 'loader': 'bars'});
 
 // Component Config
 $.extend(true, $.fn.datetimepicker.defaults, {
@@ -139,7 +134,7 @@ Vue.filter('rupiah', function (amount) {
 Vue.component('v-alert', require('./components/Alert.vue'));
 Vue.component('v-pagination', require('./components/Pagination.vue'));
 Vue.component('v-delete', require('./components/Delete.vue'));
-Vue.component('vue-typeahead-bootstrap', VueTypeaheadBootstrap);
+//Vue.component('vue-typeahead-bootstrap', VueTypeaheadBootstrap);
 Vue.component('loading', Loading);
 Vue.component('login', require('./views/Login.vue'));
 Vue.component('dashboard', require('./views/Dashboard.vue'));
@@ -177,6 +172,7 @@ Vue.component('soinvoice-detail', require('./views/SOInvoice/Detail.vue'));
 
 Vue.component('user-index', require('./views/User/Index.vue'));
 Vue.component('user-create', require('./views/User/Create.vue'));
+Vue.component('user-update', require('./views/User/Update.vue'));
 
 Vue.component('report', require('./views/Report.vue'));
 Vue.component('log-index', require('./views/Log.vue'));

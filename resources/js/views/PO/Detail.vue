@@ -5,7 +5,7 @@
                 <div class="card-body">
                     <loading :opacity="100" :active.sync="isLoading" :can-cancel="false" :is-full-page="false" />
                     <transition name="fade">
-                        <table class="table table-hover table-striped table-bordered">
+                        <table class="table table-bordered">
                             <tbody>
                                 <tr>
                                     <td style="width:15%;"><b>Nomor PO</b></td>
@@ -42,9 +42,9 @@
                     <div class="row">
                         <div class="col-md-12">
                             <v-alert :alert="alert"></v-alert>
-                            <transition name="fade">
+                            <transition name="fade" v-if="showTable == true">
                                 <div class="table-responsive">
-                                    <table class="table table-hover table-bordered" v-if="showTable == true">
+                                    <table class="table table-hover table-bordered">
                                         <thead class="thead-dark">
                                             <tr>
                                                 <th style="width:30%;text-align:center;">Barang</th>
@@ -85,57 +85,31 @@
                     </div>
                     <span v-if="po.status === 0">
                         <a
-                            v-if="mobile === true"
                             href="#"
-                            class="btn btn-block btn-success"
-                            @click="toggleApprovalModal(po.id)">
-                            <i class="fa fa-check"></i> Proses PO
-                        </a>
-                        <a
-                            v-else
-                            href="#"
+                            :class="{'btn-block': mobile === true }"
                             class="btn btn-success"
                             @click="toggleApprovalModal(po.id)">
                             <i class="fa fa-check"></i> Proses PO
                         </a>
                         <a
-                            v-if="mobile === true"
                             href="#"
-                            class="btn btn-block btn-danger"
-                            @click="toggleRejectModal(po.id)">
-                            <i class="fa fa-times"></i> Batalkan PO
-                        </a>
-                        <a
-                            v-else
-                            href="#"
+                            :class="{'btn-block': mobile === true }"
                             class="btn btn-danger"
                             @click="toggleRejectModal(po.id)">
                             <i class="fa fa-times"></i> Batalkan PO
                         </a>
                         <a
-                            v-if="mobile === true"
                             :href="route"
-                            class="btn btn-block btn-outline-danger">
-                            <i class="fa fa-arrow-left"></i> Kembali
-                        </a>
-                        <a
-                            v-else
-                            :href="route"
-                            class="btn btn-outline-danger">
+                            :class="{'btn-block': mobile === true }"
+                            class="btn btn-secondary">
                             <i class="fa fa-arrow-left"></i> Kembali
                         </a>
                     </span>
                     <span v-else>
                         <a
-                            v-if="mobile === true"
                             :href="route"
-                            class="btn btn-block btn-outline-danger">
-                            <i class="fa fa-arrow-left"></i> Kembali
-                        </a>
-                        <a
-                            v-else
-                            :href="route"
-                            class="btn btn-outline-danger">
+                            :class="{'btn-block': mobile === true }"
+                            class="btn btn-secondary">
                             <i class="fa fa-arrow-left"></i> Kembali
                         </a>
                     </span>
@@ -224,32 +198,18 @@
                                                     v-model="checkout.total" />
                                             </div>
                                         </div>
-                                        <div class="row" v-if="mobile == true">
+                                        <div class="row">
                                             <div class="form-group col-md-12">
                                                 <button 
                                                     type="button"
-                                                    class="btn btn-block btn-success"
-                                                    @click.prevent="generateInvoice()">
-                                                    <i class="fa fa-shopping-cart"></i> Proses Invoice
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    class="btn btn-block btn-danger"
-                                                    data-dismiss="modal">
-                                                    <i class="fa fa-times"></i> Batal
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="row" v-else>
-                                            <div class="form-group col-md-12">
-                                                <button 
-                                                    type="button"
+                                                    :class="{'btn-block': mobile === true }"
                                                     class="btn btn-success"
                                                     @click.prevent="generateInvoice()">
                                                     <i class="fa fa-shopping-cart"></i> Proses Invoice
                                                 </button>
                                                 <button
                                                     type="button"
+                                                    :class="{'btn-block': mobile === true }"
                                                     class="btn btn-danger"
                                                     data-dismiss="modal">
                                                     <i class="fa fa-times"></i> Batal
@@ -408,7 +368,7 @@
                         if (response.status === 'ok') {
                             $('#approval_modal').modal('hide');
                             this.$swal("Berhasil!", "Proses Pembuatan Invoice Berhasil!", "success")
-                            //window.location.href = this.route + './../invoice/detail?id=' + response.order_id;
+                            window.location.href = this.route + './../poinvoice/detail?id=' + response.invoice_id;
                         }
                     }).catch(error => {
                         this.$swal("Terjadi Kesalahan!", "Silahkan Ulangi Kembali!", "error")

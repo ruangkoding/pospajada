@@ -13,10 +13,10 @@
             </a>
             <ul class="c-sidebar-nav-dropdown-items">
                 <li class="c-sidebar-nav-item">
-                    <a class="c-sidebar-nav-link" href="{!! url('po') !!}"> Purchase Order</a>
+                    <a class="c-sidebar-nav-link" href="{!! url('po') !!}">Purchase Order</a>
                 </li>
                 <li class="c-sidebar-nav-item">
-                    <a class="c-sidebar-nav-link" href="{!! url('so') !!}"> Sales Order</a>
+                    <a class="c-sidebar-nav-link" href="{!! url('so') !!}">Sales Order</a>
                 </li>
             </ul>
         </li>
@@ -27,10 +27,10 @@
             </a>
             <ul class="c-sidebar-nav-dropdown-items">
                 <li class="c-sidebar-nav-item">
-                    <a class="c-sidebar-nav-link" href="{!! url('poinvoice') !!}"> Pembelian</a>
+                    <a class="c-sidebar-nav-link" href="{!! url('poinvoice') !!}">Pembelian</a>
                 </li>
                 <li class="c-sidebar-nav-item">
-                    <a class="c-sidebar-nav-link" href="{!! url('soinvoice') !!}"> Penjualan</a>
+                    <a class="c-sidebar-nav-link" href="{!! url('soinvoice') !!}">Penjualan</a>
                 </li>
             </ul>
         </li>
@@ -44,10 +44,10 @@
                 <a class="c-sidebar-nav-dropdown-toggle" href="#"><i class="c-sidebar-nav-icon fa fa-book"></i> Katalog</a>
                 <ul class="c-sidebar-nav-dropdown-items">
                     <li class="c-sidebar-nav-item">
-                        <a class="c-sidebar-nav-link"  href="{!! url('category') !!}"> Jenis Barang</a>
+                        <a class="c-sidebar-nav-link" href="{!! url('category') !!}">Jenis Barang</a>
                     </li>
                     <li class="c-sidebar-nav-item">
-                        <a class="c-sidebar-nav-link"  href="{!! url('item') !!}"> Barang</a>
+                        <a class="c-sidebar-nav-link" href="{!! url('item') !!}">Barang</a>
                     </li>
                 </ul>
             </li>
@@ -58,17 +58,23 @@
                 </a>
                 <ul class="c-sidebar-nav-dropdown-items">
                     <li class="c-sidebar-nav-item">
-                        <a class="c-sidebar-nav-link"  href="{!! url('supplier') !!}"> Supplier</a>
+                        <a class="c-sidebar-nav-link" href="{!! url('supplier') !!}">Supplier</a>
                     </li>
                     <li class="c-sidebar-nav-item">
-                        <a class="c-sidebar-nav-link"  href="{!! url('customer') !!}"> Customer</a>
+                        <a class="c-sidebar-nav-link" href="{!! url('customer') !!}">Customer</a>
                     </li>
                     <li class="c-sidebar-nav-item">
-                        <a class="c-sidebar-nav-link"  href="{!! url('user') !!}"> Pengguna</a>
+                        <a class="c-sidebar-nav-link" href="{!! url('user') !!}">Pengguna</a>
                     </li>
                 </ul>
             </li>
         @endif
+        
+        <li class="c-sidebar-nav-item">
+            <a class="c-sidebar-nav-link" href="{!! url('profile') !!}">
+                <i class="c-sidebar-nav-icon fa fa-user"></i> Ganti Password
+            </a>
+        </li>
 
         <li class="c-sidebar-nav-item">
             <a class="c-sidebar-nav-link" href="{!! url('logout') !!}">

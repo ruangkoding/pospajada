@@ -8,27 +8,60 @@
             <form v-on:submit.prevent="onSubmit" method="post">
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fa fa-user"></i></span>
+                        <span class="input-group-text">
+                            <i class="fa fa-user"></i>
+                        </span>
                     </div>
-                    <input class="form-control" type="text" v-model="userlogin.username" placeholder="Username" required>
+                    <input 
+                        class="form-control" 
+                        type="text" 
+                        v-model="userlogin.username" 
+                        placeholder="Username" 
+                        required>
                 </div>
                 <div class="input-group mb-4">
                     <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                        <span class="input-group-text">
+                            <i class="fa fa-lock"></i>
+                        </span>
                     </div>
-                    <input class="form-control" v-model="userlogin.password" type="password" placeholder="Password" required>
+                    <input 
+                        class="form-control" 
+                        v-model="userlogin.password" 
+                        type="password" 
+                        placeholder="Password" 
+                        required>
                 </div>
                 <div class="row">
                     <div class="col-12">
-                        <button class="btn btn-block btn-success px-4" type="submit">Login</button>
-                        <div class="text-center" v-if="(login !== '') && (login === 'notfound')" style="margin-top:25px;">
-                            <div class="alert alert-danger">Username / Password Salah!</div>
+                        <button 
+                            class="btn btn-block btn-success px-4" 
+                            type="submit">
+                            Login
+                        </button>
+                        <div 
+                            class="text-center" 
+                            v-if="(login !== '') && (login === 'notfound')" 
+                            style="margin-top:25px;">
+                            <div class="alert alert-danger">
+                                Username / Password Salah!
+                            </div>
                         </div>
-                        <div class="text-center" v-if="(login !== '') && (login === 'inactive')" style="margin-top:25px;">
-                            <div class="alert alert-danger">Status User Tidak Aktif!</div>
+                        <div 
+                            class="text-center" 
+                            v-if="(login !== '') && (login === 'inactive')" 
+                            style="margin-top:25px;">
+                            <div class="alert alert-danger">
+                                Status User Tidak Aktif!
+                            </div>
                         </div>
-                        <div class="text-center" v-if="(login !== '') && (login === 'error')" style="margin-top:25px;">
-                            <div class="alert alert-danger">Terjadi Kesalahan!</div>
+                        <div 
+                            class="text-center"
+                            v-if="(login !== '') && (login === 'error')" 
+                            style="margin-top:25px;">
+                            <div class="alert alert-danger">
+                                Terjadi Kesalahan!
+                            </div>
                         </div>
                     </div>
                 </div>

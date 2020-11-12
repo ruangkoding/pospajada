@@ -1,18 +1,18 @@
 <template>
+
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <div :class="{'pull-right': mobile === false}">
-                        <button 
-                            type="button" 
+                    <div class="pull-right">
+                        <button
+                            type="button"
                             v-on:click.prevent="toggle"
-                            :class="{'btn-block': mobile === true }" 
-                            class="btn btn-outline-info mb-2">
+                            class="btn btn-info mb-2">
                             <i class="fa fa-search"></i> Form Pencarian
                         </button>
                     </div>
-                    <div class="card" :style="{'margin-top': (mobile === true) ? 25 + 'px' : 50 + 'px'}" v-show="showForm">
+                    <div class="card" style="margin-top:50px;" v-show="showForm">    
                         <div class="card-body">
                             <form v-on:submit.prevent="fetchData()">
                                 <div class="row">

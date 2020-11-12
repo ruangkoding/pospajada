@@ -407,7 +407,7 @@
                         if (response.status === 'ok') {
                             $('#approval_modal').modal('hide');
                             this.$swal("Berhasil!", "Proses Pembuatan Invoice Berhasil!", "success")
-                            window.location.href = this.route + './../poinvoice/detail?id=' + response.invoice_id;
+                            window.location.href = this.route + './../soinvoice/detail?id=' + response.invoice_id;
                         }
                     }).catch(error => {
                         this.$swal("Terjadi Kesalahan!", "Silahkan Ulangi Kembali!", "error")

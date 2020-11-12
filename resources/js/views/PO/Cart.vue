@@ -1,336 +1,269 @@
 <template>
-    <div>
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="card-header">
-                        <div v-if="mobile === true">
-                            <a
-                                v-if="access.write === 1"
-                                href="#"
-                                @click="toggleCartModal"
-                                class="btn btn-block btn-success mb-2">
-                                <i class="fa fa-plus"></i> Tambah Data
-                            </a>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="pull-right">
+                        <a
+                            v-if="access.write === 1"
+                            href="#"
+                            :class="{'btn-block': mobile === true }"
+                            @click="toggleCartModal"
+                            class="btn btn-success mb-2">
+                            <i class="fa fa-plus"></i> Tambah Barang
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <v-alert :alert="alert_page"></v-alert>
+                    <loading :opacity="100" :active.sync="isLoading" :can-cancel="false" :is-full-page="false" />
+
+                    <!-- cart table -->
+                    <transition name="fade" v-if="showTable == true">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th scope="col" class="text-center" style="width:30%;">Barang</th>
+                                        <th scope="col" class="text-center" style="width:10%;">Harga</th>
+                                        <th scope="col" class="text-center" style="width:5%;">Jumlah</th>
+                                        <th scope="col" class="text-center" style="width:10%;">Subtotal</th>
+                                        <th scope="col" class="text-center" style="width:5%;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="v in cart" :key="v.id">
+                                        <td scope="col">{{ v.item.item_name }}</td>
+                                        <td scope="col" style="text-align:right;">{{ v.price | rupiah }}</td>
+                                        <td scope="col" style="text-align:center;">{{ v.quantity }} {{ v.item.unit.unit_name }}</td>
+                                        <td scope="col" style="text-align:right;">{{ v.subtotal | rupiah }}</td>
+                                        <td scope="col">
+                                            <div style="text-align: center;">
+                                                <a 
+                                                    href="#"
+                                                    @click="toggleModal(v.id)"
+                                                    class="btn btn-xs btn-danger">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3" style="text-align:right;"><b>Total Harga</b></td>
+                                        <td style="text-align:right;"><b>{{ totalHarga | rupiah }}</b></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="pull-right" v-else>
-                            <a
-                                v-if="access.write === 1"
-                                href="#"
-                                @click="toggleCartModal"
-                                class="btn btn-success mb-2">
-                                <i class="fa fa-plus"></i> Tambah Data
-                            </a>
+                    </transition>
+
+                    <!-- checkout button -->
+                    <span v-if="showTable == true">
+                        <a 
+                            href="#" 
+                            :class="{'btn-block': mobile === true }"
+                            @click="toggleCheckoutModal" 
+                            class="btn btn-block btn-warning">
+                            <i class="fa fa-shopping-cart"></i> Buat PO
+                        </a>
+                        <a
+                            :href="route"
+                            :class="{'btn-block': mobile === true }"
+                            class="btn btn-secondary">
+                            <i class="fa fa-arrow-left"></i> Kembali
+                        </a>
+                    </span>
+                    <span v-else>
+                        <a
+                            :href="route"
+                            :class="{'btn-block': mobile === true }"
+                            class="btn btn-secondary">
+                            <i class="fa fa-arrow-left"></i> Kembali
+                        </a>
+                    </span>
+
+                    <!-- delete item from cart -->
+                    <v-delete :element="'delete_modal'" :id="id" @delete="deleteData" />
+
+                    <!-- checkout form modal -->
+                    <div class="modal fade" id="checkout_modal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Form Purchase Order</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <v-alert :alert="alert_modal"></v-alert>
+                                    <form method="POST">
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+                                                <label>Nomor Purchase Order</label>
+                                                <input 
+                                                    readonly="readonly"
+                                                    class="form-control"
+                                                    placeholder="Masukkan Nomor Purchase Order"
+                                                    v-model="checkout.po_number"
+                                                    :class="{ 'is-invalid': validasi_checkout.po_number }">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+                                                <label>Tanggal Purchase Order</label>
+                                                <date-picker
+                                                    v-model="checkout.po_date"
+                                                    :config="options"
+                                                    class="form-control"
+                                                    placeholder="Tanggal Purchase Order"
+                                                    autocomplete="off">
+                                                </date-picker>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+                                                <label>Supplier / Penjual</label>
+                                                <select 
+                                                    v-model="checkout.supplier_id" 
+                                                    class="form-control" 
+                                                    :class="{ 'is-invalid': validasi_checkout.supplier_id }">
+                                                    <option value="">Pilih Supplier / Penjual</option>
+                                                    <option 
+                                                        v-for="v in this.supplier" 
+                                                        :value="v.id" 
+                                                        :key="v.id">
+                                                        {{ v.supplier_name }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+                                                <label>Keterangan</label>
+                                                <textarea class="form-control" v-model="checkout.note"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+                                                <label>Total Harga</label>
+                                                <money 
+                                                    class="form-control"
+                                                    readonly="readonly"
+                                                    v-model="totalHarga" />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+                                                <button 
+                                                    type="button"
+                                                    :class="{'btn-block': mobile === true }"
+                                                    class="btn btn-success"
+                                                    @click.prevent="checkOutCart()">
+                                                    <i class="fa fa-shopping-cart"></i>
+                                                    Buat PO
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    :class="{'btn-block': mobile === true }"
+                                                    class="btn btn-danger"
+                                                    data-dismiss="modal">
+                                                    <i class="fa fa-times"></i> Batal
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer"></div>
+                            </div>
                         </div>
                     </div>
-                    <div class="card-body">
-                        <v-alert :alert="alert_page"></v-alert>
-                        <loading :opacity="100" :active.sync="isLoading" :can-cancel="false" :is-full-page="false" />
-
-                        <!-- cart table -->
-                        <transition name="fade">
-                            <div class="table-responsive">
-                                <table class="table table-hover table-striped table-bordered " v-if="showTable == true">
-                                    <thead class="thead-dark">
-                                        <tr>
-                                            <th scope="col" class="text-center" style="width:30%;">Barang</th>
-                                            <th scope="col" class="text-center" style="width:10%;">Harga</th>
-                                            <th scope="col" class="text-center" style="width:5%;">Jumlah</th>
-                                            <th scope="col" class="text-center" style="width:10%;">Subtotal</th>
-                                            <th scope="col" class="text-center" style="width:5%;">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-for="v in cart" :key="v.id">
-                                            <td scope="col">{{ v.item.item_name }}</td>
-                                            <td scope="col" style="text-align:right;">{{ v.price | rupiah }}</td>
-                                            <td scope="col" style="text-align:center;">{{ v.quantity }} {{ v.item.unit.unit_name }}</td>
-                                            <td scope="col" style="text-align:right;">{{ v.subtotal | rupiah }}</td>
-                                            <td scope="col">
-                                                <div style="text-align: center;">
-                                                    <a 
-                                                        v-if="(access.delete === 1)" 
-                                                        href="#"
-                                                        @click="toggleModal(v.id)"
-                                                        class="btn btn-sm btn-danger">
-                                                        <i class="fa fa-trash"></i> Hapus
-                                                    </a>
-                                                    <button 
-                                                        v-else 
-                                                        class="btn btn-sm btn-danger disabled">
-                                                        <i class="fa fa-trash"></i> Hapus
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="3" style="text-align:right;"><b>Total Harga</b></td>
-                                            <td style="text-align:right;"><b>{{ totalHarga | rupiah }}</b></td>
-                                            <td></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </transition>
-
-                        <!-- checkout button -->
-                        <span v-if="showTable == true">
-                            <a 
-                                v-if="mobile == true"
-                                href="#" 
-                                @click="toggleCheckoutModal" 
-                                class="btn btn-block btn-warning">
-                                <i class="fa fa-shopping-cart"></i> Buat PO
-                            </a>
-                            <a 
-                                v-else
-                                href="#" 
-                                @click="toggleCheckoutModal" 
-                                class="btn btn-warning">
-                                <i class="fa fa-shopping-cart"></i> Buat PO
-                            </a>
-                            <a
-                                v-if="mobile === true"
-                                :href="route"
-                                class="btn btn-block btn-outline-danger">
-                                <i class="fa fa-arrow-left"></i> Kembali
-                            </a>
-                            <a
-                                v-else
-                                :href="route"
-                                class="btn btn-outline-danger">
-                                <i class="fa fa-arrow-left"></i> Kembali
-                            </a>
-                        </span>
-                        <span v-else>
-                            <a
-                                v-if="mobile === true"
-                                :href="route"
-                                class="btn btn-block btn-outline-danger">
-                                <i class="fa fa-arrow-left"></i> Kembali
-                            </a>
-                            <a
-                                v-else
-                                :href="route"
-                                class="btn btn-outline-danger">
-                                <i class="fa fa-arrow-left"></i> Kembali
-                            </a>
-                        </span>
-
-                        <!-- delete item from cart -->
-                        <v-delete :element="'delete_modal'" :id="id" @delete="deleteData" />
-
-                        <!-- checkout form modal -->
-                        <div class="modal fade" id="checkout_modal" tabindex="-1" role="dialog">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">Form Purchase Order</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <v-alert :alert="alert_modal"></v-alert>
-                                        <form method="POST">
-                                            <div class="row">
-                                                <div class="form-group col-md-12">
-                                                    <label>Supplier / Penjual *</label>
-                                                    <select 
-                                                        v-model="checkout.supplier_id" 
-                                                        class="form-control" 
-                                                        :class="{ 'is-invalid': validasi_checkout.supplier_id }">
-                                                        <option value="">Pilih Supplier / Penjual</option>
-                                                        <option 
-                                                            v-for="v in this.supplier" 
-                                                            :value="v.id" 
-                                                            :key="v.id">
-                                                            {{ v.supplier_name }}
-                                                        </option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="form-group col-md-12">
-                                                    <label>Nomor Purchase Order *</label>
-                                                    <input 
-                                                        class="form-control"
-                                                        placeholder="Masukkan Nomor Purchase Order"
-                                                        v-model="checkout.po_number"
-                                                        :class="{ 'is-invalid': validasi_checkout.po_number }">
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="form-group col-md-12">
-                                                    <label>Tanggal Purchase Order *</label>
-                                                    <date-picker
-                                                        v-model="checkout.po_date"
-                                                        :config="options"
-                                                        class="form-control"
-                                                        placeholder="Tanggal Purchase Order"
-                                                        autocomplete="off">
-                                                    </date-picker>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="form-group col-md-12">
-                                                    <label>Keterangan</label>
-                                                    <textarea class="form-control" v-model="checkout.note"></textarea>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="form-group col-md-12">
-                                                    <label>Total Harga *</label>
-                                                    <money 
-                                                        class="form-control"
-                                                        readonly="readonly"
-                                                        v-model="totalHarga" />
-                                                </div>
-                                            </div>
-                                            <div class="row" v-if="mobile == true">
-                                                <div class="form-group col-md-12">
-                                                    <button 
-                                                        type="button"
-                                                        class="btn btn-block btn-success"
-                                                        @click.prevent="checkOutCart()">
-                                                        <i class="fa fa-shopping-cart"></i> Buat PO
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        class="btn btn-block btn-danger"
-                                                        data-dismiss="modal">
-                                                        <i class="fa fa-times"></i> Batal
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div class="row" v-else>
-                                                <div class="form-group col-md-12">
-                                                    <button 
-                                                        type="button"
-                                                        class="btn btn-success"
-                                                        @click.prevent="checkOutCart()">
-                                                        <i class="fa fa-shopping-cart"></i>
-                                                        Buat PO
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        class="btn btn-danger"
-                                                        data-dismiss="modal">
-                                                        <i class="fa fa-times"></i> Batal
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div class="modal-footer"></div>
+                    
+                    <!-- cart form modal -->
+                    <div class="modal fade" id="cart_modal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Form Keranjang Belanja</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
                                 </div>
-                            </div>
-                        </div>
-                        
-                        <!-- cart form modal -->
-                        <div class="modal fade" id="cart_modal" tabindex="-1" role="dialog">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">Form Keranjang Belanja</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <v-alert :alert="alert_cart"></v-alert>
-                                        <form method="POST">
-                                            <div class="row">
-                                                <div class="form-group col-12">
-                                                    <label>Barang *</label>
-                                                    <select 
-                                                        v-model="cartitem.item_id" 
-                                                        class="form-control" 
-                                                        :class="{ 'is-invalid': validasi_cart.item_id }">
-                                                        <option value="">Pilih Barang</option>
-                                                        <option 
-                                                            v-for="v in this.item" 
-                                                            :value="v.id" 
-                                                            :key="v.id">
-                                                            {{ v.item_name }}
-                                                        </option>
-                                                    </select>
-                                                </div>
+                                <div class="modal-body">
+                                    <v-alert :alert="alert_cart"></v-alert>
+                                    <form method="POST">
+                                        <div class="row">
+                                            <div class="form-group col-12">
+                                                <label>Barang</label>
+                                                <select 
+                                                    v-model="cartitem.item_id" 
+                                                    class="form-control" 
+                                                    :class="{ 'is-invalid': validasi_cart.item_id }">
+                                                    <option value="">Pilih Barang</option>
+                                                    <option 
+                                                        v-for="v in this.item" 
+                                                        :value="v.id" 
+                                                        :key="v.id">
+                                                        {{ v.item_name }}
+                                                    </option>
+                                                </select>
                                             </div>
-                                            <div class="row">
-                                                <div class="form-group col-12">
-                                                    <label>Harga Satuan *</label>
-                                                    <money 
-                                                        class="form-control" 
-                                                        placeholder="Masukkan Harga" 
-                                                        @input="calcTotal"
-                                                        v-model="cartitem.price" 
-                                                        :class="{ 'is-invalid': validasi_cart.price }" />
-                                                </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-12">
+                                                <label>Harga Satuan</label>
+                                                <money 
+                                                    class="form-control" 
+                                                    placeholder="Masukkan Harga" 
+                                                    @input="calcTotal"
+                                                    v-model="cartitem.price" 
+                                                    :class="{ 'is-invalid': validasi_cart.price }" />
                                             </div>
-                                            <div class="row">
-                                                <div class="form-group col-12">
-                                                    <label>Jumlah *</label>
-                                                    <input 
-                                                        type="number" 
-                                                        class="form-control" 
-                                                        placeholder="Masukkan Jumlah Pembelian" 
-                                                        @input="calcTotal"
-                                                        v-model="cartitem.quantity" 
-                                                        :class="{ 'is-invalid': validasi_cart.quantity }"
-                                                    >
-                                                </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-12">
+                                                <label>Jumlah</label>
+                                                <input 
+                                                    type="number" 
+                                                    class="form-control" 
+                                                    placeholder="Masukkan Jumlah Pembelian" 
+                                                    @input="calcTotal"
+                                                    v-model="cartitem.quantity" 
+                                                    :class="{ 'is-invalid': validasi_cart.quantity }"
+                                                >
                                             </div>
-                                            <div class="row">
-                                                <div class="form-group col-12">
-                                                    <label>Total Harga *</label>
-                                                    <money 
-                                                        class="form-control" 
-                                                        readonly="readonly" 
-                                                        v-model="cartitem.subtotal" />
-                                                </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-12">
+                                                <label>Total Harga *</label>
+                                                <money 
+                                                    class="form-control" 
+                                                    readonly="readonly" 
+                                                    v-model="cartitem.subtotal" />
                                             </div>
-                                            <div class="row">
-                                                <div class="form-group col-12">
-                                                    <b>*) Wajib Diisi</b>
-                                                </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-12">
+                                                <button 
+                                                    type="button"
+                                                    :class="{'btn-block': mobile === true }"
+                                                    class="btn btn-success"
+                                                    @click.prevent="addCartItem()">
+                                                    <i class="fa fa-save"></i> Simpan Data
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    :class="{'btn-block': mobile === true }"
+                                                    class="btn btn-danger"
+                                                    data-dismiss="modal">
+                                                    <i class="fa fa-times"></i> Batal
+                                                </button>
                                             </div>
-                                            <div class="row" v-if="mobile === true">
-                                                <div class="form-group col-12">
-                                                    <button
-                                                        type="button"
-                                                        class="btn btn-block btn-success"
-                                                        @click.prevent="addCartItem()">
-                                                        <i class="fa fa-save"></i> Simpan Data
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        class="btn btn-block btn-danger"
-                                                        data-dismiss="modal">
-                                                        <i class="fa fa-times"></i> Batal
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div class="row" v-else>
-                                                <div class="form-group col-12">
-                                                    <button 
-                                                        type="button"
-                                                        class="btn btn-success"
-                                                        @click.prevent="addCartItem()">
-                                                        <i class="fa fa-save"></i> Simpan Data
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        class="btn btn-danger"
-                                                        data-dismiss="modal">
-                                                        <i class="fa fa-times"></i> Batal
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div class="modal-footer"></div>
+                                        </div>
+                                    </form>
                                 </div>
+                                <div class="modal-footer"></div>
                             </div>
                         </div>
                     </div>
@@ -602,6 +535,14 @@
         },
         mounted() {
             this.userId = this.$cookies.get('id');
+            service.fetchData('./../api/ajax/ponumber')
+            .then(response => {
+                this.checkout.po_number = response;
+            })
+            .catch(error => {
+                this.alert_modal.error = true;
+                console.log(error);
+            });
             this.fetchData();
         }
     };

@@ -4,19 +4,11 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-header">
-                        <div v-if="mobile === true">
+                        <div class="pull-right">
                             <a
                                 v-if="access.write === 1"
                                 href="#"
-                                @click="toggleCartModal"
-                                class="btn btn-block btn-success mb-2">
-                                <i class="fa fa-plus"></i> Tambah Barang
-                            </a>
-                        </div>
-                        <div class="pull-right" v-else>
-                            <a
-                                v-if="access.write === 1"
-                                href="#"
+                                :class="{'btn-block': mobile === true }"
                                 @click="toggleCartModal"
                                 class="btn btn-success mb-2">
                                 <i class="fa fa-plus"></i> Tambah Barang
@@ -28,9 +20,9 @@
                         <loading :opacity="100" :active.sync="isLoading" :can-cancel="false" :is-full-page="false" />
 
                         <!-- cart table -->
-                        <transition name="fade">
+                        <transition name="fade" v-if="showTable == true">
                             <div class="table-responsive">
-                                <table class="table table-hover table-striped table-bordered " v-if="showTable == true">
+                                <table class="table table-hover table-striped table-bordered">
                                     <thead class="thead-dark">
                                         <tr>
                                             <th scope="col" class="text-center" style="width:30%;">Barang</th>
@@ -76,43 +68,24 @@
                         <!-- checkout button -->
                         <span v-if="showTable == true">
                             <a 
-                                v-if="mobile == true"
                                 href="#" 
+                                :class="{'btn-block': mobile === true }"
                                 @click="toggleCheckoutModal" 
                                 class="btn btn-block btn-warning">
                                 <i class="fa fa-shopping-cart"></i> Buat SO
                             </a>
-                            <a 
-                                v-else
-                                href="#" 
-                                @click="toggleCheckoutModal" 
-                                class="btn btn-warning">
-                                <i class="fa fa-shopping-cart"></i> Buat SO
-                            </a>
                             <a
-                                v-if="mobile === true"
                                 :href="route"
-                                class="btn btn-block btn-outline-danger">
-                                <i class="fa fa-arrow-left"></i> Kembali
-                            </a>
-                            <a
-                                v-else
-                                :href="route"
-                                class="btn btn-outline-danger">
+                                :class="{'btn-block': mobile === true }"
+                                class="btn btn-secondary">
                                 <i class="fa fa-arrow-left"></i> Kembali
                             </a>
                         </span>
                         <span v-else>
                             <a
-                                v-if="mobile === true"
                                 :href="route"
-                                class="btn btn-block btn-outline-danger">
-                                <i class="fa fa-arrow-left"></i> Kembali
-                            </a>
-                            <a
-                                v-else
-                                :href="route"
-                                class="btn btn-outline-danger">
+                                :class="{'btn-block': mobile === true }"
+                                class="btn btn-secondary">
                                 <i class="fa fa-arrow-left"></i> Kembali
                             </a>
                         </span>
@@ -135,23 +108,6 @@
                                         <form method="POST">
                                             <div class="row">
                                                 <div class="form-group col-md-12">
-                                                    <label>Customer / Pembeli *</label>
-                                                    <select 
-                                                        v-model="checkout.customer_id" 
-                                                        class="form-control" 
-                                                        :class="{ 'is-invalid': validasi_checkout.customer_id }">
-                                                        <option value="">Pilih Customer / Pembeli</option>
-                                                        <option 
-                                                            v-for="v in this.customer" 
-                                                            :value="v.id" 
-                                                            :key="v.id">
-                                                            {{ v.customer_name }}
-                                                        </option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="form-group col-md-12">
                                                     <label>Nomor Sales Order *</label>
                                                     <input 
                                                         readonly="readonly"
@@ -171,6 +127,23 @@
                                                         placeholder="Tanggal Sales Order"
                                                         autocomplete="off">
                                                     </date-picker>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <label>Customer / Pembeli *</label>
+                                                    <select 
+                                                        v-model="checkout.customer_id" 
+                                                        class="form-control" 
+                                                        :class="{ 'is-invalid': validasi_checkout.customer_id }">
+                                                        <option value="">Pilih Customer / Pembeli</option>
+                                                        <option 
+                                                            v-for="v in this.customer" 
+                                                            :value="v.id" 
+                                                            :key="v.id">
+                                                            {{ v.customer_name }}
+                                                        </option>
+                                                    </select>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -229,7 +202,7 @@
                                         <form method="POST">
                                             <div class="row">
                                                 <div class="form-group col-12">
-                                                    <label>Barang *</label>
+                                                    <label>Barang</label>
                                                     <select 
                                                         v-model="cartitem.item_id" 
                                                         class="form-control" 
@@ -246,7 +219,7 @@
                                             </div>
                                             <div class="row">
                                                 <div class="form-group col-12">
-                                                    <label>Harga Satuan *</label>
+                                                    <label>Harga Satuan</label>
                                                     <money 
                                                         class="form-control" 
                                                         placeholder="Masukkan Harga" 
@@ -257,7 +230,7 @@
                                             </div>
                                             <div class="row">
                                                 <div class="form-group col-12">
-                                                    <label>Jumlah *</label>
+                                                    <label>Jumlah</label>
                                                     <input 
                                                         type="number" 
                                                         class="form-control" 
@@ -270,16 +243,11 @@
                                             </div>
                                             <div class="row">
                                                 <div class="form-group col-12">
-                                                    <label>Total Harga *</label>
+                                                    <label>Total Harga</label>
                                                     <money 
                                                         class="form-control" 
                                                         readonly="readonly" 
                                                         v-model="cartitem.subtotal" />
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="form-group col-12">
-                                                    <b>*) Wajib Diisi</b>
                                                 </div>
                                             </div>
                                             <div class="row">

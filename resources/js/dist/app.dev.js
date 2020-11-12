@@ -2,11 +2,7 @@
 
 var _vue = _interopRequireDefault(require("vue"));
 
-var _bootstrapMin = require("bootstrap/dist/js/bootstrap.min.js");
-
 var _vueLoadingOverlay = _interopRequireDefault(require("vue-loading-overlay"));
-
-require("vue-loading-overlay/dist/vue-loading.css");
 
 var _vueCookies = _interopRequireDefault(require("vue-cookies"));
 
@@ -19,10 +15,6 @@ var _vMoney = _interopRequireDefault(require("v-money"));
 var _accounting = _interopRequireDefault(require("accounting"));
 
 var _vueBootstrapDatetimepicker = _interopRequireDefault(require("vue-bootstrap-datetimepicker"));
-
-require("pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css");
-
-var _vueTypeaheadBootstrap = _interopRequireDefault(require("vue-typeahead-bootstrap"));
 
 var _vueSwal = _interopRequireDefault(require("vue-swal"));
 
@@ -50,16 +42,7 @@ _vue["default"].use(_accounting["default"]);
 
 _vue["default"].use(_vueCookies["default"]);
 
-_vue["default"].use(_vueSwal["default"]);
-
-_vue["default"].use(_vueLoadingOverlay["default"], {
-  'color': 'red',
-  'opacity': 100,
-  'can-cancel': false,
-  'is-full-page': false,
-  'z-index': 999,
-  'loader': 'bars'
-}); // Component Config
+_vue["default"].use(_vueSwal["default"]); // Component Config
 
 
 $.extend(true, $.fn.datetimepicker.defaults, {
@@ -174,9 +157,8 @@ _vue["default"].component('v-alert', require('./components/Alert.vue'));
 
 _vue["default"].component('v-pagination', require('./components/Pagination.vue'));
 
-_vue["default"].component('v-delete', require('./components/Delete.vue'));
+_vue["default"].component('v-delete', require('./components/Delete.vue')); //Vue.component('vue-typeahead-bootstrap', VueTypeaheadBootstrap);
 
-_vue["default"].component('vue-typeahead-bootstrap', _vueTypeaheadBootstrap["default"]);
 
 _vue["default"].component('loading', _vueLoadingOverlay["default"]);
 
@@ -233,6 +215,8 @@ _vue["default"].component('soinvoice-detail', require('./views/SOInvoice/Detail.
 _vue["default"].component('user-index', require('./views/User/Index.vue'));
 
 _vue["default"].component('user-create', require('./views/User/Create.vue'));
+
+_vue["default"].component('user-update', require('./views/User/Update.vue'));
 
 _vue["default"].component('report', require('./views/Report.vue'));
 

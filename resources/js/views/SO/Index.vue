@@ -28,10 +28,17 @@
                                     </div>
                                     <div class="row">
                                         <div class="input-group col-md-6">
-                                            <button type="submit" class="btn btn-success mr-sm-2">
+                                            <button 
+                                                type="submit"
+                                                :class="{'btn-block': mobile === true }"
+                                                class="btn btn-success mr-sm-2">
                                                 <i class="fa fa-search"></i> Cari Data
                                             </button>
-                                            <button type="button" v-on:click.prevent="clear" class="btn btn-outline-info">
+                                            <button 
+                                                type="button"
+                                                :class="{'btn-block': mobile === true }" 
+                                                v-on:click.prevent="clear" 
+                                                class="btn btn-info">
                                                 <i class="fa fa-refresh"></i> Reset
                                             </button>
                                         </div>
@@ -43,9 +50,61 @@
                     <div class="card-body">
                         <v-alert :alert="alert"></v-alert>
                         <loading :opacity="100" :active.sync="isLoading" :can-cancel="false" :is-full-page="false"></loading>
-                        <transition name="fade">
-                            <div class="table-responsive">
-                                <table class="table table-hover table-striped table-bordered" v-if="showTable == true">
+                        <transition name="fade" v-if="showTable === true">
+                            <div v-if="mobile === true">
+                                <div class="card" v-for="v in so" :key="v.id">
+                                    <div class="card-body">
+                                        <table class="table-noborder">
+                                            <tr>
+                                                <td>Nomor</td>
+                                                <td>:</td>
+                                                <td><a :href="route + '/detail?id=' + v.id">{{ v.so_number }}</a></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Customer</td>
+                                                <td>:</td>
+                                                <td>{{ v.customer.customer_name }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Tanggal</td>
+                                                <td>:</td>
+                                                <td>{{ v.so_date | short_moment }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Total</td>
+                                                <td>:</td>
+                                                <td>{{ v.total | rupiah }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Status</td>
+                                                <td>:</td>
+                                                <td>
+                                                    <span 
+                                                        class="badge badge-warning" 
+                                                        v-if="v.status === 0" 
+                                                        style="padding:10px;">
+                                                        <i class="fa fa-refresh"></i> MENUNGGU
+                                                    </span>
+                                                    <span
+                                                        class="badge badge-success"
+                                                        v-if="v.status === 1"
+                                                        style="padding:10px;">
+                                                        <i class="fa fa-check"></i> DIPROSES
+                                                    </span>
+                                                    <span
+                                                        class="badge badge-danger"
+                                                        v-if="v.status === 2"
+                                                        style="padding:10px;">
+                                                        <i class="fa fa-times"></i> DIBATALKAN
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="table-responsive" v-else>
+                                <table class="table table-hover table-striped table-bordered">
                                     <thead class="thead-dark">
                                         <tr>
                                             <th scope="col" style="text-align:center;">Nomor SO</th>
@@ -64,8 +123,12 @@
                                                 {{ v.customer.customer_name }}<br>
                                                 {{ v.customer.customer_address }}<br>
                                             </td>
-                                            <td scope="row" style="text-align:center;vertical-align:middle;">{{ v.so_date | moment }}</td>
-                                            <td scope="row" style="text-align:right;vertical-align:middle;">{{ v.total | rupiah }}</td>
+                                            <td scope="row" style="text-align:center;vertical-align:middle;">
+                                                {{ v.so_date | moment }}
+                                            </td>
+                                            <td scope="row" style="text-align:right;vertical-align:middle;">
+                                                {{ v.total | rupiah }}
+                                            </td>
                                             <td scope="row" style="text-align:center;vertical-align:middle;">
                                                 <span 
                                                     class="badge badge-warning" 
@@ -135,7 +198,7 @@ export default {
             userId: ''
         }
     },
-    props: ['api','route','access'],
+    props: ['api','route','access', 'mobile'],
     methods: {
         toggle() {
             this.showForm = !this.showForm

@@ -8,7 +8,7 @@
                     <form method="POST" v-on:submit.prevent="onSubmit">
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <label>Jenis Barang *</label>
+                                <label>Jenis Barang</label>
                                 <select 
                                     v-model="item.category_id" 
                                     class="form-control" 
@@ -25,7 +25,7 @@
                         </div>
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <label>Satuan *</label>
+                                <label>Satuan</label>
                                 <select 
                                     v-model="item.unit_id" 
                                     class="form-control" 
@@ -42,7 +42,7 @@
                         </div>
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <label>Kode Barang *</label>
+                                <label>Kode Barang</label>
                                 <input 
                                     type="text" 
                                     class="form-control" 
@@ -53,7 +53,7 @@
                         </div>
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <label>Nama Barang *</label>
+                                <label>Nama Barang</label>
                                 <input 
                                     type="text" 
                                     class="form-control" 
@@ -64,17 +64,12 @@
                         </div>
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <label>Stok Barang</label>
+                                <label>Stok Barang <i><small>(opsional)</small></i></label>
                                 <input 
                                     type="text" 
                                     class="form-control" 
                                     placeholder="Masukkan Jumlah Stok" 
                                     v-model="item.stock">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-md-12">
-                                <b>*) Wajib Diisi</b>
                             </div>
                         </div>
                         <div class="row">
@@ -88,7 +83,7 @@
                                 <a 
                                     :href="route" 
                                     :class="{'btn-block': mobile === true }" 
-                                    class="btn btn-outline-danger">
+                                    class="btn btn-secondary">
                                     <i class="fa fa-arrow-left"></i> Kembali
                                 </a>
                             </div>

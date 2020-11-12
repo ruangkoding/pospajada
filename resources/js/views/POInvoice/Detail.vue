@@ -153,7 +153,7 @@
                         <a
                             :href="route"
                             :class="{'btn-block': mobile === true}"
-                            class="btn btn-outline-danger">
+                            class="btn btn-secondary">
                             <i class="fa fa-arrow-left"></i> Kembali
                         </a>
                     </span>
@@ -168,7 +168,7 @@
                         <a
                             :href="route"
                             :class="{'btn-block': mobile === true}"
-                            class="btn btn-outline-danger">
+                            class="btn btn-secondary">
                             <i class="fa fa-arrow-left"></i> Kembali
                         </a>
                     </span>

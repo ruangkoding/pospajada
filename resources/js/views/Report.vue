@@ -28,7 +28,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="row">
                             <div class="form-group col-md-4">
                                 <label>Sampai *</label>
@@ -51,7 +50,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="row">
                             <div class="form-group col-md-4">
                                 <label>Jenis Laporan *</label>
@@ -63,16 +61,14 @@
                                 </div>
                             </div>
                         </div>
-
-                         <div class="row">
-                            <div class="form-group col-md-12">
-                                <b>*) Wajib Diisi</b>
-                            </div>
-                        </div>
-
                         <div class="row">
                             <div class="form-group col-md-12">
-                                <button type="submit" class="btn btn-success"><i class="fa fa-print"></i> Cetak Laporan</button>
+                                <button 
+                                    type="submit"
+                                    :class="{'btn-block': mobile === true }" 
+                                    class="btn btn-success">
+                                    <i class="fa fa-print"></i> Cetak Laporan
+                                </button>
                             </div>
                         </div>
                     </form>
@@ -132,7 +128,6 @@
             },
             validate() {
                 let condition = 0;
-
                 if (this.report.dari.length === 0) {
                     this.validasi.dari = true;
                     condition++;

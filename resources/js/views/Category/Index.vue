@@ -1,150 +1,138 @@
 <template>
-    <div>
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="card-header">
-                        <div :class="{'pull-right': mobile === false}">
-                            <button
-                                type="button"
-                                v-on:click.prevent="toggle"
-                                :class="{'btn-block': mobile === true }"
-                                class="btn btn-outline-info mb-2">
-                                <i class="fa fa-search"></i> Form Pencarian
-                            </button>
-                            <a
-                                v-if="access.write === 1"
-                                :href="route + '/create'"
-                                :class="{'btn-block': mobile === true }"
-                                class="btn btn-success mb-2">
-                                <i class="fa fa-plus"></i> Tambah Data
-                            </a>
-                        </div>
-                        <div class="card" :style="{'margin-top': (mobile === true) ? 25 + 'px' : 50 + 'px'}" v-show="showForm">
-                            <div class="card-body">
-                                <form v-on:submit.prevent="fetchData()">
-                                    <div class="row">
-                                        <div class="form-group col-md-6">
-                                            <input type="text" class="form-control" v-model="search.q" placeholder="Nama Jenis Barang">
-                                        </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="pull-right">
+                        <button
+                            type="button"
+                            v-on:click.prevent="toggle"
+                            class="btn btn-info mb-2">
+                            <i class="fa fa-search"></i> Form Pencarian
+                        </button>
+                        <a
+                            v-if="access.write === 1"
+                            :href="route + '/create'"
+                            class="btn btn-success mb-2">
+                            <i class="fa fa-plus"></i> Tambah Data
+                        </a>
+                    </div>
+                    <div class="card" style="margin-top:50px;" v-show="showForm">
+                        <div class="card-body">
+                            <form v-on:submit.prevent="fetchData()">
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <input type="text" class="form-control" v-model="search.q" placeholder="Nama Jenis Barang">
                                     </div>
-                                    <div class="row">
-                                        <div class="input-group col-md-6">
-                                            <button 
-                                                type="submit"
-                                                :class="{'btn-block': mobile === true }"
-                                                class="btn btn-success mr-sm-2">
-                                                <i class="fa fa-search"></i> Cari Data
-                                            </button>
-                                            <button 
-                                                type="button"
-                                                :class="{'btn-block': mobile === true }" 
-                                                v-on:click.prevent="clear" 
-                                                class="btn btn-info">
-                                                <i class="fa fa-refresh"></i> Reset
-                                            </button>
-                                        </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-group col-md-6">
+                                        <button 
+                                            type="submit"
+                                            :class="{'btn-block': mobile === true }"
+                                            class="btn btn-success mr-sm-2">
+                                            <i class="fa fa-search"></i> Cari Data
+                                        </button>
+                                        <button 
+                                            type="button"
+                                            :class="{'btn-block': mobile === true }" 
+                                            v-on:click.prevent="clear" 
+                                            class="btn btn-info">
+                                            <i class="fa fa-refresh"></i> Reset
+                                        </button>
                                     </div>
-                                </form>
-                            </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
-                    <div class="card-body">
-                        <v-alert :alert="alert"></v-alert>
-                        <loading :opacity="100" :active.sync="isLoading" :can-cancel="false" :is-full-page="false" />
-                        <transition name="fade" v-if="showTable == true">
-                            <div v-if="mobile === true">
-                                <div class="card" v-for="v in category" :key="v.id">
-                                    <div class="card-body">
-                                        <table class="table-noborder">
-                                            <tr>
-                                                <td>Nama Jenis</td>
-                                                <td>:</td>
-                                                <td>{{ v.category_name }}</td>
-                                            </tr>
-                                        </table>
-                                        <div style="text-align: center;">
+                </div>
+                <div class="card-body">
+                    <v-alert :alert="alert"></v-alert>
+                    <loading :opacity="100" :active.sync="isLoading" :can-cancel="false" :is-full-page="false" />
+                    <transition name="fade" v-if="showTable == true">
+                        <div v-if="mobile === true">
+                            <div class="card" v-for="v in category" :key="v.id">
+                                <div class="card-body">
+                                    <table class="table-noborder">
+                                        <tr>
+                                            <td>Nama Jenis</td>
+                                            <td>:</td>
+                                            <td>{{ v.category_name }}</td>
+                                        </tr>
+                                    </table>
+                                    <div class="summary">
+                                        <span class="buttons">
                                             <a
                                                 v-if="(access.update === 1)"
                                                 :href="route + '/edit?id=' + v.id"
-                                                class="btn btn-sm btn-block btn-warning mr-sm-1">
+                                                class="btn btn-sm btn-outline-warning mr-2">
                                                 <i class="fa fa-wrench"></i> Ubah
                                             </a>
-                                            <button
-                                                v-else
-                                                class="btn btn-sm btn-block btn-warning disabled mr-sm-1">
-                                                <i class="fa fa-wrench"></i> Ubah
-                                            </button>
                                             <a
                                                 v-if="(access.delete === 1)"
                                                 href="#"
-                                                @click="toggleModal(v.id)"
-                                                class="btn btn-sm btn-block btn-danger">
-                                                <i class="fa fa-trash-o"></i> Hapus
+                                                class="btn btn-sm btn-outline-danger"
+                                                @click="toggleModal(v.id)">
+                                                <i class="fa fa-trash"></i> Hapus
                                             </a>
-                                            <button
-                                                v-else
-                                                class="btn btn-sm btn-block btn-danger disabled">
-                                                <i class="fa fa-trash-o"></i> Hapus
-                                            </button>
-                                        </div>
+                                        </span>
                                     </div>
                                 </div>
                             </div>
-                            <div v-else>
-                                <div class="table-responsive">
-                                    <table class="table table-hover table-striped table-bordered">
-                                        <thead class="thead-dark">
-                                            <tr>
-                                                <th style="text-align:center;">Nama Jenis Barang</th>
-                                                <th style="text-align:center;">Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr v-for="v in category" :key="v.id">
-                                                <td>{{ v.category_name }}</td>
-                                                <td>
-                                                    <div style="text-align: center;">
-                                                        <a
-                                                            v-if="(access.update === 1)"
-                                                            :href="route + '/edit?id=' + v.id"
-                                                            class="btn btn-sm btn-warning mr-sm-1">
-                                                            <i class="fa fa-wrench"></i> Ubah
-                                                        </a>
-                                                        <button
-                                                            v-else
-                                                            class="btn btn-sm btn-warning disabled mr-sm-1">
-                                                            <i class="fa fa-wrench"></i> Ubah
-                                                        </button>
-                                                        <a
-                                                            v-if="(access.delete === 1)"
-                                                            href="#"
-                                                            @click="toggleModal(v.id)"
-                                                            class="btn btn-sm btn-danger">
-                                                            <i class="fa fa-trash-o"></i> Hapus
-                                                        </a>
-                                                        <button
-                                                            v-else
-                                                            class="btn btn-sm btn-danger disabled">
-                                                            <i class="fa fa-trash-o"></i> Hapus
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </transition>
-                        <v-delete :element="'delete_modal'" :id="id" @delete="deleteData" />
-                        <div class="card-footer clearfix" v-if="showTable === true">
-                            <v-pagination
-                                :pagination="pagination"
-                                v-on:next="nextPage"
-                                v-on:previous="prevPage"
-                                v-if="showTable === true">
-                            </v-pagination>
                         </div>
+                        <div v-else>
+                            <div class="table-responsive">
+                                <table class="table table-hover table-striped table-bordered">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th style="text-align:center;">Nama Jenis Barang</th>
+                                            <th style="text-align:center;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="v in category" :key="v.id">
+                                            <td>{{ v.category_name }}</td>
+                                            <td>
+                                                <div style="text-align: center;">
+                                                    <a
+                                                        v-if="(access.update === 1)"
+                                                        :href="route + '/edit?id=' + v.id"
+                                                        class="btn btn-sm btn-warning mr-sm-1">
+                                                        <i class="fa fa-wrench"></i> Ubah
+                                                    </a>
+                                                    <button
+                                                        v-else
+                                                        class="btn btn-sm btn-warning disabled mr-sm-1">
+                                                        <i class="fa fa-wrench"></i> Ubah
+                                                    </button>
+                                                    <a
+                                                        v-if="(access.delete === 1)"
+                                                        href="#"
+                                                        @click="toggleModal(v.id)"
+                                                        class="btn btn-sm btn-danger">
+                                                        <i class="fa fa-trash-o"></i> Hapus
+                                                    </a>
+                                                    <button
+                                                        v-else
+                                                        class="btn btn-sm btn-danger disabled">
+                                                        <i class="fa fa-trash-o"></i> Hapus
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </transition>
+                    <v-delete :element="'delete_modal'" :id="id" @delete="deleteData" />
+                    <div class="card-footer clearfix" v-if="showTable === true">
+                        <v-pagination
+                            :pagination="pagination"
+                            v-on:next="nextPage"
+                            v-on:previous="prevPage"
+                            v-if="showTable === true">
+                        </v-pagination>
                     </div>
                 </div>
             </div>

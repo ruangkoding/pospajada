@@ -11,20 +11,33 @@
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <label>Password Baru</label>
-                                <input type="password" class="form-control" :class="{ 'is-invalid': validasi.password }" v-model="backuser.password" placeholder="Masukkan Password Baru">
+                                <input 
+                                    type="password" 
+                                    class="form-control" 
+                                    :class="{ 'is-invalid': validasi.password }" 
+                                    v-model="backuser.password" 
+                                    placeholder="Masukkan Password Baru">
                             </div>
                         </div>
-
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <label>Konfirmasi Password</label>
-                                <input type="password" class="form-control" :class="{ 'is-invalid': validasi.repassword }" v-model="backuser.repassword" placeholder="Konfirmasi Password Baru">
+                                <input 
+                                    type="password" 
+                                    class="form-control" 
+                                    :class="{ 'is-invalid': validasi.repassword }" 
+                                    v-model="backuser.repassword" 
+                                    placeholder="Konfirmasi Password Baru">
                             </div>
                         </div>
-
                         <div class="row">
                             <div class="form-group col-md-12">
-                                <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Simpan Data</button>
+                                <button 
+                                    type="submit" 
+                                    :class="{'btn-block': mobile === true }"
+                                    class="btn btn-success">
+                                    <i class="fa fa-save"></i> Simpan Data
+                                </button>
                             </div>
                         </div>
                     </form>
@@ -35,7 +48,6 @@
 </template>
 
 <script>
-
     import service from './../services.js';
     export default {
         data() {
@@ -80,13 +92,13 @@
                     service.putData(this.api, this.backuser)
                     .then(result => {
                         if (result.status === 'ok') {
-                            this.alert.update = true;
+                            this.$swal("Berhasil!", "Ubah Password Berhasil!", "success");
                             this.formReset();
                             window.scroll({top: 0, left: 0, behavior: 'smooth'});
                             setTimeout(() => this.alert.update = false, 5000);
                         }
                     }).catch(error => {
-                        this.alert.error = true;
+                        this.$swal("Terjadi Kesalahan!", "Silahkan Ulangi Kembali!", "error");
                         window.scroll({top: 0, left: 0, behavior: 'smooth'});
                         console.log(error);
                     });

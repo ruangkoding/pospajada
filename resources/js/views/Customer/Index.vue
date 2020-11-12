@@ -4,25 +4,11 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-header">
-                        <div v-if="mobile === true">
-                            <a
-                                v-if="access.write === 1"
-                                :href="route + '/create'"
-                                class="btn btn-block btn-success mb-2">
-                                <i class="fa fa-plus"></i> Tambah Data
-                            </a>
+                        <div class="pull-right">
                             <button
                                 type="button"
                                 v-on:click.prevent="toggle"
-                                class="btn btn-block btn-outline-info mb-2">
-                                <i class="fa fa-search"></i> Form Pencarian
-                            </button>
-                        </div>
-                        <div class="pull-right" v-else>
-                            <button
-                                type="button"
-                                v-on:click.prevent="toggle"
-                                class="btn btn-outline-info mb-2">
+                                class="btn btn-info mb-2">
                                 <i class="fa fa-search"></i> Form Pencarian
                             </button>
                             <a
@@ -32,56 +18,85 @@
                                 <i class="fa fa-plus"></i> Tambah Data
                             </a>
                         </div>
-                        <transition name="fade">
-                            <div class="card" style="margin-top:50px;" v-show="showForm">
-                                <div class="card-body table-responsive">
-                                    <form v-on:submit.prevent="fetchData()">
-                                        <div class="row">
-                                            <div class="form-group col-md-4">
-                                                <input type="text" class="form-control" v-model="search.q" placeholder="Nama Customer">
-                                            </div>
-                                            <div class="row" v-if="mobile === true">
-                                                <div class="input-group col-md-6">
-                                                    <button 
-                                                        type="submit" 
-                                                        class="btn btn-block btn-success mr-sm-2">
-                                                        <i class="fa fa-search"></i> Cari Data
-                                                    </button>
-                                                    <button 
-                                                        type="button" 
-                                                        v-on:click.prevent="clear" 
-                                                        class="btn btn-block btn-info">
-                                                        <i class="fa fa-refresh"></i> Reset
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div class="row" v-else>
-                                                <div class="input-group col-md-6">
-                                                    <button 
-                                                        type="submit" 
-                                                        class="btn btn-success mr-sm-2">
-                                                        <i class="fa fa-search"></i> Cari Data
-                                                    </button>
-                                                    <button 
-                                                        type="button" 
-                                                        v-on:click.prevent="clear" 
-                                                        class="btn btn-info">
-                                                        <i class="fa fa-refresh"></i> Reset
-                                                    </button>
-                                                </div>
-                                            </div>
+                        <div class="card" style="margin-top:50px;" v-show="showForm">
+                            <div class="card-body">
+                                <form v-on:submit.prevent="fetchData()">
+                                    <div class="row">
+                                        <div class="form-group col-md-6">
+                                            <input 
+                                                type="text" 
+                                                class="form-control" 
+                                                v-model="search.q" 
+                                                placeholder="Nama Customer">
                                         </div>
-                                    </form>
-                                </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="input-group col-md-6">
+                                            <button 
+                                                type="submit"
+                                                :class="{'btn-block': mobile === true }"
+                                                class="btn btn-success mr-sm-2">
+                                                <i class="fa fa-search"></i> Cari Data
+                                            </button>
+                                            <button 
+                                                type="button"
+                                                :class="{'btn-block': mobile === true }" 
+                                                v-on:click.prevent="clear" 
+                                                class="btn btn-info">
+                                                <i class="fa fa-refresh"></i> Reset
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
-                        </transition>
+                        </div>
                     </div>
                     <div class="card-body">
                         <v-alert :alert="alert"></v-alert>
                         <loading :opacity="100" :active.sync="isLoading" :can-cancel="false" :is-full-page="false" />
-                        <transition name="fade">
-                            <div class="table-responsive">
-                                <table class="table table-hover table-striped table-bordered" v-if="showTable == true">
+                        <transition name="fade" v-if="showTable == true">
+                            <div v-if="mobile === true">
+                                <div class="card" v-for="v in customer" :key="v.id">
+                                    <div class="card-body">
+                                        <table class="table-noborder">
+                                            <tr>
+                                                <td>Nama</td>
+                                                <td>:</td>
+                                                <td>{{ v.customer_name }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Alamat</td>
+                                                <td>:</td>
+                                                <td>{{ v.customer_address }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Kontak</td>
+                                                <td>:</td>
+                                                <td>{{ v.hp }}</td>
+                                            </tr>
+                                        </table>
+                                        <div class="summary">
+                                            <span class="buttons">
+                                                <a
+                                                    v-if="(access.update === 1)"
+                                                    :href="route + '/edit?id=' + v.id"
+                                                    class="btn btn-sm btn-outline-warning mr-2">
+                                                    <i class="fa fa-wrench"></i> Ubah
+                                                </a>
+                                                <a
+                                                    v-if="(access.delete === 1)"
+                                                    href="#"
+                                                    class="btn btn-sm btn-outline-danger"
+                                                    @click="toggleModal(v.id)">
+                                                    <i class="fa fa-trash"></i> Hapus
+                                                </a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="table-responsive" v-else>
+                                <table class="table table-bordered">
                                     <thead class="thead-dark">
                                         <tr>
                                             <th style="width:12%; text-align:center;">Nama Customer</th>
@@ -103,7 +118,11 @@
                                                         class="btn btn-sm btn-warning mr-sm-1">
                                                         <i class="fa fa-wrench"></i> Ubah
                                                     </a>
-                                                    <button v-else class="btn btn-sm btn-warning disabled mr-sm-1"><i class="fa fa-wrench"></i> Ubah</button>
+                                                    <button 
+                                                        v-else 
+                                                        class="btn btn-sm btn-warning disabled mr-sm-1">
+                                                        <i class="fa fa-wrench"></i> Ubah
+                                                    </button>
                                                     <a
                                                         v-if="(access.delete === 1)"
                                                         href="#"
@@ -111,7 +130,11 @@
                                                         class="btn btn-sm btn-danger">
                                                         <i class="fa fa-trash-o"></i> Hapus
                                                     </a>
-                                                    <button v-else class="btn btn-sm btn-danger disabled"><i class="fa fa-trash-o"></i> Hapus</button>
+                                                    <button 
+                                                        v-else 
+                                                        class="btn btn-sm btn-danger disabled">
+                                                        <i class="fa fa-trash-o"></i> Hapus
+                                                    </button>
                                                 </div>
                                             </td>
                                         </tr>
@@ -220,16 +243,14 @@ export default {
             service.deleteData(this.api + '?id=' + id)
             .then(response => {
                 if(response.status === 'ok') {
-                    this.alert.delete = true;
+                    this.$swal("Berhasil!", "Data Berhasil Dihapus!", "success");
                     $('#delete_modal').modal('hide');
                     this.fetchData();
                     window.scroll({ top: 0, left: 0, behavior: 'smooth' });
-                    setTimeout(() => this.alert.delete=false, 5000);
                 }
             }).catch(error => {
                 this.isLoading = false;
-                this.alert.delete = false;
-                this.alert.error = true;
+                this.$swal("Terjadi Kesalahan!", "Silahkan Ulangi Kembali!", "error");
                 $('#delete_modal').modal('hide');
                 window.scroll({ top: 0, left: 0, behavior: 'smooth' });
                 this.fetchData();

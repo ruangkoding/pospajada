@@ -3,16 +3,15 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <div :class="{'pull-right': mobile === false}">
-                        <button 
-                            type="button" 
+                    <div class="pull-right">
+                        <button
+                            type="button"
                             v-on:click.prevent="toggle"
-                            :class="{'btn-block': mobile === true }" 
-                            class="btn btn-outline-info mb-2">
+                            class="btn btn-info mb-2">
                             <i class="fa fa-search"></i> Form Pencarian
                         </button>
                     </div>
-                    <div class="card" :style="{'margin-top': (mobile === true) ? 25 + 'px' : 50 + 'px'}" v-show="showForm">
+                    <div class="card" style="margin-top:50px;" v-show="showForm">
                         <div class="card-body">
                             <form v-on:submit.prevent="fetchData()">
                                 <div class="row">
@@ -27,17 +26,17 @@
                                 <div class="row">
                                     <div class="input-group col-md-6">
                                         <button 
-                                            type="submit" 
-                                            :class="{'btn-block': mobile === true }" 
+                                            type="submit"
+                                            :class="{'btn-block': mobile === true }"
                                             class="btn btn-success mr-sm-2">
-                                                <i class="fa fa-search"></i> Cari Data
+                                            <i class="fa fa-search"></i> Cari Data
                                         </button>
                                         <button 
                                             type="button"
-                                            :class="{'btn-block': mobile === true }"
-                                            @click.prevent="clear"
-                                            class="btn btn-outline-info">
-                                                <i class="fa fa-refresh"></i> Reset
+                                            :class="{'btn-block': mobile === true }" 
+                                            v-on:click.prevent="clear" 
+                                            class="btn btn-info">
+                                            <i class="fa fa-refresh"></i> Reset
                                         </button>
                                     </div>
                                 </div>
@@ -116,61 +115,59 @@
                             </div>
                         </div>
                         <!-- desktop view -->
-                        <div name="fade" v-else>
-                            <div class="table-responsive">
-                                <table class="table table-hover table-striped table-bordered">
-                                    <thead class="thead-dark">
-                                        <tr>
-                                            <th scope="col" style="text-align:center;width:13%;">Nomor Invoice</th>
-                                            <th scope="col" style="text-align:center;width:32%;">Supplier</th>
-                                            <th scope="col" style="text-align:center;width:15%;">Tanggal</th>
-                                            <th scope="col" style="text-align:center;width:12%;">Total</th>
-                                            <th scope="col" style="text-align:center;width:13%;">Pembayaran</th>
-                                            <th scope="col" style="text-align:center;width:15%;">Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-for="v in po" :key="v.id">
-                                            <td scope="row" style="vertical-align:middle;">
-                                                <a :href="route + '/detail?id=' + v.id">{{ v.invoice_number }}</a>
-                                            </td>
-                                            <td scope="row" style="vertical-align:middle;">
-                                                {{ v.po.supplier.supplier_name }}<br>
-                                                {{ v.po.supplier.supplier_address }}<br>
-                                            </td>
-                                            <td scope="row" style="text-align:center;vertical-align:middle;">{{ v.po_date | moment }}</td>
-                                            <td scope="row" style="text-align:right;vertical-align:middle;">{{ v.total | rupiah }}</td>
-                                            <td scope="row" style="text-align:center;vertical-align:middle;">
-                                                <span v-if="v.paymentmethod.name === 'Kredit'">
-                                                    {{ v.paymentmethod.name }}<br>
-                                                    <b>Tempo : {{ v.payment_due_date | short_moment }}</b>
-                                                </span>
-                                                <span v-if="v.paymentmethod.name === 'Tunai'">{{ v.paymentmethod.name }}</span>
-                                            </td>
-                                            <td scope="row" style="text-align:center;vertical-align:middle;">
-                                                <span 
-                                                    class="badge badge-danger" 
-                                                    v-if="v.status === 0" 
-                                                    style="padding:5px;">
-                                                        <i class="fa fa-times"></i> BELUM DIBAYAR
-                                                </span>
-                                                <span 
-                                                    class="badge badge-success"
-                                                    v-if="v.status === 1"
-                                                    style="padding:5px;">
-                                                        <i class="fa fa-check"></i> LUNAS
-                                                </span>
-                                                <span
-                                                    class="badge badge-warning" 
-                                                    v-if="v.status === 2" 
-                                                    style="padding:5px;">
-                                                    <i class="fa fa-refresh"></i> DIBAYAR SEBAGIAN
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                        <div class="table-responsive" v-else>
+                            <table class="table table-hover table-striped table-bordered">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th scope="col" style="text-align:center;width:13%;">Nomor Invoice</th>
+                                        <th scope="col" style="text-align:center;width:32%;">Supplier</th>
+                                        <th scope="col" style="text-align:center;width:15%;">Tanggal</th>
+                                        <th scope="col" style="text-align:center;width:12%;">Total</th>
+                                        <th scope="col" style="text-align:center;width:13%;">Pembayaran</th>
+                                        <th scope="col" style="text-align:center;width:15%;">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="v in po" :key="v.id">
+                                        <td scope="row" style="vertical-align:middle;">
+                                            <a :href="route + '/detail?id=' + v.id">{{ v.invoice_number }}</a>
+                                        </td>
+                                        <td scope="row" style="vertical-align:middle;">
+                                            {{ v.po.supplier.supplier_name }}<br>
+                                            {{ v.po.supplier.supplier_address }}<br>
+                                        </td>
+                                        <td scope="row" style="text-align:center;vertical-align:middle;">{{ v.po_date | moment }}</td>
+                                        <td scope="row" style="text-align:right;vertical-align:middle;">{{ v.total | rupiah }}</td>
+                                        <td scope="row" style="text-align:center;vertical-align:middle;">
+                                            <span v-if="v.paymentmethod.name === 'Kredit'">
+                                                {{ v.paymentmethod.name }}<br>
+                                                <b>Tempo : {{ v.payment_due_date | short_moment }}</b>
+                                            </span>
+                                            <span v-if="v.paymentmethod.name === 'Tunai'">{{ v.paymentmethod.name }}</span>
+                                        </td>
+                                        <td scope="row" style="text-align:center;vertical-align:middle;">
+                                            <span 
+                                                class="badge badge-danger" 
+                                                v-if="v.status === 0" 
+                                                style="padding:5px;">
+                                                    <i class="fa fa-times"></i> BELUM DIBAYAR
+                                            </span>
+                                            <span 
+                                                class="badge badge-success"
+                                                v-if="v.status === 1"
+                                                style="padding:5px;">
+                                                    <i class="fa fa-check"></i> LUNAS
+                                            </span>
+                                            <span
+                                                class="badge badge-warning" 
+                                                v-if="v.status === 2" 
+                                                style="padding:5px;">
+                                                <i class="fa fa-refresh"></i> DIBAYAR SEBAGIAN
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </transition>
 

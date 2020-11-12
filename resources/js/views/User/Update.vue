@@ -36,45 +36,23 @@
                         </div>
                         <div class="row">
                             <div class="form-group col-md-12">
-                                <b>*) Wajib Diisi</b>
-                            </div>
-                        </div>
-                        <div class="row" v-if="mobile === true">
-                            <div class="form-group col-md-12">
-                                <button 
-                                    type="submit" 
-                                    class="btn btn-block btn-success">
-                                    <i class="fa fa-save"></i> Simpan Data
-                                </button>
-                                <button 
-                                    type="button" 
-                                    class="btn btn-block btn-warning" 
-                                    @click.prevent="resetPassword()">
-                                    <i class="fa fa-refresh"></i> Reset Password
-                                </button>
-                                <a 
-                                    :href="route" 
-                                    class="btn btn-block btn-outline-danger">
-                                    <i class="fa fa-arrow-left"></i> Kembali
-                                </a>
-                            </div>
-                        </div>
-                        <div class="row" v-else>
-                            <div class="form-group col-md-12">
                                 <button 
                                     type="submit"
+                                    :class="{'btn-block': mobile === true }"
                                     class="btn btn-success">
-                                    <i class="fa fa-save"></i> Simpan Data
+                                    <i class="fa fa-save"></i> Simpan
                                 </button>
                                 <button 
                                     type="button" 
+                                    :class="{'btn-block': mobile === true }"
                                     class="btn btn-warning" 
                                     @click.prevent="resetPassword()">
                                     <i class="fa fa-refresh"></i> Reset Password
                                 </button>
                                 <a 
                                     :href="route" 
-                                    class="btn btn-outline-danger">
+                                    :class="{'btn-block': mobile === true }"
+                                    class="btn btn-secondary">
                                     <i class="fa fa-arrow-left"></i> Kembali
                                 </a>
                             </div>
@@ -127,7 +105,7 @@
                             this.response(result);
                         }).catch(error => {
                             this.isLoading = false;
-                            this.alert.error = true;
+                            this.$swal("Terjadi Kesalahan!", "Silahkan Ulangi Kembali!", "error");
                             window.scroll({top: 0, left: 0, behavior: 'smooth'});
                             console.log(error);
                         });
@@ -139,13 +117,11 @@
             response(result) {
                 setTimeout(() => { this.isLoading = false }, 1000);
                 if (result.status === 'ok') {
-                    this.alert.update = true;
+                    this.$swal("Berhasil!", "Data Berhasil Diubah!", "success");
                     window.scroll({ top: 0, left: 0, behavior: 'smooth' });
-                    setTimeout(() => this.alert.update = false, 5000);
                 } else if (result.status === 'duplicate') {
-                    this.alert.duplicate = true;
+                    this.$swal("Duplikat!", "Data Yang Sama Sudah Disimpan Sebelumnya!", "warning");
                     window.scroll({ top: 0, left: 0, behavior: 'smooth' });
-                    setTimeout(() => this.alert.update = false, 5000);
                 }
             },
             resetPassword() {
@@ -153,13 +129,12 @@
                 .then(result => {
                     setTimeout(() => { this.isLoading = false }, 1000);
                     if (result.status === 'ok') {
-                        this.alert.reset = true;
+                        this.$swal("Berhasil!", "Password Berhasil Direset ulang!", "success");
                         window.scroll({ top: 0, left: 0, behavior: 'smooth' });
-                        setTimeout(() => this.alert.reset = false, 5000);
                     }
                 }).catch(error => {
                     this.isLoading = false;
-                    this.alert.error = true;
+                    this.$swal("Terjadi Kesalahan!", "Silahkan Ulangi Kembali!", "error");
                     window.scroll({top: 0, left: 0, behavior: 'smooth'});
                     console.log(error);
                 });

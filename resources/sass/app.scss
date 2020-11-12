@@ -1,7 +1,5 @@
-//@import "./coreui/css/coreui.min.css";
-//@import "~bootstrap/dist/css/bootstrap.min.css";
-@import "./../../node_modules/font-awesome/scss/font-awesome.scss";
+@import "./../../node_modules/font-awesome/css/font-awesome.min.css";
+@import './../../node_modules/pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.min.css';
+@import './../../node_modules/vue-loading-overlay/dist/vue-loading.css';
 @import "./theme.scss";
-@import "./multiselect_bootstrap.scss";
 @import "./custom.css";
-//@import "./../../node_modules/@coreui/icons/css/free.min.css";

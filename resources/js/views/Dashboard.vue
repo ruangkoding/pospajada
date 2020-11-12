@@ -11,7 +11,8 @@
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">
-                                                <i class="fa fa-calendar"></i></span>
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
                                         </div>
                                         <date-picker
                                             id="periode"
@@ -26,15 +27,9 @@
                                 </div>
                                 <div class="form-group col-lg-4 col-md-4 col-sm-12 col-sm-12">
                                     <button
-                                        v-if="mobile === true"
                                         type="submit"
+                                        :class="{'btn-block': mobile === true }"
                                         class="btn btn-block btn-success">
-                                        <i class="fa fa-search"></i> Tampikan Data
-                                    </button>
-                                    <button
-                                        v-else
-                                        type="submit"
-                                        class="btn btn-success">
                                         <i class="fa fa-search"></i> Tampikan Data
                                     </button>
                                 </div>

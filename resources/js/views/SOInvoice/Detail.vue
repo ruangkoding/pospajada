@@ -6,7 +6,7 @@
                     <loading :opacity="100" :active.sync="isLoading" :can-cancel="false" :is-full-page="false" />
                     <!-- summary data -->
                     <transition name="fade">
-                        <table class="table table-striped">
+                        <table class="table table-bordered">
                             <tbody>
                                 <tr>
                                     <td style="width:15%;"><b>Invoice</b></td>
