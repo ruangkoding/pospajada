@@ -85,8 +85,8 @@
                                 <table class="table table-hover table-striped table-bordered">
                                     <thead class="thead-dark">
                                         <tr>
-                                            <th style="text-align:center;">Nama Jenis Barang</th>
-                                            <th style="text-align:center;">Action</th>
+                                            <th style="text-align:center;width:75%;">Nama Jenis Barang</th>
+                                            <th style="text-align:center;width:25%;">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>

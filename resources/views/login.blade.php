@@ -14,7 +14,7 @@
         <div class="row justify-content-center">
             <div class="col-md-4">
                 <div class="card-group">
-                    <div class="card p-4">
+                    <div class="card">
                         <div class="card-body">
                             <div id="app">
                                 <login :api='{!! json_encode($api) !!}' :redirect='{!! json_encode($redirect) !!}'></login>

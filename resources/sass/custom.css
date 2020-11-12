@@ -32,13 +32,13 @@ h2 {
     font-size: 0.75rem;
 }
 
-.fade-enter-active, .fade-leave-active {
+/* .fade-enter-active, .fade-leave-active {
     transition: opacity .5s;
 }
 
 .fade-enter, .fade-leave-to {
     opacity: 0;
-}
+} */
 
 .bootstrap-datetimepicker-widget {
     font-size: 12px !important;

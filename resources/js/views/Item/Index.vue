@@ -107,10 +107,10 @@
                                 <table class="table table-bordered" style="min-width: 100%">
                                     <thead class="thead-dark">
                                         <tr>
-                                            <th scope="col" class="text-center" style="width:20%;">Kode Barang</th>
-                                            <th scope="col" class="text-center" style="width:30%;">Nama Barang</th>
-                                            <th scope="col" class="text-center" style="width:20%;">Jenis</th>
-                                            <th scope="col" class="text-center" style="width:10%;">Stok</th>
+                                            <th scope="col" class="text-center" style="width:10%;">Kode</th>
+                                            <th scope="col" class="text-center" style="width:40%;">Nama Barang</th>
+                                            <th scope="col" class="text-center" style="width:15%;">Jenis</th>
+                                            <th scope="col" class="text-center" style="width:15%;">Stok</th>
                                             <th scope="col" class="text-center" style="width:20%;">Tindakan</th>
                                         </tr>
                                     </thead>
