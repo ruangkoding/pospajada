@@ -150,7 +150,7 @@ class PurchaseOrderController extends Controller
                     }
                 }
             }
-            return response()->json(['status' => 'ok'], 200);
+            return response()->json(['status' => 'ok', 'invoice_id' => $invoice->id], 200);
         } else {
             return response()->json(['status' => 'failed'], 500);
         }

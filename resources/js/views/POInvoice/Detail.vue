@@ -6,7 +6,7 @@
                     <loading :opacity="100" :active.sync="isLoading" :can-cancel="false" :is-full-page="false" />
                     <!-- summary data -->
                     <transition name="fade">
-                        <table class="table table-striped">
+                        <table class="table table-bordered">
                             <tbody>
                                 <tr>
                                     <td style="width:15%;"><b>Invoice</b></td>
@@ -33,12 +33,12 @@
                                 <tr>
                                     <td style="width:15%;"><b>Pembayaran</b></td>
                                     <td style="width:85%;">
-                                        <span v-if="invoice.paymentmethod.name === 'Kredit'">
-                                            {{ invoice.paymentmethod.name }}<br>
+                                        <span v-if="invoice.payment_method_id === 2">
+                                            Kredit<br>
                                             Tanggal Jatuh Tempo : <b>{{ invoice.payment_due_date | moment }}</b>
                                         </span>
-                                        <span v-if="invoice.paymentmethod.name === 'Tunai'">
-                                            {{ v.paymentmethod.name }}
+                                        <span v-if="invoice.payment_method_id === 1">
+                                            Tunai
                                         </span>
                                     </td>
                                 </tr>
@@ -307,6 +307,7 @@
             'invoice',
             'detail',
             'route',
+            'paymentmethod',
             'print_api',
             'access',
             'api',
@@ -314,8 +315,20 @@
         ],
         methods: {
             cetakInvoice(id) {
-                let newWindow = window.open();
-                newWindow.location = this.print_api;
+                this.isLoading = true;
+                service.getDownloadData(this.print_api)
+                .then(response => {
+                    const link = document.createElement('a');
+                    link.href = response;
+                    link.setAttribute('download', 'Invoice Pembelian - '+ this.invoice.invoice_number+'.pdf');
+                    document.body.appendChild(link);
+                    link.click();
+                    this.isLoading = false;
+                }).catch(error => {
+                    this.isLoading = false;
+                    this.$swal("Terjadi Kesalahan!", "Silahkan Ulangi Kembali!", "error");
+                    console.log(error);
+                });
             },
             togglePaymentModal() {
                 $("#payment_modal").modal('show');
@@ -390,6 +403,7 @@
         mounted() {
             this.userId = this.$cookies.get('id');
             this.isLoading = false;
+            console.log(this.invoice.paymentmethod.name);
         }
     };
 </script>

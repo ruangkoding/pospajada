@@ -64,7 +64,7 @@
                             href="#" 
                             :class="{'btn-block': mobile === true }"
                             @click="toggleCheckoutModal" 
-                            class="btn btn-block btn-warning">
+                            class="btn btn-warning">
                             <i class="fa fa-shopping-cart"></i> Buat PO
                         </a>
                         <a

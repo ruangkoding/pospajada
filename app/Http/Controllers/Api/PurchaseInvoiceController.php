@@ -10,6 +10,7 @@ use App\Models\PurchaseInvoiceDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Exception;
+use PDF;
 
 class PurchaseInvoiceController extends Controller
 {
@@ -78,8 +79,10 @@ class PurchaseInvoiceController extends Controller
             $_id = isset($request['id']) ? $request['id'] : '';
             $invoice = PurchaseInvoice::with('po.supplier','paymentmethod')->find($_id);
             $detail = PurchaseInvoiceDetail::with('item.unit')->where('po_invoice_id', $_id)->get();
-            $view = View::make('poinvoice.print', ['invoice' => $invoice, 'detail' => $detail]);
-            return $view;
+            $pdf = PDF::loadView('poinvoice.print', ['invoice' => $invoice, 'detail' => $detail])->setPaper('a4', 'landscape');
+            // $view = View::make('poinvoice.print', ['invoice' => $invoice, 'detail' => $detail]);
+            // return $view;
+            return $pdf->stream('invoice.pdf');
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
