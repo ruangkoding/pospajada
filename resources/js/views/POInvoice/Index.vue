@@ -15,12 +15,39 @@
                         <div class="card-body">
                             <form v-on:submit.prevent="fetchData()">
                                 <div class="row">
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-3">
                                         <input 
                                             type="text"
                                             class="form-control" 
                                             v-model="search.q" 
                                             placeholder="Nomor Invoice">
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <date-picker
+                                            v-model="search.from"
+                                            :config="options"
+                                            class="form-control"
+                                            placeholder="Tanggal Mulai Pencarian"
+                                            autocomplete="off">
+                                        </date-picker>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <date-picker
+                                            v-model="search.to"
+                                            :config="options"
+                                            class="form-control"
+                                            placeholder="Tanggal Akhir Pencarian"
+                                            autocomplete="off">
+                                        </date-picker>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <select 
+                                            v-model="search.payment" 
+                                            class="form-control">
+                                            <option value="">Pilih Pembayaran</option>
+                                            <option value="1">Tunai</option>
+                                            <option value="2">Kredit</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -193,7 +220,15 @@ export default {
         return {
             po: {},
             search: {
-                q:''
+                q:'',
+                from:'',
+                to:'',
+                payment:''
+            },
+            options: {
+                format: 'YYYY-MM-DD',
+                useCurrent: false,
+                locale: 'id'
             },
             alert: {
                 error:false,
@@ -221,6 +256,9 @@ export default {
         },
         clear() {
             this.search.q = '';
+            this.search.from = '';
+            this.search.to = '';
+            this.search.payment = '';
             this.fetchData();
         },
         nextPage() {

@@ -23,8 +23,17 @@ class SalesInvoiceController extends Controller
     public function get_data(Request $request)
     {
         try {
-            $_query = isset($request['q']) ? $request['q'] : '';
-            $order  = SalesInvoice::searchInvoice($_query)->with('so.customer','paymentmethod')->orderBy('id', 'DESC')->paginate(10);
+            $_query   = isset($request['q']) ? $request['q'] : '';
+            $_from    = isset($request['from']) ? $request['from'] : '';
+            $_to      = isset($request['to']) ? $request['to'] : '';
+            $_payment = isset($request['payment']) ? $request['payment'] : '';
+            $order  = SalesInvoice::searchInvoice($_query)
+                                    ->searchFrom($_from)
+                                    ->searchTo($_to)
+                                    ->searchPayment($_payment)
+                                    ->with('po.customer','paymentmethod')
+                                    ->orderBy('id', 'DESC')
+                                    ->paginate(10);
             return response()->json($order, 200);
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);

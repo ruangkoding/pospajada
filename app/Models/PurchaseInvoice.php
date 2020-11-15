@@ -41,17 +41,24 @@ class PurchaseInvoice extends Model
         }
     }
 
-    public function scopeSearchAwalPeriode($query, $start)
+    public function scopeSearchFrom($query, $start)
     {
         if ($start) {
             return $query->where('invoice_date', '>=', $start);
         }
     }
 
-    public function scopeSearchAkhirPeriode($query, $end)
+    public function scopeSearchTo($query, $end)
     {
         if ($end) {
             return $query->where('invoice_date', '<=', $end);
+        }
+    }
+
+    public function scopeSearchPayment($query, $payment)
+    {
+        if ($payment) {
+            return $query->where('payment_method_id', $payment);
         }
     }
 }

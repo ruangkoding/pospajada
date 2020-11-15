@@ -19,7 +19,7 @@ $i = 0;
         }
     </style>
 </head>
-<body>
+<body onload="window.print()">
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">

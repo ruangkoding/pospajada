@@ -24,8 +24,17 @@ class PurchaseInvoiceController extends Controller
     public function get_data(Request $request)
     {
         try {
-            $_query = isset($request['q']) ? $request['q'] : '';
-            $order  = PurchaseInvoice::searchInvoice($_query)->with('po.supplier','paymentmethod')->orderBy('id', 'DESC')->paginate(10);
+            $_query   = isset($request['q']) ? $request['q'] : '';
+            $_from    = isset($request['from']) ? $request['from'] : '';
+            $_to      = isset($request['to']) ? $request['to'] : '';
+            $_payment = isset($request['payment']) ? $request['payment'] : '';
+            $order  = PurchaseInvoice::searchInvoice($_query)
+                                        ->searchFrom($_from)
+                                        ->searchTo($_to)
+                                        ->searchPayment($_payment)
+                                        ->with('po.supplier','paymentmethod')
+                                        ->orderBy('id', 'DESC')
+                                        ->paginate(10);
             return response()->json($order, 200);
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
@@ -79,10 +88,12 @@ class PurchaseInvoiceController extends Controller
             $_id = isset($request['id']) ? $request['id'] : '';
             $invoice = PurchaseInvoice::with('po.supplier','paymentmethod')->find($_id);
             $detail = PurchaseInvoiceDetail::with('item.unit')->where('po_invoice_id', $_id)->get();
+            
+            //$pdf->setPaper('a4', 'landscape');
+            $view = View::make('poinvoice.print', ['invoice' => $invoice, 'detail' => $detail]);
+            //return $view;
             $pdf = PDF::loadView('poinvoice.print', ['invoice' => $invoice, 'detail' => $detail])->setPaper('a4', 'landscape');
-            // $view = View::make('poinvoice.print', ['invoice' => $invoice, 'detail' => $detail]);
-            // return $view;
-            return $pdf->stream('invoice.pdf');
+            return $pdf->download('invoice.pdf');
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

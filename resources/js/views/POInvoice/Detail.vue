@@ -159,9 +159,9 @@
                     </span>
                     <span v-else>
                         <a
-                            href="#"
+                            :href="print_api"
                             :class="{'btn-block': mobile === true}"
-                            @click="cetakInvoice(invoice.id)"
+                            target="_blank"
                             class="btn btn-info">
                             <i class="fa fa-print"></i> Cetak Invoice
                         </a>
@@ -316,19 +316,24 @@
         methods: {
             cetakInvoice(id) {
                 this.isLoading = true;
-                service.getDownloadData(this.print_api)
-                .then(response => {
-                    const link = document.createElement('a');
-                    link.href = response;
-                    link.setAttribute('download', 'Invoice Pembelian - '+ this.invoice.invoice_number+'.pdf');
-                    document.body.appendChild(link);
-                    link.click();
+                // service.getDownloadData(this.print_api)
+                // .then(response => {
+                //     const link = document.createElement('a');
+                //     link.href = response;
+                //     link.setAttribute('download', 'Invoice Pembelian - '+ this.invoice.invoice_number+'.pdf');
+                //     document.body.appendChild(link);
+                //     link.click();
+                //     this.isLoading = false;
+                // }).catch(error => {
+                //     this.isLoading = false;
+                //     this.$swal("Terjadi Kesalahan!", "Silahkan Ulangi Kembali!", "error");
+                //     console.log(error);
+                // });
+                let newWindow = window.open();
+                newWindow.location = this.print_api;
+                newWindow.onunload = function () {
                     this.isLoading = false;
-                }).catch(error => {
-                    this.isLoading = false;
-                    this.$swal("Terjadi Kesalahan!", "Silahkan Ulangi Kembali!", "error");
-                    console.log(error);
-                });
+                }
             },
             togglePaymentModal() {
                 $("#payment_modal").modal('show');
