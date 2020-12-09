@@ -22,7 +22,7 @@ class Item extends Model
     public function scopeSearchQuery($query, $q)
     {
         if ($q) {
-            return $query->where('item_code', 'LIKE', '%' . $q . '%')->orWhere('item_name', 'LIKE', '%' . $q . '%');
+            return $query->where('item_name', 'LIKE', '%' . $q . '%');
         }
     }
 

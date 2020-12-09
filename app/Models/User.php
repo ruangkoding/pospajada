@@ -9,6 +9,11 @@ class User extends Model
     protected $table = 'user';
     protected $dates = ['created_at', 'updated_at'];
 
+    public function category()
+    {
+        return $this->belongsTo('App\Models\Category', 'category_id');
+    }
+
     public function scopeSearchUser($query, $q)
     {
         if ($q) {

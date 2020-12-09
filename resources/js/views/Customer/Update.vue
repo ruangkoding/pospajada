@@ -46,12 +46,12 @@
                                     class="btn btn-success">
                                     <i class="fa fa-save"></i> Simpan
                                 </button>
-                                <a 
-                                    :href="route" 
-                                    :class="{'btn-block': mobile === true }"
-                                    class="btn btn-secondary">
+                                <router-link 
+                                    :to="{ name: 'customer.index' }" 
+                                    class="btn btn-secondary"
+                                    :class="{'btn-block': mobile === true }">  
                                     <i class="fa fa-arrow-left"></i> Kembali
-                                </a>
+                                </router-link>
                             </div>
                         </div>
                     </form>
@@ -66,6 +66,7 @@
     export default {
         data() {
             return {
+                customer: {},
                 alert: {
                     error: false,
                     update: false,
@@ -80,12 +81,9 @@
                 isLoading: false,
             }
         },
-        props: ['api', 'route', 'customer', 'mobile'],
+        props: ['mobile'],
         methods: {
             clearAlert() {
-                this.alert.error = false;
-                this.alert.update = false;
-                this.alert.duplicate = false;
                 this.alert.validate = false;
             },
             onSubmit(evt) {
@@ -94,7 +92,7 @@
                 let validasi = this.validate();
                 if (validasi === true) {
                     this.isLoading = true;
-                    service.putData(this.api, this.customer)
+                    service.putData('/api/customer?id=' + this.$route.params.id, this.customer)
                         .then(result => {
                             this.response(result);
                         }).catch(error => {
@@ -111,6 +109,7 @@
             response(result) {
                 setTimeout(() => { this.isLoading = false }, 1000);
                 if (result.status === 'ok') {
+                    this.getCustomer();
                     this.$swal("Berhasil!", "Data Berhasil Diubah!", "success");
                     window.scroll({ top: 0, left: 0, behavior: 'smooth' });
                 } else if (result.status === 'duplicate') {
@@ -147,13 +146,24 @@
                 } else {
                     return true;
                 }
+            },
+            getCustomer() {
+                service.fetchData('/api/customer/'+ this.$route.params.id)
+                .then(response => {
+                    this.customer = response;
+                    this.isLoading = false;
+                })
+                .catch(error => {
+                    this.alert.error = true;
+                    console.log(error);
+                });
             }
         },
         created() {
             this.isLoading = true;
         },
         mounted() {
-            this.isLoading = false;
+            this.getCustomer();
         }
     };
 </script>

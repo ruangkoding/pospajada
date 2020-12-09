@@ -181,4 +181,19 @@ class Common
         $breadcrumb .= '</ol>';
         return $breadcrumb;
     }
+
+    /**
+     * generate breadcrumbs
+     * @param string $date
+     * @return string
+     */
+    public function check_token($token)
+    {
+        $user = DB::table('user')->where('remember_token', $token)->count();
+        if ($user > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

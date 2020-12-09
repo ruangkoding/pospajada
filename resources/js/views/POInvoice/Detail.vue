@@ -3,71 +3,75 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-body">
-                    <loading :opacity="100" :active.sync="isLoading" :can-cancel="false" :is-full-page="false" />
+                    <spinner :active="isLoading" />
                     <!-- summary data -->
-                    <transition name="fade">
-                        <table class="table table-bordered">
-                            <tbody>
-                                <tr>
-                                    <td style="width:15%;"><b>Invoice</b></td>
-                                    <td style="width:85%;">{{ invoice.invoice_number }}</td>
-                                </tr>
-                                <tr>
-                                    <td style="width:15%;"><b>Tanggal</b></td>
-                                    <td style="width:85%;">{{ invoice.invoice_date | moment }}</td>
-                                </tr>
-                                <tr>
-                                    <td style="width:15%;"><b>Supplier</b></td>
-                                    <td style="width:85%;">
-                                        {{ invoice.po.supplier.supplier_name }}<br>
-                                        {{ invoice.po.supplier.supplier_address }}<br>
-                                        {{ invoice.po.supplier.supplier_contact }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="width:15%;"><b>PIC</b></td>
-                                    <td style="width:85%;">
-                                        {{ invoice.po.user.username }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="width:15%;"><b>Pembayaran</b></td>
-                                    <td style="width:85%;">
-                                        <span v-if="invoice.payment_method_id === 2">
-                                            Kredit<br>
-                                            Tanggal Jatuh Tempo : <b>{{ invoice.payment_due_date | moment }}</b>
-                                        </span>
-                                        <span v-if="invoice.payment_method_id === 1">
-                                            Tunai
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><b>Status</b></td>
-                                    <td>
-                                        <span 
-                                            class="badge badge-danger" 
-                                            v-if="invoice.status === 0" 
-                                            style="padding:5px;">
-                                                <i class="fa fa-times"></i> BELUM DIBAYAR
-                                        </span>
-                                        <span 
-                                            class="badge badge-success"
-                                            v-if="invoice.status === 1"
-                                            style="padding:5px;">
-                                                <i class="fa fa-check"></i> LUNAS
-                                        </span>
-                                        <span
-                                            class="badge badge-warning" 
-                                            v-if="invoice.status === 2" 
-                                            style="padding:5px;">
-                                            <i class="fa fa-refresh"></i> DIBAYAR SEBAGIAN
-                                        </span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </transition>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <transition name="fade">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td style="width:15%;"><b>Invoice</b></td>
+                                            <td style="width:85%;">{{ invoice.invoice_number }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:15%;"><b>Tanggal</b></td>
+                                            <td style="width:85%;">{{ invoice.invoice_date | moment }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:15%;"><b>Supplier</b></td>
+                                            <td style="width:85%;">
+                                                {{ invoice.po.supplier.supplier_name }}<br>
+                                                {{ invoice.po.supplier.supplier_address }}<br>
+                                                {{ invoice.po.supplier.supplier_contact }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:15%;"><b>PIC</b></td>
+                                            <td style="width:85%;">
+                                                {{ invoice.po.user.username }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:15%;"><b>Pembayaran</b></td>
+                                            <td style="width:85%;">
+                                                <span v-if="invoice.payment_method_id === 2">
+                                                    Kredit<br>
+                                                    Tanggal Jatuh Tempo : <b>{{ invoice.payment_due_date | moment }}</b>
+                                                </span>
+                                                <span v-if="invoice.payment_method_id === 1">
+                                                    Tunai
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Status</b></td>
+                                            <td>
+                                                <span 
+                                                    class="badge badge-danger" 
+                                                    v-if="invoice.status === 0" 
+                                                    style="padding:5px;">
+                                                        <i class="fa fa-times"></i> BELUM DIBAYAR
+                                                </span>
+                                                <span 
+                                                    class="badge badge-success"
+                                                    v-if="invoice.status === 1"
+                                                    style="padding:5px;">
+                                                        <i class="fa fa-check"></i> LUNAS
+                                                </span>
+                                                <span
+                                                    class="badge badge-warning" 
+                                                    v-if="invoice.status === 2" 
+                                                    style="padding:5px;">
+                                                    <i class="fa fa-refresh"></i> DIBAYAR SEBAGIAN
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </transition>
+                        </div>
+                    </div>
 
                     <div style="margin-top:25px;"></div>
 
@@ -150,27 +154,27 @@
                             @click="togglePaymentModal()">
                             <i class="fa fa-check"></i> Proses Pembayaran
                         </a>
-                        <a
-                            :href="route"
-                            :class="{'btn-block': mobile === true}"
-                            class="btn btn-secondary">
+                        <router-link 
+                            :to="{ name: 'poinvoice.index' }" 
+                            class="btn btn-secondary"
+                            :class="{'btn-block': mobile === true }">  
                             <i class="fa fa-arrow-left"></i> Kembali
-                        </a>
+                        </router-link>
                     </span>
                     <span v-else>
                         <a
-                            :href="print_api"
+                            href="#"
                             :class="{'btn-block': mobile === true}"
                             target="_blank"
                             class="btn btn-info">
                             <i class="fa fa-print"></i> Cetak Invoice
                         </a>
-                        <a
-                            :href="route"
-                            :class="{'btn-block': mobile === true}"
-                            class="btn btn-secondary">
+                        <router-link 
+                            :to="{ name: 'poinvoice.index' }" 
+                            class="btn btn-secondary"
+                            :class="{'btn-block': mobile === true }">  
                             <i class="fa fa-arrow-left"></i> Kembali
-                        </a>
+                        </router-link>
                     </span>
 
                     <!-- payment modal -->
@@ -269,6 +273,8 @@
     export default {
         data() {
             return {
+                invoice:{},
+                detail:{},
                 id:'',
                 isLoading: false,
                 saldo: 0,
@@ -283,7 +289,7 @@
                     validate: false
                 },
                 payment: {
-                    'po_invoice_id': this.invoice.id,
+                    'po_invoice_id': '',
                     'note': '',
                     'payment_date': '',
                     'total': '',
@@ -304,16 +310,28 @@
             }
         },
         props: [
-            'invoice',
-            'detail',
-            'route',
-            'paymentmethod',
-            'print_api',
-            'access',
-            'api',
             'mobile'
         ],
         methods: {
+            getInvoice() {
+                service.fetchData('/api/invoice/buy/show/' + this.$route.params.id)
+                .then(response => {
+                    this.invoice = response;
+                    this.detail = this.invoice.detail;
+                    if (this.detail.length < 1) {
+                        this.alert.empty = true;
+                        this.showTable = false;
+                    } else {
+                        this.payment.po_invoice_id = this.invoice.id;
+                        this.showTable = true;
+                        this.checkRemainingPayment();
+                        this.isLoading = false;
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+            },
             cetakInvoice(id) {
                 this.isLoading = true;
                 // service.getDownloadData(this.print_api)
@@ -330,7 +348,7 @@
                 //     console.log(error);
                 // });
                 let newWindow = window.open();
-                newWindow.location = this.print_api;
+                newWindow.location = '';
                 newWindow.onunload = function () {
                     this.isLoading = false;
                 }
@@ -342,12 +360,12 @@
                 let validasi = this.validate();
                 if (validasi === true) {
                     if (this.payment.nominal <= this.payment.total) {
-                        service.postData(this.api + '/pay', this.payment)
+                        service.postData('/api/invoice/buy/pay', this.payment)
                         .then(response => {
                             if (response.status === 'ok') {
                                 $('#payment_modal').modal('hide');
                                 this.$swal("Berhasil!", "Proses Pembayaran Berhasil!", "success");
-                                setTimeout(() => location.reload(), 2000);
+                                setTimeout(() => this.getInvoice(), 2000);
                             }
                         }).catch(error => {
                             this.$swal("Terjadi Kesalahan!", "Silahkan Ulangi Kembali!", "error");
@@ -362,7 +380,7 @@
                 }
             },
             checkRemainingPayment() {
-                service.fetchData(this.api + '/pay?invoice=' + this.invoice.id)
+                service.fetchData('/api/invoice/buy/pay?invoice=' + this.invoice.id)
                 .then(response => {
                     this.payment_data  = response.payment_data;
                     this.payment.total = response.remaining_payment;
@@ -397,18 +415,9 @@
         },
         created() {
             this.isLoading = true;
-            if (this.detail.length < 1) {
-                this.alert.empty = true;
-                this.showTable = false;
-            } else {
-                this.showTable = true;
-                this.checkRemainingPayment();
-            }
         },
         mounted() {
-            this.userId = this.$cookies.get('id');
-            this.isLoading = false;
-            console.log(this.invoice.paymentmethod.name);
+            this.getInvoice();
         }
     };
 </script>

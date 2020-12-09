@@ -6,6 +6,7 @@ use App\Libraries\Common;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Closure;
 
 /**
  * Class CategoryController
@@ -18,14 +19,34 @@ class CategoryController extends Controller
 
     public function __construct()
     {
-        $this->_common = new Common();
+        $this->middleware(
+            function ($request, Closure $next) {
+                $token = $request->bearerToken();
+                $this->_common = new Common();
+                if ($token != '') {
+                    $check = $this->_common->check_token($token);
+                    if ($check == true) {
+                        return $next($request);
+                    } else {
+                        return response()->json(['error' => 'Unauthorized Request'], 401);
+                    }
+                } else {
+                    return response()->json(['error' => 'Unauthorized Request'], 401);
+                }
+            }
+        );
     }
 
     public function get_data(Request $request)
     {
         try {
             $_query = isset($request['q']) ? $request['q'] : '';
-            $category = Category::searchCategory($_query)->orderBy('id', 'DESC')->paginate(10);
+            $_all   = isset($request['all']) ? true : false;
+            if ($_all == true) {
+                $category = Category::all();
+            } else {
+                $category = Category::searchCategory($_query)->orderBy('id', 'DESC')->paginate(10);
+            }
             return response()->json($category, 200);
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
@@ -52,6 +73,11 @@ class CategoryController extends Controller
     public function show_data(Request $request)
     {
         return response()->json(Category::find($request['id']), 200);
+    }
+
+    public function show_all_data(Request $request)
+    {
+        return response()->json(Category::all(), 200);
     }
 
     public function put_data(Request $request)

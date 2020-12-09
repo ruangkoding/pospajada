@@ -20,6 +20,9 @@ Route::get('ajax/soinvoice', 'Api\AjaxController@generate_sales_invoice');
 Route::get('ajax/ponumber', 'Api\AjaxController@generate_purchasing_number');
 Route::get('ajax/sonumber', 'Api\AjaxController@generate_sales_number');
 
+Route::get('unit', 'Api\UnitController@get_data');
+Route::get('paymentmethod', 'Api\PaymentMethodController@get_data');
+
 // category
 Route::get('category', 'Api\CategoryController@get_data');
 Route::get('category/{id}', 'Api\CategoryController@show_data');
@@ -50,42 +53,28 @@ Route::delete('supplier', 'Api\SupplierController@delete_data');
 
 // user
 Route::get('user', 'Api\UserController@get_data');
-Route::get('user/{id}', 'Api\UserController@show_data');
+Route::get('user/show/{id}', 'Api\UserController@show_data');
 Route::post('user', 'Api\UserController@post_data');
 Route::put('user', 'Api\UserController@put_data');
 Route::put('user/resetpassword', 'Api\UserController@reset_password');
 Route::delete('user', 'Api\UserController@delete_data');
 
-// PO order
-Route::get('order/po', 'Api\PurchaseOrderController@get_data');
-Route::get('order/po/cart', 'Api\PurchaseOrderController@get_cart_data');
-Route::post('order/po/cart', 'Api\PurchaseOrderController@post_cart_data');
-Route::delete('order/po/cart', 'Api\PurchaseOrderController@delete_cart_data');
-Route::post('order/po/checkout', 'Api\PurchaseOrderController@post_checkout_data');
-Route::post('order/po/rejectitem', 'Api\PurchaseOrderController@post_reject_item_data');
-Route::post('order/po/generateinvoice', 'Api\PurchaseOrderController@post_invoice_data');
-Route::post('order/po/rejectpo', 'Api\PurchaseOrderController@post_reject_po_data');
-Route::get('order/po/print', 'Api\PurchaseOrderController@get_print_data');
+// Buy Invoice
+Route::get('order/buy', 'Api\BuyInvoiceController@get_invoices_data');
+Route::get('order/buy/show/{id}', 'Api\BuyInvoiceController@get_invoice_data');
+Route::post('order/buy', 'Api\BuyInvoiceController@post_invoice_data');
+Route::get('order/buy/cart', 'Api\BuyInvoiceController@get_cart_data');
+Route::post('order/buy/cart', 'Api\BuyInvoiceController@post_cart_data');
+Route::delete('order/buy/cart', 'Api\BuyInvoiceController@delete_cart_data');
+Route::get('order/buy/pay', 'Api\BuyInvoiceController@get_payment_data');
+Route::post('order/buy/pay', 'Api\BuyInvoiceController@post_payment_data');
 
-// SO order
-Route::get('order/so', 'Api\SalesOrderController@get_data');
-Route::get('order/so/cart', 'Api\SalesOrderController@get_cart_data');
-Route::post('order/so/cart', 'Api\SalesOrderController@post_cart_data');
-Route::delete('order/so/cart', 'Api\SalesOrderController@delete_cart_data');
-Route::post('order/so/checkout', 'Api\SalesOrderController@post_checkout_data');
-Route::post('order/so/rejectitem', 'Api\SalesOrderController@post_reject_item_data');
-Route::post('order/so/generateinvoice', 'Api\SalesOrderController@post_invoice_data');
-Route::post('order/so/rejectso', 'Api\SalesOrderController@post_reject_so_data');
-Route::get('order/so/print', 'Api\SalesOrderController@get_print_data');
-
-// invoice pembelian
-Route::get('invoice/buy', 'Api\PurchaseInvoiceController@get_data');
-Route::post('invoice/buy/pay', 'Api\PurchaseInvoiceController@post_payment_data');
-Route::get('invoice/buy/pay', 'Api\PurchaseInvoiceController@get_payment_data');
-Route::get('invoice/buy/print', 'Api\PurchaseInvoiceController@get_print_data');
-
-// invoice penjualan
-Route::get('invoice/sell', 'Api\SalesInvoiceController@get_data');
-Route::post('invoice/sell/pay', 'Api\SalesInvoiceController@post_payment_data');
-Route::get('invoice/sell/pay', 'Api\SalesInvoiceController@get_payment_data');
-Route::get('invoice/sell/print', 'Api\SalesInvoiceController@get_print_data');
+// Sell Invoice
+Route::get('order/sell', 'Api\SellInvoiceController@get_invoices_data');
+Route::get('order/sell/show/{id}', 'Api\SellInvoiceController@get_invoice_data');
+Route::post('order/sell', 'Api\SellInvoiceController@post_invoice_data');
+Route::get('order/sell/cart', 'Api\SellInvoiceController@get_cart_data');
+Route::post('order/sell/cart', 'Api\SellInvoiceController@post_cart_data');
+Route::delete('order/sell/cart', 'Api\SellInvoiceController@delete_cart_data');
+Route::get('order/sell/pay', 'Api\SellInvoiceController@get_payment_data');
+Route::post('order/sell/pay', 'Api\SellInvoiceController@post_payment_data');

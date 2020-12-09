@@ -2,7 +2,6 @@
 namespace App\Libraries;
 
 use Exception;
-
 class Access
 {
     function generateAccess($level) {

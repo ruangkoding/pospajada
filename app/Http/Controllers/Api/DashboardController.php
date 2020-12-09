@@ -6,11 +6,32 @@ use Exception;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Libraries\Common;
-use App\Models\PurchaseInvoice;
+use App\Models\BuyInvoice;
 use DB;
+use Closure;
 
 class DashboardController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(
+            function ($request, Closure $next) {
+                $token = $request->bearerToken();
+                $this->_common = new Common();
+                if ($token != '') {
+                    $check = $this->_common->check_token($token);
+                    if ($check == true) {
+                        return $next($request);
+                    } else {
+                        return response()->json(['error' => 'Unauthorized Request'], 401);
+                    }
+                } else {
+                    return response()->json(['error' => 'Unauthorized Request'], 401);
+                }
+            }
+        );
+    }
+    
     public function getData(Request $request)
     {
         try {
@@ -19,9 +40,10 @@ class DashboardController extends Controller
 
             $d = explode('-', $year);
 
-            $buy  = PurchaseInvoice::select('invoice_date', DB::raw('sum(total) as total'))
+            $buy = BuyInvoice::select('invoice_date', DB::raw('sum(total) as total'))
                                     ->whereYear('invoice_date', $d[0])
                                     ->whereMonth('invoice_date', $d[1])
+                                    ->where('status', 1)
                                     ->groupBy('invoice_date')
                                     ->get();
 

@@ -7,6 +7,7 @@ use App\Libraries\Common;
 use Illuminate\Http\Request;
 use Exception;
 use App\Http\Controllers\Controller;
+use Closure;
 
 class SupplierController extends Controller
 {
@@ -14,14 +15,34 @@ class SupplierController extends Controller
 
     public function __construct()
     {
-        $this->_common = new Common();
+        $this->middleware(
+            function ($request, Closure $next) {
+                $token = $request->bearerToken();
+                $this->_common = new Common();
+                if ($token != '') {
+                    $check = $this->_common->check_token($token);
+                    if ($check == true) {
+                        return $next($request);
+                    } else {
+                        return response()->json(['error' => 'Unauthorized Request'], 401);
+                    }
+                } else {
+                    return response()->json(['error' => 'Unauthorized Request'], 401);
+                }
+            }
+        );
     }
 
     public function get_data(Request $request)
     {
         try {
             $_query = ($request['q'] !== '') ? $request['q'] : '';
-            $supplier = Supplier::searchSupplier($_query)->orderBy('id', 'DESC')->paginate(10);
+            $_all   = isset($request['all']) ? true : false;
+            if($_all == true) {
+                $supplier = Supplier::all();
+            } else {
+                $supplier = Supplier::searchSupplier($_query)->orderBy('id', 'DESC')->paginate(10);
+            }
             return response()->json($supplier, 200);
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);

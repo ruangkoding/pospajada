@@ -6,6 +6,7 @@ use App\Libraries\Common;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Closure;
 
 class UserController extends Controller
 {
@@ -13,17 +14,31 @@ class UserController extends Controller
 
     public function __construct()
     {
-        $this->_common = new Common();
+        $this->middleware(
+            function ($request, Closure $next) {
+                $token = $request->bearerToken();
+                $this->_common = new Common();
+                if ($token != '') {
+                    $check = $this->_common->check_token($token);
+                    if ($check == true) {
+                        return $next($request);
+                    } else {
+                        return response()->json(['error' => 'Unauthorized Request'], 401);
+                    }
+                } else {
+                    return response()->json(['error' => 'Unauthorized Request'], 401);
+                }
+            }
+        );
     }
 
     public function get_data(Request $request)
     {
         try {
             $_query = isset($request['q']) ? $request['q'] : '';
-            $_active = isset($request['active']) ?  $request['active'] : '';
             $user = User::searchNotAdmin()
                         ->searchUser($_query)
-                        ->searchActive($_active)
+                        ->with('category')
                         ->orderBy('id', 'DESC')
                         ->paginate(10);
             return response()->json($user, 200);
@@ -38,9 +53,10 @@ class UserController extends Controller
         if ($check == 0) {
             $user = new User();
             $user->username = $request->input('username');
-            $user->password = md5('sosroretno');
+            $user->category_id = $request->input('category_id');
+            $user->password = hash('sha1', 'sosroretno');
             $user->level = 2;
-            $user->active = $request->input('active');
+            $user->active = 1;
             $user->created_at = date('Y-m-d H:i:s');
             if ($user->save()) {
                 return response()->json(['status' => 'ok'], 200);
@@ -61,7 +77,7 @@ class UserController extends Controller
     {
         $user = User::find($request['id']);
         $user->username = $request->input('username');
-        $user->active = $request->input('active');
+        $user->category_id = $request->input('category_id');
         $user->updated_at = date('Y-m-d H:i:s');
         if ($user->save()) {
             return response()->json(['status' => 'ok'], 200);
@@ -73,7 +89,7 @@ class UserController extends Controller
     public function reset_password(Request $request)
     {
         $user = User::find($request['id']);
-        $user->password = md5('sosroretno');
+        $user->password = hash('sha1', 'sosroretno');
         $user->updated_at = date('Y-m-d H:i:s');
         if ($user->save()) {
             return response()->json(['status' => 'ok'], 200);
@@ -85,7 +101,9 @@ class UserController extends Controller
     public function delete_data(Request $request)
     {
         $user = User::find($request['id']);
-        if ($user->delete()) {
+        $user->active = 0;
+        $user->updated_at = date('Y-m-d H:i:s');
+        if ($user->save()) {
             return response()->json(['status' => 'ok'], 200);
         } else {
             return response()->json(['status' => 'failed'], 500);

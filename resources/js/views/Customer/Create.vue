@@ -46,12 +46,12 @@
                                     class="btn btn-success">
                                     <i class="fa fa-save"></i> Simpan
                                 </button>
-                                <a 
-                                    :href="route" 
-                                    :class="{'btn-block': mobile === true }"
-                                    class="btn btn-secondary">
+                                <router-link 
+                                    :to="{ name: 'customer.index' }" 
+                                    class="btn btn-secondary"
+                                    :class="{'btn-block': mobile === true }">  
                                     <i class="fa fa-arrow-left"></i> Kembali
-                                </a>
+                                </router-link>
                             </div>
                         </div>
                     </form>
@@ -85,21 +85,17 @@
                 isLoading: false
             }
         },
-        props: ['api', 'route'],
+        props: ['mobile'],
         methods: {
             clearAlert() {
-                this.alert.error = false;
-                this.alert.save = false;
-                this.alert.duplicate = false;
                 this.alert.validate = false;
             },
             onSubmit(evt) {
                 evt.preventDefault();
-                this.clearAlert();
                 let validasi = this.validate();
                 if (validasi === true) {
                     this.isLoading = true;
-                    service.postData(this.api, this.customer)
+                    service.postData('/api/customer', this.customer)
                         .then(result => {
                             this.response(result);
                         }).catch(error => {

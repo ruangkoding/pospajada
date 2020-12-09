@@ -73,7 +73,7 @@
                 </div>
                 <div class="card-body">
                     <v-alert :alert="alert" />
-                    <loading :opacity="100" :active.sync="isLoading" :can-cancel="false" :is-full-page="false" />
+                    <spinner :active="isLoading" />
                     <transition name="fade" v-if="showTable === true">
                         <!-- mobile view -->
                         <div v-if="mobile === true">
@@ -83,7 +83,11 @@
                                         <tr>
                                             <td>Invoice</td>
                                             <td>:</td>
-                                            <td><a :href="route + '/detail?id=' + v.id">{{ v.invoice_number }}</a></td>
+                                            <td>
+                                                <router-link :to="{ name: 'poinvoice.detail', params: { id: v.id} }">  
+                                                    {{ v.invoice_number }}
+                                                </router-link>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>Supplier</td>
@@ -154,10 +158,13 @@
                                         <th scope="col" style="text-align:center;width:15%;">Status</th>
                                     </tr>
                                 </thead>
+
                                 <tbody>
                                     <tr v-for="v in po" :key="v.id">
                                         <td scope="row" style="vertical-align:middle;">
-                                            <a :href="route + '/detail?id=' + v.id">{{ v.invoice_number }}</a>
+                                            <router-link :to="{ name: 'poinvoice.detail', params: { id: v.id} }">  
+                                                {{ v.invoice_number }}
+                                            </router-link>
                                         </td>
                                         <td scope="row" style="vertical-align:middle;">
                                             {{ v.po.supplier.supplier_name }}<br>
@@ -214,7 +221,7 @@
 
 <script>
 import service from './../../services.js';
-
+import { mapState } from 'vuex'
 export default {
     data: function() {
         return {
@@ -249,7 +256,7 @@ export default {
             userId: ''
         }
     },
-    props: ['api','route','access', 'mobile'],
+    props: ['mobile'],
     methods: {
         toggle() {
             this.showForm = !this.showForm
@@ -271,9 +278,22 @@ export default {
         },
         fetchData() {
             let query  = this.generateParams();
-            service.fetchData(this.api + '?user=' + this.userId + '&'+ query + '&page='+ this.pagination.page)
+            service.fetchData('/api/invoice/buy?user=' + this.userid + '&'+ query + '&page='+ this.pagination.page)
             .then(response => {
-                this.renderData(response);
+                if (response.total === 0) {
+                    this.showTable = false;
+                    this.alert.empty = true;
+                    this.alert.error = false;
+                } else {
+                    this.showTable = true;
+                    this.alert.empty = false;
+                    this.alert.error = false;
+                    this.po = response.data;
+                    this.pagination.last = response.last_page;
+                    this.pagination.from = response.from;
+                    this.pagination.to = response.to;
+                    this.pagination.total = response.total;
+                }
                 this.isLoading = false;
             })
             .catch(error => {
@@ -281,31 +301,17 @@ export default {
                 console.log(error);
             });
         },
-        renderData(response) {
-            if (response.total === 0) {
-                this.showTable = false;
-                this.alert.empty = true;
-                this.alert.error = false;
-            } else {
-                this.showTable = true;
-                this.alert.empty = false;
-                this.alert.error = false;
-                this.po = response.data;
-                this.pagination.last = response.last_page;
-                this.pagination.from = response.from;
-                this.pagination.to = response.to;
-                this.pagination.total = response.total;
-            }
-        },
         generateParams() {
             return Object.keys(this.search).map(key => key + '=' + this.search[key]).join('&');
         }
+    },
+    computed: {
+        ...mapState(['userid'])
     },
     created() {
         this.isLoading = true;
     },
     mounted() {
-        this.userId = this.$cookies.get('id');
         this.fetchData();
     }
 };
