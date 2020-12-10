@@ -32,8 +32,8 @@ class ProfileController extends Controller
 
     public function putUpdatePassword(Request $request)
     {
-        $user = User::find($request->input('id'));
-        $user->password = md5($request->input('password'));
+        $user = User::find($request['id']);
+        $user->password = hash('sha256', $request->input('password'));
         $user->updated_at = date('Y-m-d H:i:s');
         if ($user->save()) {
             return response()->json(['status' => 'ok'], 200);

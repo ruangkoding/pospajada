@@ -13,7 +13,7 @@ class LoginController extends Controller
         try {
             $user_data = [];
             $user_data['username'] = $request->input('username');
-            $user_data['password'] = hash('sha1', $request->input('password'));
+            $user_data['password'] = hash('sha256', $request->input('password'));
             $user = User::where($user_data)->first();
             if ($user) {
                 if ($user['active'] == 1) {
