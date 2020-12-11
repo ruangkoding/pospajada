@@ -54,7 +54,7 @@ class UserController extends Controller
             $user = new User();
             $user->username = $request->input('username');
             $user->category_id = $request->input('category_id');
-            $user->password = hash('sha1', 'sosroretno');
+            $user->password = hash('sha256', 'sosroretno');
             $user->level = 2;
             $user->active = 1;
             $user->created_at = date('Y-m-d H:i:s');
@@ -89,7 +89,7 @@ class UserController extends Controller
     public function reset_password(Request $request)
     {
         $user = User::find($request['id']);
-        $user->password = hash('sha1', 'sosroretno');
+        $user->password = hash('sha256', 'sosroretno');
         $user->updated_at = date('Y-m-d H:i:s');
         if ($user->save()) {
             return response()->json(['status' => 'ok'], 200);
