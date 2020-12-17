@@ -58,11 +58,10 @@ class ItemController extends Controller
         $check = Item::where(['item_name' => $request->input('item_name'), 'category_id' => $request->input('category_id')])->count();
         if ($check == 0) {
             $item = new Item();
-            //$item->item_code = $request->input('item_code');
             $item->item_name = $request->input('item_name');
             $item->category_id = $request->input('category_id');
             $item->unit_id = $request->input('unit_id');
-            $item->stock = 0;
+            $item->stock = $request->input('stock');
             $item->created_at = date('Y-m-d H:i:s');
             if ($item->save()) {
                 return response()->json(['status' => 'ok'], 200);
@@ -85,6 +84,7 @@ class ItemController extends Controller
         $item->item_name = $request->input('item_name');
         $item->category_id = $request->input('category_id');
         $item->unit_id = $request->input('unit_id');
+        $item->stock = $request->input('stock');
         $item->updated_at = date('Y-m-d H:i:s');
         if ($item->save()) {
             return response()->json(['status' => 'ok'], 200);
